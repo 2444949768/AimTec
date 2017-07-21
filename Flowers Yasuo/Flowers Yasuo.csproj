@@ -36,6 +36,9 @@
     <Reference Include="Aimtec">
       <HintPath>..\..\..\AimTec\Data\System\Aimtec.dll</HintPath>
     </Reference>
+    <Reference Include="Aimtec.AppDomain">
+      <HintPath>..\..\..\AimTec\Data\System\Aimtec.AppDomain.dll</HintPath>
+    </Reference>
     <Reference Include="Aimtec.SDK">
       <HintPath>..\..\..\AimTec\Data\System\Aimtec.SDK.dll</HintPath>
     </Reference>
