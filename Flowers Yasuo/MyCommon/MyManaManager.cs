@@ -15,6 +15,8 @@
         internal static bool SpellFarm { get; set; } = true;
         internal static bool SpellHarass { get; set; } = true;
 
+        private static int tick { get; set; } = 0;
+
         internal static void AddFarmToMenu(Menu mainMenu)
         {
             try
@@ -26,34 +28,29 @@
                     var spellHarass = mainMenu.Add(new MenuKeyBind("MyManaManager.SpellHarass", "Use Spell To Harass(In Clear Mode)",
                         Aimtec.SDK.Util.KeyCode.H, KeybindType.Toggle, true));
 
-                    SpellHarass = spellHarass.Enabled;
-                    spellHarass.OnValueChanged += delegate(MenuComponent sender, ValueChangedArgs args)
-                    {
-                        try
-                        {
-                            SpellHarass = args.GetNewValue<MenuKeyBind>().Enabled;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("Error in MyManaManager.spellHarass.OnValueChange" + ex);
-                        }
-                    };
-
                     Game.OnWndProc += delegate (WndProcEventArgs Args)
                     {
                         try
                         {
-                            if(spellFarm.Enabled)
+                            if (Args.Message == 0x20a)
                             {
-                                if (Args.Message == 0x20a)
-                                {
-                                    SpellFarm = !SpellFarm;
-                                }
+                                spellFarm.As<MenuBool>().Value = !spellFarm.As<MenuBool>().Value;
+                                SpellFarm = spellFarm.Enabled;
                             }
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine("Error in MyManaManager.OnWndProcEvent." + ex);
+                        }
+                    };
+
+                    Game.OnUpdate += delegate
+                    {
+                        if (Environment.TickCount - tick > 100 * Game.Ping)
+                        {
+                            tick = Environment.TickCount;
+                            SpellFarm = spellFarm.Enabled;
+                            SpellHarass = spellHarass.Enabled;
                         }
                     };
                 }
