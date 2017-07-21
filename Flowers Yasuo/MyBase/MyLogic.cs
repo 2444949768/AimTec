@@ -34,5 +34,6 @@
         internal static Menu EvadeMenu { get; set; }
         internal static Menu DrawMenu { get; set; }
 
+        internal static Vector3 YasuolastEPos { get; set; }
     }
 }

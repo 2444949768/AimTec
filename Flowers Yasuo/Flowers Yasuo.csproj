@@ -34,16 +34,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aimtec">
-      <HintPath>..\..\..\AimTec\Data\System\Aimtec.dll</HintPath>
+      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Aimtec.dll</HintPath>
     </Reference>
     <Reference Include="Aimtec.AppDomain">
-      <HintPath>..\..\..\AimTec\Data\System\Aimtec.AppDomain.dll</HintPath>
+      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Aimtec.AppDomain.dll</HintPath>
     </Reference>
     <Reference Include="Aimtec.SDK">
-      <HintPath>..\..\..\AimTec\Data\System\Aimtec.SDK.dll</HintPath>
+      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Aimtec.SDK.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\AimTec\Data\System\Newtonsoft.Json.dll</HintPath>
+      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,6 +59,7 @@
     <Compile Include="MyBase\MyChampions.cs" />
     <Compile Include="MyCommon\MyEventManager.cs" />
     <Compile Include="MyBase\MyLogic.cs" />
+    <Compile Include="MyCommon\MyExtraManager.cs" />
     <Compile Include="MyCommon\MySpellManager.cs" />
     <Compile Include="MyCommon\MyManaManager.cs" />
     <Compile Include="MyCommon\MyMenuManager.cs" />
