@@ -10,6 +10,7 @@
 
     #endregion
 
+
     internal class MyManaManager
     {
         internal static bool SpellFarm { get; set; } = true;
@@ -24,8 +25,8 @@
                 if (mainMenu != null)
                 {
                     mainMenu.Add(new MenuSeperator("MyManaManager.SpellFarmSettings", ":: Spell Farm Logic"));
-                    var spellFarm = mainMenu.Add(new MenuBool("MyManaManager.SpellFarm", "Use Spell To Farm(Mouse Scrool)"));
-                    var spellHarass = mainMenu.Add(new MenuKeyBind("MyManaManager.SpellHarass", "Use Spell To Harass(In Clear Mode)",
+                    mainMenu.Add(new MenuBool("MyManaManager.SpellFarm", "Use Spell To Farm(Mouse Scrool)"));
+                    mainMenu.Add(new MenuKeyBind("MyManaManager.SpellHarass", "Use Spell To Harass(In Clear Mode)",
                         Aimtec.SDK.Util.KeyCode.H, KeybindType.Toggle, true));
 
                     Game.OnWndProc += delegate (WndProcEventArgs Args)
@@ -34,8 +35,8 @@
                         {
                             if (Args.Message == 0x20a)
                             {
-                                spellFarm.As<MenuBool>().Value = !spellFarm.As<MenuBool>().Value;
-                                SpellFarm = spellFarm.Enabled;
+                                mainMenu["MyManaManager.SpellFarm"].As<MenuBool>().Value = !mainMenu["MyManaManager.SpellFarm"].As<MenuBool>().Value;
+                                SpellFarm = mainMenu["MyManaManager.SpellFarm"].Enabled;
                             }
                         }
                         catch (Exception ex)
@@ -49,8 +50,8 @@
                         if (Environment.TickCount - tick > 100 * Game.Ping)
                         {
                             tick = Environment.TickCount;
-                            SpellFarm = spellFarm.Enabled;
-                            SpellHarass = spellHarass.Enabled;
+                            SpellFarm = mainMenu["MyManaManager.SpellFarm"].Enabled;
+                            SpellHarass = mainMenu["MyManaManager.SpellHarass"].Enabled;
                         }
                     };
                 }
@@ -67,8 +68,8 @@
             {
                 if (mainMenu != null)
                 {
-                    var spellFarm = mainMenu.Add(new MenuBool("MyManaManager.DrawSpelFarm", "Draw Spell Farm Status"));
-                    var spellHarass = mainMenu.Add(new MenuBool("MyManaManager.DrawSpellHarass", "Draw Spell Harass Status"));
+                    mainMenu.Add(new MenuBool("MyManaManager.DrawSpelFarm", "Draw Spell Farm Status"));
+                    mainMenu.Add(new MenuBool("MyManaManager.DrawSpellHarass", "Draw Spell Harass Status"));
 
                     Render.OnRender += delegate
                     {
@@ -79,7 +80,7 @@
                                 return;
                             }
 
-                            if (spellFarm.Enabled)
+                            if (mainMenu["MyManaManager.DrawSpelFarm"].Enabled)
                             {
                                 Vector2 MePos = Vector2.Zero;
                                 Render.WorldToScreen(ObjectManager.GetLocalPlayer().Position, out MePos);
@@ -88,7 +89,7 @@
                                     "Spell Farms:" + (SpellFarm ? "On" : "Off"));
                             }
 
-                            if (spellHarass.Enabled)
+                            if (mainMenu["MyManaManager.DrawSpellHarass"].Enabled)
                             {
                                 Vector2 MePos = Vector2.Zero;
                                 Render.WorldToScreen(ObjectManager.GetLocalPlayer().Position, out MePos);

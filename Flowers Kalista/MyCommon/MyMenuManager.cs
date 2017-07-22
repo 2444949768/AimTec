@@ -18,16 +18,16 @@
         {
             try
             {
-                MyLogic.Menu = new Menu("FlowersKalista", "Flowers Kalista", true)
+                MyLogic.Menu = new Menu("FlowersKalista", "Flowers Kalista", true);
                 {
-                    new MenuSeperator("CreditName", "Credit: NightMoon")
-                };
-                MyLogic.Menu.Attach();
+                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("ASDASDF"));
+                }
 
                 MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
                 MyLogic.Orbwalker.Attach(MyLogic.Menu);
 
-                MyLogic.ComboMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.ComboMenu", ":: Combo Settings"));
+                MyLogic.ComboMenu = new Menu("FlowersKalista.ComboMenu", ":: Combo Settings");
                 {
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersKalista.ComboMenu.QSettings", "-- Q Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersKalista.ComboMenu.Q", "Use Q"));
@@ -39,8 +39,9 @@
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersKalista.ComboMenu.GapcloserSettings", "-- Gapcloser Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersKalista.ComboMenu.Gapcloser", "Auto Attack Minion To Gapcloser Target"));
                 }
+                MyLogic.Menu.Add(MyLogic.ComboMenu);
 
-                MyLogic.HarassMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.HarassMenu", ":: Harass Settings"));
+                MyLogic.HarassMenu = new Menu("FlowersKalista.HarassMenu", ":: Harass Settings");
                 {
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersKalista.HarassMenu.QSettings", "-- Q Settings"));
                     MyLogic.HarassMenu.Add(new MenuBool("FlowersKalista.HarassMenu.Q", "Use Q", false));
@@ -59,8 +60,9 @@
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersKalista.HarassMenu.TargetSettings", "-- Target Settings"));
                     AddTargetList(MyLogic.HarassMenu, "FlowersKalista.HarassMenu.HarassTarget_");
                 }
+                MyLogic.Menu.Add(MyLogic.HarassMenu);
 
-                MyLogic.ClearMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.ClearMenu", ":: Clear Settings"));
+                MyLogic.ClearMenu = new Menu("FlowersKalista.ClearMenu", ":: Clear Settings");
                 {
                     MyLogic.ClearMenu.Add(new MenuSeperator("FlowersKalista.ClearMenu.LaneClearSettings", "-- LaneClear Settings"));
                     MyLogic.ClearMenu.Add(new MenuSliderBool("FlowersKalista.ClearMenu.LaneClearE",
@@ -74,17 +76,19 @@
                     MyLogic.ClearMenu.Add(new MenuSlider("FlowersKalista.ClearMenu.JungleClearMana",
                         "When Player ManaPercent >= x%", 30, 1, 99));
                 }
+                MyLogic.Menu.Add(MyLogic.ClearMenu);
 
-                MyLogic.LastHitMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.LastHitMenu", ":: LastHit Settings"));
+                MyLogic.LastHitMenu = new Menu("FlowersKalista.LastHitMenu", ":: LastHit Settings");
                 {
                     MyLogic.LastHitMenu.Add(new MenuSeperator("FlowersKalista.LastHitMenu.ESettings", "-- E Settings"));
                     MyLogic.LastHitMenu.Add(new MenuBool("FlowersKalista.LastHitMenu.E", "Use E"));
                     MyLogic.LastHitMenu.Add(new MenuBool("FlowersKalista.LastHitMenu.Auto", "Auto E To LastHit"));
-                    MyLogic.ClearMenu.Add(new MenuSlider("FlowersKalista.LastHitMenu.Mana",
+                    MyLogic.LastHitMenu.Add(new MenuSlider("FlowersKalista.LastHitMenu.Mana",
                         "When Player ManaPercent >= x%", 30, 1, 99));
                 }
+                MyLogic.Menu.Add(MyLogic.LastHitMenu);
 
-                MyLogic.KillStealMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.KillStealMenu", ":: KillSteal Settings"));
+                MyLogic.KillStealMenu = new Menu("FlowersKalista.KillStealMenu", ":: KillSteal Settings");
                 {
                     MyLogic.KillStealMenu.Add(new MenuSeperator("FlowersKalista.KillStealMenu.QSettings", "-- Q Settings"));
                     MyLogic.KillStealMenu.Add(new MenuBool("FlowersKalista.KillStealMenu.Q", "Use Q"));
@@ -92,8 +96,9 @@
                     MyLogic.KillStealMenu.Add(new MenuSeperator("FlowersKalista.KillStealMenu.ESettings", "-- E Settings"));
                     MyLogic.KillStealMenu.Add(new MenuBool("FlowersKalista.KillStealMenu.E", "Use E"));
                 }
+                MyLogic.Menu.Add(MyLogic.KillStealMenu);
 
-                MyLogic.MiscMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.MiscMenu", ":: Misc Settings"));
+                MyLogic.MiscMenu = new Menu("FlowersKalista.MiscMenu", ":: Misc Settings");
                 {
                     MyManaManager.AddFarmToMenu(MyLogic.MiscMenu);
 
@@ -108,8 +113,9 @@
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersKalista.MiscMenu.ForcusSettings", "-- Forcus Settings"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersKalista.MiscMenu.ForcusAttack", "Forcus Attack Passive Target"));
                 }
+                MyLogic.Menu.Add(MyLogic.MiscMenu);
 
-                MyLogic.DrawMenu = MyLogic.Menu.Add(new Menu("FlowersKalista.DrawMenu", ":: Draw Settings"));
+                MyLogic.DrawMenu = new Menu("FlowersKalista.DrawMenu", ":: Draw Settings");
                 {
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersKalista.DrawMenu.RangeSettings", "-- Spell Range"));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersKalista.DrawMenu.Q", "Draw Q Range", false));
@@ -119,6 +125,9 @@
 
                     MyManaManager.AddDrawToMenu(MyLogic.DrawMenu);
                 }
+                MyLogic.Menu.Add(MyLogic.DrawMenu);
+
+                MyLogic.Menu.Attach();
             }
             catch (Exception ex)
             {
