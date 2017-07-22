@@ -18,16 +18,16 @@
         {
             try
             {
-                MyLogic.Menu = new Menu("FlowersYasuo", "Flowers Yasuo", true)
+                MyLogic.Menu = new Menu("FlowersYasuo", "Flowers Yasuo", true);
                 {
-                    new MenuSeperator("CreditName", "Credit: NightMoon")
-                };
-                MyLogic.Menu.Attach();
+                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("ASDASDF"));
+                }
 
                 MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
                 MyLogic.Orbwalker.Attach(MyLogic.Menu);
 
-                MyLogic.ComboMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.ComboMenu", ":: Combo Settings"));
+                MyLogic.ComboMenu =new Menu("FlowersYasuo.ComboMenu", ":: Combo Settings");
                 {
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.QSettings", "-- Q Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Q", "Use Q"));
@@ -73,8 +73,9 @@
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Ignite", "Use Ignite"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Items", "Use Items"));
                 }
+                MyLogic.Menu.Add(MyLogic.ComboMenu);
 
-                MyLogic.HarassMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.HarassMenu", ":: Harass Settings"));
+                MyLogic.HarassMenu = new Menu("FlowersYasuo.HarassMenu", ":: Harass Settings");
                 {
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersYasuo.HarassMenu.QSettings", "-- Q Settings"));
                     MyLogic.HarassMenu.Add(new MenuBool("FlowersYasuo.HarassMenu.Q", "Use Q"));
@@ -85,8 +86,9 @@
                         Aimtec.SDK.Util.KeyCode.N, KeybindType.Toggle, true));
                     MyLogic.HarassMenu.Add(new MenuBool("FlowersYasuo.HarassMenu.AutoQ3", "Auto Q3 Harass", false));
                 }
+                MyLogic.Menu.Add(MyLogic.HarassMenu);
 
-                MyLogic.ClearMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.ClearMenu", ":: Clear Settings"));
+                MyLogic.ClearMenu = new Menu("FlowersYasuo.ClearMenu", ":: Clear Settings");
                 {
                     MyLogic.ClearMenu.Add(new MenuSeperator("FlowersYasuo.ClearMenu.LaneClearSettings", "-- LaneClear Settings"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearQ", "Use Q"));
@@ -100,8 +102,9 @@
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.JungleClearQ3", "Use Q3"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.JungleClearE", "Use E"));
                 }
+                MyLogic.Menu.Add(MyLogic.ClearMenu);
 
-                MyLogic.LastHitMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.LastHitMenu", ":: LastHit Settings"));
+                MyLogic.LastHitMenu = new Menu("FlowersYasuo.LastHitMenu", ":: LastHit Settings");
                 {
                     MyLogic.LastHitMenu.Add(new MenuSeperator("FlowersYasuo.LastHitMenu.QSettings", "-- Q Settings"));              
                     MyLogic.LastHitMenu.Add(new MenuBool("FlowersYasuo.LastHitMenu.Q", "Use Q"));
@@ -110,8 +113,9 @@
                     MyLogic.LastHitMenu.Add(new MenuSeperator("FlowersYasuo.LastHitMenu.ESettings", "-- E Settings"));
                     MyLogic.LastHitMenu.Add(new MenuBool("FlowersYasuo.LastHitMenu.E", "Use E", false));
                 }
+                MyLogic.Menu.Add(MyLogic.LastHitMenu);
 
-                MyLogic.FleeMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.FleeMenu", ":: Flee Settings"));
+                MyLogic.FleeMenu = new Menu("FlowersYasuo.FleeMenu", ":: Flee Settings");
                 {
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.QSettings", "-- Q Settings"));
                     MyLogic.FleeMenu.Add(new MenuBool("FlowersYasuo.FleeMenu.Q", "Use Q"));
@@ -127,8 +131,9 @@
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.WallJumpSettings", "-- Wall Jump Settings"));
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.WallJumpTODO", "TODO~"));//TODO
                 }
+                MyLogic.Menu.Add(MyLogic.FleeMenu);
 
-                MyLogic.KillStealMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.KillStealMenu", ":: KillSteal Settings"));
+                MyLogic.KillStealMenu = new Menu("FlowersYasuo.KillStealMenu", ":: KillSteal Settings");
                 {
                     MyLogic.KillStealMenu.Add(new MenuSeperator("FlowersYasuo.KillStealMenu.QSettings", "-- Q Settings"));
                     MyLogic.KillStealMenu.Add(new MenuBool("FlowersYasuo.KillStealMenu.Q", "Use Q"));
@@ -137,8 +142,9 @@
                     MyLogic.KillStealMenu.Add(new MenuSeperator("FlowersYasuo.KillStealMenu.ESettings", "-- E Settings"));
                     MyLogic.KillStealMenu.Add(new MenuBool("FlowersYasuo.KillStealMenu.E", "Use E"));
                 }
+                MyLogic.Menu.Add(MyLogic.KillStealMenu);
 
-                MyLogic.MiscMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.MiscMenu", ":: Misc Settings"));
+                MyLogic.MiscMenu = new Menu("FlowersYasuo.MiscMenu", ":: Misc Settings");
                 {
                     MyManaManager.AddFarmToMenu(MyLogic.MiscMenu);
 
@@ -158,13 +164,15 @@
                     MyLogic.MiscMenu.Add(new MenuKeyBind("FlowersYasuo.MiscMenu.EQFlashKey", "EQ Flash Key",
                         Aimtec.SDK.Util.KeyCode.A, KeybindType.Press));
                 }
+                MyLogic.Menu.Add(MyLogic.MiscMenu);
 
-                MyLogic.EvadeMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.EvadeMenu", ":: Evade Settings"));
+                MyLogic.EvadeMenu = new Menu("FlowersYasuo.EvadeMenu", ":: Evade Settings");
                 {
                     MyLogic.EvadeMenu.Add(new MenuSeperator("FlowersYasuo.EvadeMenu.TODO", "TODO~"));//TODO
                 }
+                MyLogic.Menu.Add(MyLogic.EvadeMenu);
 
-                MyLogic.DrawMenu = MyLogic.Menu.Add(new Menu("FlowersYasuo.DrawMenu", ":: Draw Settings"));
+                MyLogic.DrawMenu = new Menu("FlowersYasuo.DrawMenu", ":: Draw Settings");
                 {
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersYasuo.DrawMenu.RangeSettings", "-- Spell Range"));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersYasuo.DrawMenu.Q", "Draw Q Range", false));
@@ -181,6 +189,9 @@
 
                     MyManaManager.AddDrawToMenu(MyLogic.DrawMenu);
                 }
+                MyLogic.Menu.Add(MyLogic.DrawMenu);
+
+                MyLogic.Menu.Attach();
             }
             catch (Exception ex)
             {
