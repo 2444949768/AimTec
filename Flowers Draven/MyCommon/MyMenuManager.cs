@@ -18,16 +18,16 @@
         {
             try
             {
-                MyLogic.Menu = new Menu("FlowersDraven", "Flowers Draven", true)
+                MyLogic.Menu = new Menu("FlowersDraven", "Flowers Draven", true);
                 {
-                    new MenuSeperator("CreditName", "Credit: NightMoon")
-                };
-                MyLogic.Menu.Attach();
+                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("ASDASDF"));
+                }
 
                 MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
                 MyLogic.Orbwalker.Attach(MyLogic.Menu);
 
-                MyLogic.AxeMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.AxeMenu", ":: Axe Settings"));
+                MyLogic.AxeMenu = new Menu("FlowersDraven.AxeMenu", ":: Axe Settings");
                 {
                     MyLogic.AxeMenu.Add(new MenuList("FlowersDraven.AxeMenu.CatchMode", "Catch Axe Mode: ",
                         new[] {"All", "Only Combo", "Off"}, 0));
@@ -50,8 +50,9 @@
 
                     cancel.OnValueChanged += MyEventManager.OnCancelValueChange;
                 }
+                MyLogic.Menu.Add(MyLogic.AxeMenu);
 
-                MyLogic.ComboMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.ComboMenu", ":: Combo Settings"));
+                MyLogic.ComboMenu = new Menu("FlowersDraven.ComboMenu", ":: Combo Settings");
                 {
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersDraven.ComboMenu.QSettings", "-- Q Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersDraven.ComboMenu.Q", "Use Q"));
@@ -66,8 +67,9 @@
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersDraven.ComboMenu.RSolo", "Use R| Solo Ks Mode"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersDraven.ComboMenu.RTeam", "Use R| Team Fight"));
                 }
+                MyLogic.Menu.Add(MyLogic.ComboMenu);
 
-                MyLogic.HarassMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.HarassMenu", ":: Harass Settings"));
+                MyLogic.HarassMenu = new Menu("FlowersDraven.HarassMenu", ":: Harass Settings");
                 {
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersDraven.HarassMenu.QSettings", "-- Q Settings"));
                     MyLogic.HarassMenu.Add(new MenuBool("FlowersDraven.HarassMenu.Q", "Use Q"));
@@ -79,8 +81,9 @@
                     MyLogic.HarassMenu.Add(new MenuSlider("FlowersDraven.HarassMenu.Mana",
                         "When Player ManaPercent >= x%", 60, 1, 99));
                 }
+                MyLogic.Menu.Add(MyLogic.HarassMenu);
 
-                MyLogic.ClearMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.ClearMenu", ":: Clear Settings"));
+                MyLogic.ClearMenu = new Menu("FlowersDraven.ClearMenu", ":: Clear Settings");
                 {
                     MyLogic.ClearMenu.Add(new MenuSeperator("FlowersDraven.ClearMenu.LaneClearSettings", "-- LaneClear Settings"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersDraven.ClearMenu.LaneClearQ", "Use Q"));
@@ -94,8 +97,9 @@
                     MyLogic.ClearMenu.Add(new MenuSlider("FlowersDraven.ClearMenu.JungleClearMana",
                         "When Player ManaPercent >= x%", 30, 1, 99));
                 }
+                MyLogic.Menu.Add(MyLogic.ClearMenu);
 
-                MyLogic.KillStealMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.KillStealMenu", ":: KillSteal Settings"));
+                MyLogic.KillStealMenu = new Menu("FlowersDraven.KillStealMenu", ":: KillSteal Settings");
                 {
                     MyLogic.KillStealMenu.Add(new MenuSeperator("FlowersDraven.KillStealMenu.ESettings", "-- E Settings"));
                     MyLogic.KillStealMenu.Add(new MenuBool("FlowersDraven.KillStealMenu.E", "Use E"));
@@ -104,8 +108,9 @@
                     MyLogic.KillStealMenu.Add(new MenuBool("FlowersDraven.KillStealMenu.R", "Use R"));
                     AddTargetList(MyLogic.KillStealMenu, "FlowersDraven.KillStealMenu.UltKS_");
                 }
+                MyLogic.Menu.Add(MyLogic.KillStealMenu);
 
-                MyLogic.MiscMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.MiscMenu", ":: Misc Settings"));
+                MyLogic.MiscMenu = new Menu("FlowersDraven.MiscMenu", ":: Misc Settings");
                 {
                     MyManaManager.AddFarmToMenu(MyLogic.MiscMenu);
 
@@ -125,19 +130,22 @@
                     MyLogic.MiscMenu.Add(new MenuKeyBind("FlowersDraven.MiscMenu.SemiRKey", "Semi R Key",
                         Aimtec.SDK.Util.KeyCode.T, KeybindType.Press));
                 }
+                MyLogic.Menu.Add(MyLogic.MiscMenu);
 
-                MyLogic.DrawMenu = MyLogic.Menu.Add(new Menu("FlowersDraven.DrawMenu", ":: Draw Settings"));
+                MyLogic.DrawMenu = new Menu("FlowersDraven.DrawMenu", ":: Draw Settings");
                 {
+                    MyManaManager.AddDrawToMenu(MyLogic.DrawMenu);
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersDraven.DrawMenu.RangeSettings", "-- Spell Range"));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersDraven.DrawMenu.E", "Draw E Range", false));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersDraven.DrawMenu.R", "Draw R Range", false));
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersDraven.DrawMenu.AxeSettings", "-- Draw Axe"));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersDraven.DrawMenu.AxeRange", "Draw Catch Axe Range", false));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersDraven.DrawMenu.AxePosition", "Draw Axe Position", false));
-                    MyManaManager.AddDrawToMenu(MyLogic.DrawMenu);
                 }
+                MyLogic.Menu.Add(MyLogic.DrawMenu);
+          
 
-                
+                MyLogic.Menu.Attach();
             }
             catch (Exception ex)
             {

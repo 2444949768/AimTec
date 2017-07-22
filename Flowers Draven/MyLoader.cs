@@ -3,6 +3,7 @@
     #region 
 
     using Aimtec;
+    using Aimtec.SDK.Events;
 
     #endregion
 
@@ -10,7 +11,7 @@
     {
         public static void Main()
         {
-            Game.OnStart += delegate
+            GameEvents.GameStart += () =>
             {
                 if (ObjectManager.GetLocalPlayer().ChampionName != "Draven")
                 {

@@ -20,7 +20,7 @@
         internal static SpellSlot IgniteSlot { get; set; } = SpellSlot.Unknown;
         internal static SpellSlot FlashSlot { get; set; } = SpellSlot.Unknown;
 
-        internal static Obj_AI_Hero Me { get; set; } = ObjectManager.GetLocalPlayer();
+        internal static Obj_AI_Hero Me = ObjectManager.GetLocalPlayer();
 
         internal static Menu Menu { get; set; }
         internal static Menu AxeMenu { get; set; }

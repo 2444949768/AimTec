@@ -55,7 +55,7 @@
             {
                 if (AxeMenu["FlowersDraven.AxeMenu.CancelCatch"].Enabled)
                 {
-                    if (Args.GetNewValue<MenuKeyBind>().Enabled)
+                    if (AxeMenu["FlowersDraven.AxeMenu.CancelKey1"].As<MenuKeyBind>().Enabled)
                     {
                         if (Game.TickCount - lastCatchTime > 1800)
                         {
@@ -111,6 +111,12 @@
         {
             try
             {
+                if (AxeList.Count == 0)
+                {
+                    OrbwalkerPoint = Game.CursorPos;
+                    return;
+                }
+
                 if (AxeMenu["FlowersDraven.AxeMenu.CatchMode"].Value == 2 ||
                     AxeMenu["FlowersDraven.AxeMenu.CatchMode"].Value == 1 && Orbwalker.Mode != OrbwalkingMode.Combo)
                 {
@@ -647,7 +653,7 @@
                         if (Orbwalker.Mode == OrbwalkingMode.Combo)
                         {
                             if (ComboMenu["FlowersDraven.ComboMenu.Q"].Enabled &&
-                                ComboMenu["FlowersDraven.AxeMenu.CatchCount"].Value >= AxeCount)
+                                AxeMenu["FlowersDraven.AxeMenu.CatchCount"].Value >= AxeCount)
                             {
                                 Q.Cast();
                             }
