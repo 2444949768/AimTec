@@ -4,17 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CED32DCD-9FF6-4441-9E89-A7BC6FE67E79}</ProjectGuid>
+    <ProjectGuid>{3296372F-95CB-4FF0-B964-D657CCE63436}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Flowers_Kalista</RootNamespace>
-    <AssemblyName>Flowers Kalista</AssemblyName>
+    <RootNamespace>Flowers_Draven</RootNamespace>
+    <AssemblyName>Flowers Draven</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>

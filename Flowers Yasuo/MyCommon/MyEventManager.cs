@@ -1,4 +1,5 @@
-﻿using Aimtec;
+﻿using System.Collections.Generic;
+using Aimtec;
 using Aimtec.SDK;
 
 namespace Flowers_Yasuo.MyCommon
@@ -9,6 +10,7 @@ namespace Flowers_Yasuo.MyCommon
 
     using System;
     using Aimtec.SDK.Orbwalking;
+    using Aimtec.SDK.Extensions;
 
     #endregion
 
@@ -23,15 +25,18 @@ namespace Flowers_Yasuo.MyCommon
                 SpellBook.OnStopCast += OnStopCast;
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Obj_AI_Base.OnPlayAnimation += OnPlayAnimation;
-                Orbwalker.PostAttack += OnPostAttack;
-                //Interrupt
-                //Gapcloser
+                Orbwalker.PreAttack += OnPreAttack;
                 Render.OnRender += OnRender;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error in MyEventManager.Initializer." + ex);
             }
+        }
+
+        private static void OnPreAttack(object sender, PreAttackEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private static void OnStopCast(Obj_AI_Base sender, SpellBookStopCastEventArgs Args)

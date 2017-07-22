@@ -1,20 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Aimtec;
-using Aimtec.SDK;
-using Aimtec.SDK.Extensions;
-using Aimtec.SDK.Prediction.Skillshots;
-using Aimtec.SDK.Util;
-using Aimtec.SDK.Util.Cache;
-using Flowers_Yasuo.MyBase;
-
-namespace Flowers_Yasuo.MyCommon
+﻿namespace Flowers_Yasuo.MyCommon
 {
+    #region
+
+    using Aimtec;
+    using Aimtec.SDK.Extensions;
+    using Aimtec.SDK.Prediction.Skillshots;
+    using Aimtec.SDK.Util.Cache;
+
+    using Flowers_Yasuo.MyBase;
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    #endregion
+
     internal static class MyExtraManager
     {
+        internal static bool IsFacing(this Obj_AI_Base unit, Vector3 position)
+        {
+            return unit != null && unit.IsValid &&
+                   unit.Orientation.To2D().AngleBetween((position - unit.Position).To2D()) < 90;
+        }
+
+        internal static bool IsFacing(this Obj_AI_Base unit, Obj_AI_Base target)
+        {
+            return unit != null && target != null && unit.IsValid && target.IsValid &&
+                   unit.Orientation.To2D().Perpendicular().AngleBetween((target.Position - unit.Position).To2D())
+                   < 90;
+        }
+
         internal static float DistanceToPlayer(this Obj_AI_Base source)
         {
             return ObjectManager.GetLocalPlayer().Distance(source);
@@ -93,7 +108,7 @@ namespace Flowers_Yasuo.MyCommon
 
         internal static bool SafetyCheck(Obj_AI_Base unit)
         {
-            var pos = GetDashPos(unit);
+            //var pos = GetDashPos(unit);
 
             return true; //TODO//YasuoMenuInit.ComboETurret && MyEvade.Program.IsSafe(pos).IsSafe || !pos.PointUnderEnemyTurret();
         }
@@ -101,7 +116,7 @@ namespace Flowers_Yasuo.MyCommon
         internal static Obj_AI_Base GetNearObj(Obj_AI_Base target = null, bool inQCir = false)
         {
             var pos = target != null
-                ? Prediction.GetPrediction(target, 7.5f, 0, 1025f).UnitPosition
+                ? Prediction.GetPrediction(target, 0.75f, 0, 1025f).UnitPosition
                 : Game.CursorPos;
             var obj = new List<Obj_AI_Base>();
             obj.AddRange(GameObjects.Minions.Where(x => x.IsValidTarget(475) && !x.IsAlly && x.IsMinion));
@@ -181,8 +196,8 @@ namespace Flowers_Yasuo.MyCommon
 
                 if (dash != null && dash.DistanceToPlayer() <= 475 && CanCastE(dash) &&
                     target.DistanceToPlayer() >= GapcloserDis &&
-                    target.Position.Distance(PosAfterE(dash)) <= target.DistanceToPlayer() /*&&
-                    ObjectManager.GetLocalPlayer().IsFacing(dash)*/ && (UnderTurret || !UnderTower(PosAfterE(dash))))
+                    target.Position.Distance(PosAfterE(dash)) <= target.DistanceToPlayer() &&
+                    ObjectManager.GetLocalPlayer().IsFacing(dash) && (UnderTurret || !UnderTower(PosAfterE(dash))))
                     ObjectManager.GetLocalPlayer().SpellBook.CastSpell(SpellSlot.E, dash);
             }
         }
@@ -213,7 +228,7 @@ namespace Flowers_Yasuo.MyCommon
                             .MinOrDefault(x => PosAfterE(x).Distance(Game.CursorPos));
 
                     if (dash != null && dash.DistanceToPlayer() <= 475 && CanCastE(dash) &&
-                        target.DistanceToPlayer() >= GapcloserDis &&/* ObjectManager.GetLocalPlayer().IsFacing(dash) &&*/
+                        target.DistanceToPlayer() >= GapcloserDis && ObjectManager.GetLocalPlayer().IsFacing(dash) &&
                         (UnderTurret || !UnderTower(PosAfterE(dash))))
                         ObjectManager.GetLocalPlayer().SpellBook.CastSpell(SpellSlot.E, dash);
                 }
@@ -272,19 +287,12 @@ namespace Flowers_Yasuo.MyCommon
         internal static Vector3 PosAfterE(Obj_AI_Base target)
         {
             if (target.IsValidTarget())
-                return /*ObjectManager.GetLocalPlayer().IsFacing(target)
-                    ? ObjectManager.GetLocalPlayer().ServerPosition.MyExtend(target.ServerPosition, 475f)
-                    : */ObjectManager.GetLocalPlayer().ServerPosition.Extend(Prediction.GetPrediction(target, 0.35f).CastPosition, 475f);
+                return ObjectManager.GetLocalPlayer().IsFacing(target)
+                    ? ObjectManager.GetLocalPlayer().ServerPosition.Extend(target.ServerPosition, 475f)
+                    : ObjectManager.GetLocalPlayer().ServerPosition.Extend(Prediction.GetPrediction(target, 0.35f).CastPosition, 475f);
 
             return Vector3.Zero;
         }
     }
 
 }
-/*
-suggestion:
-1.Add Item.CanUseItem(ItemID)
-2.Add target.IsFacing(anothertarget)
-3.Vector3.IsValid
-4.Cache.GameObjects Add Standalone Jungle Part
- */

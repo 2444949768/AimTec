@@ -1,4 +1,3 @@
 # AimTec
-
-WIP:
-Yasuo
+Done: Draven (Not Test), Kalista (Not Test)
+WIP: Yasuo
