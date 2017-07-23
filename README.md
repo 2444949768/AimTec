@@ -6,9 +6,9 @@ Draven (Working)
 
 WIP: 
 
-Kalista (Not Test)
+Kalista (Need Test)
 
 Riven
 
-Yasuo
+Yasuo (Need Test)
 

@@ -3,6 +3,7 @@
     #region
 
     using Aimtec;
+    using Aimtec.SDK.Extensions;
     using Aimtec.SDK.Menu;
     using Aimtec.SDK.Orbwalking;
 
@@ -34,6 +35,11 @@
         internal static Menu EvadeMenu { get; set; }
         internal static Menu DrawMenu { get; set; }
 
-        internal static Vector3 YasuolastEPos { get; set; }
+        internal static Vector3 YasuolastEPos { get; set; } = Vector3.Zero;
+        internal static int YasuolastETime { get; set; } = 0;
+        internal static bool isYasuoDashing { get; set; } = false;
+        internal static bool HaveQ3 => ObjectManager.GetLocalPlayer().HasBuff("YasuoQ3W");
+        internal static bool IsMyDashing { get; set; } = false;
+        internal static int YasuolastEQFlashTime { get; set; } = 0;
     }
 }

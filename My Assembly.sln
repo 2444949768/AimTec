@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowers Kalista", "Flowers 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowers Yasuo", "Flowers Yasuo\Flowers Yasuo.csproj", "{B7924DE0-BDB7-4ED9-A77C-1BFE31C75AF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowers Riven", "Flowers Riven\Flowers Riven.csproj", "{F0C16FED-6195-45F5-969C-2654B4966140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B7924DE0-BDB7-4ED9-A77C-1BFE31C75AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7924DE0-BDB7-4ED9-A77C-1BFE31C75AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7924DE0-BDB7-4ED9-A77C-1BFE31C75AF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0C16FED-6195-45F5-969C-2654B4966140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0C16FED-6195-45F5-969C-2654B4966140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0C16FED-6195-45F5-969C-2654B4966140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0C16FED-6195-45F5-969C-2654B4966140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

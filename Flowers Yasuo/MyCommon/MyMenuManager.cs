@@ -31,6 +31,7 @@
                 {
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.QSettings", "-- Q Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Q", "Use Q"));
+                    MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Q3", "Use Q3"));
 
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.ESettings", "-- E Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.E", "Use E"));
@@ -71,7 +72,6 @@
 
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.OtherSettings", "-- Other Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Ignite", "Use Ignite"));
-                    MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Items", "Use Items"));
                 }
                 MyLogic.Menu.Add(MyLogic.ComboMenu);
 
@@ -92,10 +92,9 @@
                 {
                     MyLogic.ClearMenu.Add(new MenuSeperator("FlowersYasuo.ClearMenu.LaneClearSettings", "-- LaneClear Settings"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearQ", "Use Q"));
-                    MyLogic.ClearMenu.Add(new MenuSlider("FlowersYasuo.ClearMenu.LaneClearQ3", "Use Q3| When Min Hit Count >= x", 3, 1, 5));
+                    MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearQ3", "Use Q3"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearE", "Use E"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearEQ", "Use EQ"));
-                    MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearEQ3", "Use EQ3"));
 
                     MyLogic.ClearMenu.Add(new MenuSeperator("FlowersYasuo.ClearMenu.JungleClearSettings", "-- JungleClear Settings"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.JungleClearQ", "Use Q"));
@@ -117,8 +116,11 @@
 
                 MyLogic.FleeMenu = new Menu("FlowersYasuo.FleeMenu", ":: Flee Settings");
                 {
+                    MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.KeySettings", "-- Key Settings"));
+                    MyLogic.FleeMenu.Add(new MenuKeyBind("FlowersYasuo.FleeMenu.FleeKey", "Flee Key",
+                        Aimtec.SDK.Util.KeyCode.Z, KeybindType.Press));
+
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.QSettings", "-- Q Settings"));
-                    MyLogic.FleeMenu.Add(new MenuBool("FlowersYasuo.FleeMenu.Q", "Use Q"));
                     MyLogic.FleeMenu.Add(new MenuBool("FlowersYasuo.FleeMenu.Q3", "Use Q3"));
 
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.ESettings", "-- E Settings"));
@@ -126,7 +128,6 @@
 
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.EQSettings", "-- EQ Settings"));
                     MyLogic.FleeMenu.Add(new MenuBool("FlowersYasuo.FleeMenu.EQ", "Use EQ"));
-                    MyLogic.FleeMenu.Add(new MenuBool("FlowersYasuo.FleeMenu.EQ3", "Use EQ3"));
 
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.WallJumpSettings", "-- Wall Jump Settings"));
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersYasuo.FleeMenu.WallJumpTODO", "TODO~"));//TODO
@@ -149,8 +150,8 @@
                     MyManaManager.AddFarmToMenu(MyLogic.MiscMenu);
 
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersYasuo.MiscMenu.QSettings", "-- Q Settings"));
-                    MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.Q3Interrupt", "Use Q3| Interrupt Danger Spell"));
-                    MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.Q3AntiGapcloser", "Use Q3| Anti Gapcloser"));
+                    //MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.Q3Interrupt", "Use Q3| Interrupt Danger Spell"));
+                    //MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.Q3AntiGapcloser", "Use Q3| Anti Gapcloser"));
                     MyLogic.MiscMenu.Add(new MenuKeyBind("FlowersYasuo.MiscMenu.StackQ", "Stack Q Key",
                         Aimtec.SDK.Util.KeyCode.T, KeybindType.Toggle));
 
@@ -158,7 +159,7 @@
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.AutoR", "Auto R"));
                     MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRCount", "Auto R| Min Hit Count >= x", 3, 1, 5));
                     MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRAlly", "Auto R| My Allies Count >= x", 2, 1, 5));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRCount", "Auto R| My HealthPercednt >= x", 50, 1, 99));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRHP", "Auto R| My HealthPercednt >= x", 50, 1, 99));
 
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersYasuo.MiscMenu.EQSettings", "-- EQ Settings"));
                     MyLogic.MiscMenu.Add(new MenuKeyBind("FlowersYasuo.MiscMenu.EQFlashKey", "EQ Flash Key",
