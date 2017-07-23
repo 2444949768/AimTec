@@ -151,13 +151,13 @@
                         return;
                     }
 
-                    if (AxeMenu["FlowersDraven.AxeMenu.NotCatchKS"].Enabled)
+                    if (AxeMenu["FlowersDraven.AxeMenu.NotCatchKS"].Enabled && Orbwalker.Mode == OrbwalkingMode.Combo)
                     {
                         var target = TargetSelector.GetTarget(800, true);
 
-                        if (target != null && target.IsValidTarget() &&
+                        if (target != null && target.IsValidTarget(800) &&
                             target.DistanceToPlayer() > target.BoundingRadius + Me.BoundingRadius + 200 &&
-                            target.Health < Me.GetAutoAttackDamage(target) * 2.5)
+                            target.Health < Me.GetAutoAttackDamage(target) * 2.5 - 80)
                         {
                             OrbwalkerPoint = Game.CursorPos;
                             return;
