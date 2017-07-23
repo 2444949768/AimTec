@@ -16,7 +16,7 @@
     {
         internal static float ManaPercent(this Obj_AI_Base target)
         {
-            if (target.Mana > 0)
+            if (target.MaxMana > 0)
             {
                 return target.Mana / target.MaxMana * 100f;
             }
@@ -26,7 +26,7 @@
 
         internal static float HealthPercent(this Obj_AI_Base target)
         {
-            if (target.Health > 0)
+            if (target.MaxHealth > 0)
             {
                 return target.Health / target.MaxHealth * 100f;
             }
