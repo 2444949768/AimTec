@@ -467,7 +467,10 @@
                 {
                     if (ClearMenu["FlowersDraven.ClearMenu.LaneClearQ"].Enabled && Q.Ready && AxeCount < 2 && Orbwalker.CanAttack())
                     {
-                        var minions = GameObjects.EnemyMinions.Where(x => x.IsValidTarget(600) && x.Health > 5).ToArray();
+                        var minions =
+                            GameObjects.EnemyMinions.Where(
+                                    x => x.IsValidTarget(600) && x.MaxHealth > 5 && x.Team != GameObjectTeam.Neutral)
+                                .ToArray();
 
                         if (minions.Any() && minions.Length >= 2)
                         {
@@ -488,7 +491,7 @@
             {
                 if (Me.ManaPercent() >= ClearMenu["FlowersDraven.ClearMenu.JungleClearMana"].Value)
                 {
-                    var mobs = GameObjects.Minions.Where(x => x.IsValidTarget(E.Range) && x.Health > 5 && x.Team == GameObjectTeam.Neutral).ToArray();
+                    var mobs = GameObjects.EnemyMinions.Where(x => x.IsValidTarget(E.Range) && x.MaxHealth > 5 && x.Team == GameObjectTeam.Neutral).ToArray();
 
                     if (mobs.Any())
                     {
