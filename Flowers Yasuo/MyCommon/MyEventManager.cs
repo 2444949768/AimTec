@@ -246,7 +246,7 @@
                     {
                         if (target.IsValidTarget(Q.Range) && !target.IsUnKillable())
                         {
-                            Q.Cast(target);
+                            CastQ(target);
                             return;
                         }
                     }
@@ -377,7 +377,7 @@
 
                     if (target != null && target.IsValidTarget(Q.Range))
                     {
-                        Q.Cast(target);
+                        CastQ(target);
                     }
                 }
             }
@@ -530,7 +530,7 @@
                             if (ComboMenu["FlowersYasuo.ComboMenu.Q"].Enabled && !HaveQ3 &&
                                 target.IsValidTarget(Q.Range))
                             {
-                                Q.Cast(target);
+                                CastQ(target);
                             }
 
                             if (ComboMenu["FlowersYasuo.ComboMenu.Q3"].Enabled && HaveQ3 &&
@@ -630,11 +630,11 @@
 
                     if (target != null && target.IsValidTarget(Q.Range))
                     {
-                        Q.Cast(target);
+                        CastQ(target);
                     }
                 }
 
-                if (HarassMenu["FlowersYasuo.HarassMenu.Q3"].Enabled && Q3.Ready && !HaveQ3)
+                if (HarassMenu["FlowersYasuo.HarassMenu.Q3"].Enabled && Q3.Ready && HaveQ3)
                 {
                     CastQ3();
                 }
@@ -1018,7 +1018,9 @@
                 var castPos = Vector3.Zero;
 
                 if (!targets.Any())
+                {
                     return;
+                }
 
                 foreach (var pred in
                     targets.Select(i => Q3.GetPrediction(i))
@@ -1036,6 +1038,23 @@
                     Q3.Cast(castPos);
                 }
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in MyEventManager.CastQ3." + ex);
+            }
+        }
+
+        internal static void CastQ(Obj_AI_Base target)
+        {
+            try
+            {
+                var qPred = Q.GetPrediction(target);
+
+                if (qPred.HitChance >= Aimtec.SDK.Prediction.Skillshots.HitChance.Medium)
+                {
+                    Q.Cast(qPred.UnitPosition);
+                }
             }
             catch (Exception ex)
             {
