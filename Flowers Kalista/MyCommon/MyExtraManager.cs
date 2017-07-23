@@ -139,9 +139,9 @@
                 var damage = 0d;
 
                 damage += spell.Ready
-                    ? ObjectManager.GetLocalPlayer().GetSpellDamage(target, spell.Slot) +
+                    ? ObjectManager.GetLocalPlayer().GetSpellDamage(target, SpellSlot.E) +
                       ObjectManager.GetLocalPlayer()
-                          .GetSpellDamage(target, spell.Slot, Aimtec.SDK.Damage.JSON.DamageStage.Buff) //Kalista E
+                          .GetSpellDamage(target, SpellSlot.E, Aimtec.SDK.Damage.JSON.DamageStage.Buff) //Kalista E
                     : 0d + (havetoler ? tolerDMG : 0) - target.HPRegenRate;
 
                 if (target.UnitSkinName == "Moredkaiser")
@@ -173,6 +173,30 @@
             }
 
             return 0d;
+        }
+
+        internal static bool isBigMob(this Obj_AI_Base mob)
+        {
+            switch (mob.UnitSkinName)
+            {
+                case "SRU_Baron":
+                case "SRU_Blue":
+                case "SRU_Dragon_Elder":
+                case "SRU_Dragon_Fire":
+                case "SRU_Dragon_Air":
+                case "SRU_Dragon_Earth":
+                case "SRU_Dragon_Water":
+                case "SRU_Red":
+                case "SRU_RiftHerald":
+                /*case "SRU_Murkwolf":
+                case "SRU_Gromp":
+                case "Sru_Crab":
+                case "SRU_Razorbeak":
+                case "SRU_Krug":*/
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         internal static float DistanceToPlayer(this Obj_AI_Base source)

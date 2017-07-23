@@ -33,10 +33,5 @@
 
         internal static int lastWTime { get; set; } = 0;
         internal static int lastETime { get; set; } = 0;
-
-        internal static readonly string[] MobsName = {
-            "sru_baronspawn", "sru_blue", "sru_dragon_water", "sru_dragon_fire", "sru_dragon_earth", "sru_dragon_air",
-            "sru_dragon_elder", "sru_red", "sru_riftherald"
-        };
     }
 }

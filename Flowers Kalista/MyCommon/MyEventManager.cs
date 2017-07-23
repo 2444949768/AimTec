@@ -25,6 +25,8 @@
         {
             try
             {
+                var healthPrediction = new Aimtec.SDK.Prediction.Health.HealthPrediction();
+
                 Game.OnUpdate += OnUpdate;
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Orbwalker.OnNonKillableMinion += OnNonKillableMinion;
@@ -160,15 +162,16 @@
                 {
                     foreach (
                         var mob in
-                        GameObjects.Minions.Where(
+                        GameObjects.EnemyMinions.Where(
                             x =>
-                                x != null && x.IsValidTarget(E.Range) && x.Team == GameObjectTeam.Neutral &&
-                                MobsName.Contains(x.UnitSkinName.ToLower())))
+                                x != null && x.IsValidTarget(E.Range) && x.MaxHealth > 5 && x.isBigMob()))
                     {
-                        if (mob.Buffs.Any(a => a.Name.ToLower().Contains("kalistaexpungemarker")) &&
-                            mob.IsValidTarget(E.Range) && mob.Health < E.GetRealDamage(mob))
+                        if (mob.Buffs.Any(a => a.Name.ToLower().Contains("kalistaexpungemarker")) && mob.IsValidTarget(E.Range))
                         {
-                            E.Cast();
+                            if (mob.Health < E.GetRealDamage(mob))
+                            {
+                                E.Cast();
+                            }
                         }
                     }
                 }
@@ -187,6 +190,8 @@
 
                 if (target != null && target.IsValidTarget(Q.Range))
                 {
+                    ForcusAttack(target);
+
                     if (ComboMenu["FlowersKalista.ComboMenu.Q"].Enabled && Q.Ready && target.IsValidTarget(Q.Range) && !target.IsValidAutoRange())
                     {
                         var qPred = Q.GetPrediction(target);
@@ -224,14 +229,24 @@
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in MyEventManager.ComboEvent." + ex);
+            }
+        }
 
-                var orbTarget = Orbwalker.GetOrbwalkingTarget();
-
-                if (orbTarget == null && Me.CountEnemyHeroesInRange(Me.AttackRange + Me.BoundingRadius + 380) > 0)
+        private static void ForcusAttack(Obj_AI_Hero target)
+        {
+            try
+            {
+                if (!GameObjects.EnemyHeroes.All(x => x.IsValidAutoRange()) &&
+                    Me.CountEnemyHeroesInRange(Me.AttackRange + Me.BoundingRadius + 380) > 0)
                 {
+
                     var AttackUnit =
-                        GameObjects.Minions.Where(x => x.IsValidTarget(Me.GetFullAttackRange(x)))
-                            .OrderBy(x => x.DistanceToPlayer())
+                        GameObjects.EnemyMinions.Where(x => x.IsValidTarget(Me.GetFullAttackRange(x)))
+                            .OrderBy(x => x.Distance(target))
                             .FirstOrDefault();
 
                     if (AttackUnit != null && !AttackUnit.IsDead && AttackUnit.IsValidAutoRange())
@@ -361,12 +376,12 @@
             {
                 if (Me.ManaPercent() >= ClearMenu["FlowersKalista.ClearMenu.JungleClearMana"].Value)
                 {
-                    if (ClearMenu["FlowersKalista.ClearMenu.JungleClearE"].As<MenuSliderBool>().Enabled && E.Ready &&
+                    if (ClearMenu["FlowersKalista.ClearMenu.JungleClearE"].Enabled && E.Ready &&
                         Game.TickCount - lastETime > 500 + Game.Ping)
                     {
                         var KSCount =
-                            GameObjects.Minions.Where(
-                                    x => x.IsValidTarget(E.Range) && x.Team == GameObjectTeam.Neutral)
+                            GameObjects.EnemyMinions.Where(
+                                    x => x.IsValidTarget(E.Range) && x.Team == GameObjectTeam.Neutral && x.MaxHealth > 5)
                                 .Where(x => x.Buffs.Any(a => a.Name.ToLower().Contains("kalistaexpungemarker")))
                                 .Count(x => x.Health < E.GetRealDamage(x));
 
@@ -379,7 +394,7 @@
                     if (ClearMenu["FlowersKalista.ClearMenu.JungleClearQ"].Enabled && Q.Ready)
                     {
                         var qMob =
-                            GameObjects.Minions.Where(x => x.IsValidTarget(Q.Range) && x.Team == GameObjectTeam.Neutral)
+                            GameObjects.EnemyMinions.Where(x => x.IsValidTarget(Q.Range) && x.Team == GameObjectTeam.Neutral && x.MaxHealth > 5)
                                 .OrderByDescending(x => x.Health)
                                 .FirstOrDefault();
 
@@ -403,8 +418,7 @@
                 if (Me.ManaPercent() >= LastHitMenu["FlowersKalista.LastHitMenu.Mana"].Value &&
                     LastHitMenu["FlowersKalista.LastHitMenu.E"].Enabled && E.Ready)
                 {
-                    if (
-                        GameObjects.EnemyMinions.Any(
+                    if (GameObjects.EnemyMinions.Any(
                             x =>
                                 x.IsValidTarget(E.Range) &&
                                 x.Buffs.Any(
@@ -430,8 +444,6 @@
                 {
                     return;
                 }
-
-                //Console.WriteLine(Args.SpellData.Name);
 
                 switch (Args.SpellData.Name.ToLower())
                 {
@@ -564,7 +576,7 @@
                                      (Orbwalker.Mode == OrbwalkingMode.Mixed ||
                                       Orbwalker.Mode == OrbwalkingMode.Laneclear && MyManaManager.SpellHarass))
                             {
-                                if (ComboMenu["FlowersKalista.HarassMenu.Q"].Enabled)
+                                if (HarassMenu["FlowersKalista.HarassMenu.Q"].Enabled)
                                 {
                                     var qPred = Q.GetPrediction(target);
 
@@ -577,15 +589,17 @@
                         }
                         break;
                     case GameObjectType.obj_AI_Minion:
-                        var mob = Args.Target as Obj_AI_Minion;
-
-                        if (mob != null && !mob.IsDead && mob.IsValidTarget(Q.Range) && mob.Team == GameObjectTeam.Neutral)
+                        if (MyManaManager.SpellFarm && Orbwalker.Mode == OrbwalkingMode.Laneclear &&
+                            Me.ManaPercent() >= ClearMenu["FlowersKalista.ClearMenu.JungleClearMana"].Value)
                         {
-                            if (MyManaManager.SpellFarm &&
-                                Me.ManaPercent() >= ClearMenu["FlowersKalista.ClearMenu.JungleClearMana"].Value &&
-                                ClearMenu["FlowersKalista.ClearMenu.JungleClearQ"].Enabled)
+                            var mob = Args.Target as Obj_AI_Minion;
+
+                            if (mob != null && !mob.IsDead && mob.IsValidTarget(Q.Range) && mob.Team == GameObjectTeam.Neutral)
                             {
-                                Q.Cast(mob);
+                                if (ClearMenu["FlowersKalista.ClearMenu.JungleClearQ"].Enabled)
+                                {
+                                    Q.Cast(mob);
+                                }
                             }
                         }
                         break;
