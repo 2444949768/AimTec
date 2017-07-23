@@ -178,7 +178,6 @@
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersYasuo.DrawMenu.RangeSettings", "-- Spell Range"));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersYasuo.DrawMenu.Q", "Draw Q Range", false));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersYasuo.DrawMenu.Q3", "Draw Q3 Range", false));
-                    MyLogic.DrawMenu.Add(new MenuBool("FlowersYasuo.DrawMenu.W", "Draw W Range", false));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersYasuo.DrawMenu.E", "Draw E Range", false));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersYasuo.DrawMenu.R", "Draw R Range", false));
 

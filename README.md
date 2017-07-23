@@ -5,10 +5,11 @@ Draven (Working)
 
 Kalista (Working)
 
+Yasuo (Working)
+
 
 WIP: 
 
 Riven
 
-Yasuo (Need Test)
 

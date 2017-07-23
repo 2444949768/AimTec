@@ -65,8 +65,8 @@
             for (var i = 1; i <= 360; i++)
             {
                 var angle = i * 2 * Math.PI / 360;
-                var point = new Vector2(ObjectManager.GetLocalPlayer().Position.X + 425f * (float)Math.Cos(angle),
-                    ObjectManager.GetLocalPlayer().Position.Y + 425f * (float)Math.Sin(angle)).To3D();
+                var point = new Vector3(ObjectManager.GetLocalPlayer().Position.X + 425f * (float)Math.Cos(angle),
+                    ObjectManager.GetLocalPlayer().Position.Y + 425f * (float)Math.Sin(angle), ObjectManager.GetLocalPlayer().Position.Z);
 
                 points.Add(point);
             }
@@ -79,18 +79,31 @@
             return target.HasBuffOfType(BuffType.Knockup) || target.HasBuffOfType(BuffType.Knockback);
         }
 
-        internal static Obj_AI_Base GetNearObj(Obj_AI_Base target = null)
+        internal static Obj_AI_Base GetNearObj()
         {
-            var pos = target != null
-                ? Prediction.GetPrediction(target, 0.75f, 0, 1025f).UnitPosition
-                : Game.CursorPos;
+            var pos = Game.CursorPos;
             var obj = new List<Obj_AI_Base>();
 
-            obj.AddRange(GameObjects.Minions.Where(x => x.IsValidTarget(475) && !x.IsAlly && x.IsMinion));
+            obj.AddRange(GameObjects.EnemyMinions.Where(x => x.IsValidTarget(475) && x.MaxHealth > 5));
             obj.AddRange(GameObjects.EnemyHeroes.Where(i => i.IsValidTarget(475)));
 
             return obj.Where(i => CanCastE(i) && pos.Distance(PosAfterE(i)) < ObjectManager.GetLocalPlayer().Distance(pos))
                     .MinOrDefault(i => pos.Distance(PosAfterE(i)));
+        }
+
+        public static double GetIgniteDamage(this Obj_AI_Hero source, Obj_AI_Hero target)
+        {
+            return 50 + 20 * source.Level - target.HPRegenRate / 5 * 3;
+        }
+
+        public static SpellSlot GetSpellSlotFromName(this Obj_AI_Hero source, string name)
+        {
+            foreach (var spell in source.SpellBook.Spells.Where(spell => string.Equals(spell.Name, name, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                return spell.Slot;
+            }
+
+            return SpellSlot.Unknown;
         }
 
         internal static void EGapTarget(Obj_AI_Hero target, bool UnderTurret, float GapcloserDis,
@@ -103,20 +116,22 @@
                         !x.IsDead && (includeChampion || x.NetworkId != target.NetworkId) && x.IsValidTarget(475) &&
                         CanCastE(x)));
             dashtargets.AddRange(
-                GameObjects.Minions.Where(x => x.IsValidTarget(475) && !x.IsAlly && x.IsMinion)
+                GameObjects.EnemyMinions.Where(x => x.IsValidTarget(475) && x.MaxHealth > 5)
                     .Where(CanCastE));
 
             if (dashtargets.Any())
             {
                 var dash = dashtargets.Where(x => x.IsValidTarget(475))
                     .OrderBy(x => target.Position.Distance(PosAfterE(x)))
-                    .FirstOrDefault();//(x => MyEvade.Program.IsSafe(PosAfterE(x).ToMy2D()).IsSafe);
+                    .FirstOrDefault();
 
                 if (dash != null && dash.DistanceToPlayer() <= 475 && CanCastE(dash) &&
                     target.DistanceToPlayer() >= GapcloserDis &&
                     target.Position.Distance(PosAfterE(dash)) <= target.DistanceToPlayer() &&
                     ObjectManager.GetLocalPlayer().IsFacing(dash) && (UnderTurret || !UnderTower(PosAfterE(dash))))
-                    ObjectManager.GetLocalPlayer().SpellBook.CastSpell(SpellSlot.E, dash);
+                {
+                    MyLogic.E.CastOnUnit(dash);
+                }
             }
         }
 
@@ -136,19 +151,21 @@
                             !x.IsDead && (includeChampion || x.NetworkId != target.NetworkId) && x.IsValidTarget(475) &&
                             CanCastE(x)));
                 dashtargets.AddRange(
-                    GameObjects.Minions.Where(x => x.IsValidTarget(475) && !x.IsAlly && x.IsMinion)
+                    GameObjects.EnemyMinions.Where(x => x.IsValidTarget(475) && x.MaxHealth > 5)
                         .Where(CanCastE));
 
                 if (dashtargets.Any())
                 {
                     var dash =
-                        dashtargets.Where(x => x.IsValidTarget(475) /*&& MyEvade.Program.IsSafe(PosAfterE(x).ToMy2D()).IsSafe*/)
+                        dashtargets.Where(x => x.IsValidTarget(475))
                             .MinOrDefault(x => PosAfterE(x).Distance(Game.CursorPos));
 
                     if (dash != null && dash.DistanceToPlayer() <= 475 && CanCastE(dash) &&
                         target.DistanceToPlayer() >= GapcloserDis && ObjectManager.GetLocalPlayer().IsFacing(dash) &&
                         (UnderTurret || !UnderTower(PosAfterE(dash))))
-                        ObjectManager.GetLocalPlayer().SpellBook.CastSpell(SpellSlot.E, dash);
+                    {
+                        MyLogic.E.CastOnUnit(dash);
+                    }
                 }
             }
         }
@@ -219,7 +236,7 @@
         internal static bool CanCastDelayR(Obj_AI_Hero target)
         {
             var buff = target.Buffs.FirstOrDefault(i => i.Type == BuffType.Knockback || i.Type == BuffType.Knockup);
-            return buff != null && buff.EndTime - Game.ClockTime <= (buff.EndTime - buff.StartTime) / 3;
+            return buff != null && buff.EndTime - Game.ClockTime <= (buff.EndTime - buff.StartTime) / 2.5;
         }
 
         internal static bool CanCastE(Obj_AI_Base target)

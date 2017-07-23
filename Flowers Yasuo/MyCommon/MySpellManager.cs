@@ -30,16 +30,18 @@
 
                 MyLogic.R = new Aimtec.SDK.Spell(SpellSlot.R, 1200f);
 
-                if (ObjectManager.GetLocalPlayer().SpellBook.Spells.FirstOrDefault(x => x.Name.ToLower() == "summonerdot") != null)
+                MyLogic.IgniteSlot = ObjectManager.GetLocalPlayer().GetSpellSlotFromName("summonerdot");
+
+                if (MyLogic.IgniteSlot != SpellSlot.Unknown)
                 {
-                    // ReSharper disable once PossibleNullReferenceException
-                    MyLogic.IgniteSlot = ObjectManager.GetLocalPlayer().SpellBook.Spells.FirstOrDefault(x => x.Name.ToLower() == "summonerdot").Slot;
+                    MyLogic.Ignite = new Aimtec.SDK.Spell(MyLogic.IgniteSlot, 600);
                 }
 
-                if (ObjectManager.GetLocalPlayer().SpellBook.Spells.FirstOrDefault(x => x.Name.ToLower() == "summonerflash") != null)
+                MyLogic.FlashSlot = ObjectManager.GetLocalPlayer().GetSpellSlotFromName("summonerflash");
+
+                if (MyLogic.FlashSlot != SpellSlot.Unknown)
                 {
-                    // ReSharper disable once PossibleNullReferenceException
-                    MyLogic.FlashSlot = ObjectManager.GetLocalPlayer().SpellBook.Spells.FirstOrDefault(x => x.Name.ToLower() == "summonerflash").Slot;
+                    MyLogic.Flash = new Aimtec.SDK.Spell(MyLogic.FlashSlot, 425);
                 }
             }
             catch (Exception ex)

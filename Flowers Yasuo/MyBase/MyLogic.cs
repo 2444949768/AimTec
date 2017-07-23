@@ -18,6 +18,9 @@
         internal static Aimtec.SDK.Spell W { get; set; }
         internal static Aimtec.SDK.Spell E { get; set; }
         internal static Aimtec.SDK.Spell R { get; set; }
+        internal static Aimtec.SDK.Spell Flash { get; set; }
+        internal static Aimtec.SDK.Spell Ignite { get; set; }
+
 
         internal static SpellSlot IgniteSlot { get; set; } = SpellSlot.Unknown;
         internal static SpellSlot FlashSlot { get; set; } = SpellSlot.Unknown;
