@@ -3,10 +3,10 @@ Done:
 
 Draven (Working)
 
+Kalista (Working)
+
 
 WIP: 
-
-Kalista (Need Test)
 
 Riven
 
