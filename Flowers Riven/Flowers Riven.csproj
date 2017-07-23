@@ -7,10 +7,11 @@
     <ProjectGuid>{F0C16FED-6195-45F5-969C-2654B4966140}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Flowers_Riven</RootNamespace>
-    <AssemblyName>Flowers_Riven</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AssemblyName>Flowers Riven</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -23,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,8 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aimtec">
+      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Aimtec.dll</HintPath>
+    </Reference>
+    <Reference Include="Aimtec.SDK">
+      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Aimtec.SDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,7 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="MyBase\MyChampions.cs" />
+    <Compile Include="MyBase\MyLogic.cs" />
+    <Compile Include="MyCommon\MyEventManager.cs" />
+    <Compile Include="MyCommon\MyExtraManager.cs" />
+    <Compile Include="MyCommon\MyManaManager.cs" />
+    <Compile Include="MyCommon\MyMenuManager.cs" />
+    <Compile Include="MyCommon\MySpellManager.cs" />
+    <Compile Include="MyLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
