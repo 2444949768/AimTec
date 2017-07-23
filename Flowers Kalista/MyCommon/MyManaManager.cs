@@ -94,7 +94,7 @@
                                 Render.WorldToScreen(ObjectManager.GetLocalPlayer().Position, out MePos);
 
                                 Render.Text(MePos.X - 57, MePos.Y + 68, System.Drawing.Color.FromArgb(242, 120, 34),
-                                    "Spell Harass:" + (SpellFarm ? "On" : "Off"));
+                                    "Spell Harass:" + (SpellHarass ? "On" : "Off"));
                             }
                         }
                         catch (Exception ex)
