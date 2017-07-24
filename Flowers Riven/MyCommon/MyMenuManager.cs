@@ -33,6 +33,9 @@ namespace Flowers_Riven.MyCommon
 
                 MyLogic.ComboMenu =new Menu("FlowersRiven.ComboMenu", ":: Combo Settings");
                 {
+                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersRiven.ComboMenu.QSettings", "-- Q Settings"));
+                    MyLogic.ComboMenu.Add(new MenuBool("FlowersRiven.ComboMenu.QGapcloser", "Use Q Gapcloser"));
+
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersRiven.ComboMenu.WSettings", "-- W Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersRiven.ComboMenu.WCancel", "Use W Cancel Animation"));
 
@@ -116,11 +119,11 @@ namespace Flowers_Riven.MyCommon
                     MyLogic.FleeMenu.Add(new MenuKeyBind("FlowersRiven.FleeMenu.FleeKey", "Flee Key",
                         Aimtec.SDK.Util.KeyCode.Z, KeybindType.Press));
 
-                    MyLogic.FleeMenu.Add(new MenuSeperator("FlowersRiven.FleeMenu.WSettings", "-- W Settings"));
-                    MyLogic.FleeMenu.Add(new MenuBool("FlowersRiven.FleeMenu.W", "Use W"));
-
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersRiven.FleeMenu.QSettings", "-- Q Settings"));
                     MyLogic.FleeMenu.Add(new MenuBool("FlowersRiven.FleeMenu.Q", "Use Q"));
+
+                    MyLogic.FleeMenu.Add(new MenuSeperator("FlowersRiven.FleeMenu.WSettings", "-- W Settings"));
+                    MyLogic.FleeMenu.Add(new MenuBool("FlowersRiven.FleeMenu.W", "Use W"));
 
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersRiven.FleeMenu.ESettings", "-- E Settings"));
                     MyLogic.FleeMenu.Add(new MenuBool("FlowersRiven.FleeMenu.E", "Use E"));
@@ -153,9 +156,9 @@ namespace Flowers_Riven.MyCommon
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersRiven.MiscMenu.AnimationSettings", "-- Animation Settings"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersRiven.MiscMenu.SemiCancel", "Semi Cancel Animation"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersRiven.MiscMenu.CalculatePing", "Calulate your Ping"));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q1Delay", "Auto R| Min Hit Count >= x", 351, 250, 500));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q2Delay", "Auto R| My Allies Count >= x", 351, 250, 500));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q3Delay", "Auto R| My HealthPercednt >= x", 451, 350, 600));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q1Delay", "Q1 Cancel Delay", 351, 0, 500));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q2Delay", "Q2 Cancel Delay", 351, 0, 500));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q3Delay", "Q3 Cancel Delay", 451, 0, 600));
                 }
                 MyLogic.Menu.Add(MyLogic.MiscMenu);
 
@@ -169,30 +172,15 @@ namespace Flowers_Riven.MyCommon
                         {
                             var heroMenu = new Menu(target.ChampionName, target.ChampionName);
 
-                            //TODO
-                            //if (target.SpellBook.GetSpell(SpellSlot.Q).SpellData. == 1)
-                            //{
-                            //    eMenu.AddBool(target.ChampionName + "Skill" + target.Spellbook.GetSpell(SpellSlot.Q).SData.Name,
-                            //        target.SpellBook.GetSpell(SpellSlot.Q).SData.Name);
-                            //}
+                            foreach (var spell in target.SpellBook.Spells.ToArray().Where(x => !x.Name.ToLower().Contains("summoner")))
+                            {
+                                if (spell.SpellData.TargettingType == 1)
+                                {
+                                    heroMenu.Add(new MenuBool(target.ChampionName + spell.Slot, spell.Slot.ToString()));
+                                }
+                            }
 
-                            //if (target.SpellBook.GetSpell(SpellSlot.W).SData.TargettingType == SpellDataTargetType.Unit)
-                            //{
-                            //    eMenu.AddBool(target.ChampionName + "Skill" + target.Spellbook.GetSpell(SpellSlot.W).SData.Name,
-                            //        target.SpellBook.GetSpell(SpellSlot.W).SData.Name);
-                            //}
-
-                            //if (target.Spellbook.GetSpell(SpellSlot.E).SData.TargettingType == SpellDataTargetType.Unit)
-                            //{
-                            //    eMenu.AddBool(target.ChampionName + "Skill" + target.Spellbook.GetSpell(SpellSlot.E).SData.Name,
-                            //        target.Spellbook.GetSpell(SpellSlot.E).SData.Name);
-                            //}
-
-                            //if (target.Spellbook.GetSpell(SpellSlot.R).SData.TargettingType == SpellDataTargetType.Unit)
-                            //{
-                            //    eMenu.AddBool(target.ChampionName + "Skill" + target.Spellbook.GetSpell(SpellSlot.R).SData.Name,
-                            //        target.Spellbook.GetSpell(SpellSlot.R).SData.Name);
-                            //}
+                            MyLogic.EvadeMenu.Add(heroMenu);
                         }
                     }
                 }

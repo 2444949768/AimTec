@@ -41,5 +41,11 @@
         internal static int lastCastTime { get; set; } = 0;
         internal static bool isRActive => ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.R).Name == "RivenIzunaBlade";
         internal static Obj_AI_Hero myTarget { get; set; } = null;
+
+        //TODO IM NOT SURE THIS<<< NEED TO TEST IT
+        internal const string Youmuu = "Youmuu's Ghostblade";
+        internal const string Tiamat = "Tiamat (Melee Only)";
+        internal const string Titanic = "Titanic Hydra (Melee Only)";
+        internal const string Hrdra = "Ravenous Hydra (Melee Only)";
     }
 }
