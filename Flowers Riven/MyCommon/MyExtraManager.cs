@@ -191,7 +191,7 @@
                         return false;
                     }
 
-                    return MyLogic.Q.Cast(target.Position);
+                    return MyLogic.Q.Cast(target.ServerPosition);
                 case 1:
                     return MyLogic.Q.Cast(Game.CursorPos);
                 default:
@@ -230,19 +230,19 @@
                         target.Health <= ObjectManager.GetLocalPlayer().GetSpellDamage(target, SpellSlot.R) ||
                         target.Health <= GetComboDamage(target))
                     {
-                        return MyLogic.R.Cast(target.Position);
+                        return MyLogic.R.Cast(target.ServerPosition);
                     }
                     break;
                 case 1:
                     if (ObjectManager.GetLocalPlayer().GetSpellDamage(target, SpellSlot.R) > target.Health && target.DistanceToPlayer() < 600)
                     {
-                        return MyLogic.R.Cast(target.Position);
+                        return MyLogic.R.Cast(target.ServerPosition);
                     }
                     break;
                 case 2:
                     if (target.DistanceToPlayer() < 600)
                     {
-                        return MyLogic.R.Cast(target.Position);
+                        return MyLogic.R.Cast(target.ServerPosition);
                     }
                     break;
             }

@@ -256,7 +256,7 @@
                     if (ComboMenu["FlowersRiven.ComboMenu.EGapcloser"].Enabled && E.Ready && target.IsValidTarget(600) &&
                         target.DistanceToPlayer() > Me.GetFullAttackRange(target) + 50)
                     {
-                        E.Cast(target.Position);
+                        E.Cast(target.ServerPosition);
                         return;
                     }
 
@@ -336,10 +336,10 @@
                 {
                     if (target.IsValidTarget(E.Range + Me.BoundingRadius - 30))
                     {
-                        E.Cast(target.Position);
+                        E.Cast(target.ServerPosition);
                         Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
                         Aimtec.SDK.Util.DelayAction.Queue(60, () => W.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(150, () => Q.Cast(target.Position));
+                        Aimtec.SDK.Util.DelayAction.Queue(150, () => Q.Cast(target.ServerPosition));
                         return;
                     }
 
@@ -347,11 +347,11 @@
                     {
                         if (target.IsValidTarget(E.Range + Me.BoundingRadius + 425 - 50))
                         {
-                            E.Cast(target.Position);
+                            E.Cast(target.ServerPosition);
                             Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
                             Aimtec.SDK.Util.DelayAction.Queue(60, () => W.Cast());
-                            Aimtec.SDK.Util.DelayAction.Queue(61, () => Flash.Cast(target.Position));
-                            Aimtec.SDK.Util.DelayAction.Queue(150, () => Q.Cast(target.Position));
+                            Aimtec.SDK.Util.DelayAction.Queue(61, () => Flash.Cast(target.ServerPosition));
+                            Aimtec.SDK.Util.DelayAction.Queue(150, () => Q.Cast(target.ServerPosition));
                         }
                     }
                 }
@@ -378,13 +378,13 @@
                 {
                     if (target.IsValidTarget(E.Range + 425 + Q.Range - 150) && qStack > 0 && E.Ready && R.Ready && !isRActive && W.Ready)
                     {
-                        E.Cast(target.Position);
+                        E.Cast(target.ServerPosition);
                         Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(50, () => Flash.Cast(target.Position));
-                        Aimtec.SDK.Util.DelayAction.Queue(61, () => Q.Cast(target.Position));
+                        Aimtec.SDK.Util.DelayAction.Queue(50, () => Flash.Cast(target.ServerPosition));
+                        Aimtec.SDK.Util.DelayAction.Queue(61, () => Q.Cast(target.ServerPosition));
                         Aimtec.SDK.Util.DelayAction.Queue(62, UseItem);
                         Aimtec.SDK.Util.DelayAction.Queue(70, () => W.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(71, () => R.Cast(target.Position));
+                        Aimtec.SDK.Util.DelayAction.Queue(71, () => R.Cast(target.ServerPosition));
                         return;
                     }
 
@@ -397,12 +397,12 @@
                 {
                     if (target.IsValidTarget(E.Range + Q.Range - 150) && qStack == 2 && E.Ready && R.Ready && !isRActive && W.Ready)
                     {
-                        E.Cast(target.Position);
+                        E.Cast(target.ServerPosition);
                         Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(50, () => Q.Cast(target.Position));
+                        Aimtec.SDK.Util.DelayAction.Queue(50, () => Q.Cast(target.ServerPosition));
                         Aimtec.SDK.Util.DelayAction.Queue(61, UseItem);
                         Aimtec.SDK.Util.DelayAction.Queue(62, () => W.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(70, () => R.Cast(target.Position));
+                        Aimtec.SDK.Util.DelayAction.Queue(70, () => R.Cast(target.ServerPosition));
                         return;
                     }
 
@@ -438,7 +438,7 @@
                     {
                         if (E.Ready && qStack == 2)
                         {
-                            var pos = Me.Position + (Me.Position - target.Position).Normalized() * E.Range;
+                            var pos = Me.ServerPosition + (Me.ServerPosition - target.ServerPosition).Normalized() * E.Range;
 
                             if (pos != Vector3.Zero)
                             {
@@ -448,7 +448,7 @@
 
                         if (Q.Ready && qStack == 2)
                         {
-                            var pos = Me.Position + (Me.Position - target.Position).Normalized() * E.Range;
+                            var pos = Me.ServerPosition + (Me.ServerPosition - target.ServerPosition).Normalized() * E.Range;
 
                             if (pos != Vector3.Zero)
                             {
@@ -481,7 +481,7 @@
                         if (E.Ready && HarassMenu["FlowersRiven.HarassMenu.E"].Enabled && 
                             target.DistanceToPlayer() <= E.Range + (Q.Ready ? Q.Range : Me.AttackRange))
                         {
-                            E.Cast(target.Position);
+                            E.Cast(target.ServerPosition);
                         }
 
                         if (Q.Ready && HarassMenu["FlowersRiven.HarassMenu.Q"].Enabled &&
@@ -546,7 +546,7 @@
 
                         if (minion != null)
                         {
-                            Q.Cast(minion.Position);
+                            Q.Cast(minion.ServerPosition);
                         }
                     }
 
@@ -596,7 +596,7 @@
 
                             if (!mobs.Any(x => x.DistanceToPlayer() <= E.Range))
                             {
-                                E.Cast(mob.Position);
+                                E.Cast(mob.ServerPosition);
                             }
                         }
                     }
@@ -675,7 +675,7 @@
                         {
                             if (R.Ready && isRActive)
                             {
-                                R.Cast(target.Position);
+                                R.Cast(target.ServerPosition);
                             }
                             else if (Q.Ready && target.IsValidTarget(400))
                             {
@@ -730,7 +730,7 @@
                     case "rivenizunablade":
                         if (Q.Ready && target.IsValidTarget(400))
                         {
-                            Q.Cast(target.Position);
+                            Q.Cast(target.ServerPosition);
                         }
                         break;
                     default:
@@ -893,7 +893,7 @@
 
                 if (R.Ready && isRActive)
                 {
-                    R.Cast(target.Position);
+                    R.Cast(target.ServerPosition);
                     return;
                 }
 
@@ -909,7 +909,7 @@
 
                 if (E.Ready)
                 {
-                    E.Cast(target.Position);
+                    E.Cast(target.ServerPosition);
                 }
             }
             catch (Exception ex)
@@ -963,7 +963,7 @@
 
                     if (!Q.Ready && !W.Ready && E.Ready && target.IsValidTarget(400))
                     {
-                        E.Cast(target.Position);
+                        E.Cast(target.ServerPosition);
                         return;
                     }
 
@@ -1036,7 +1036,7 @@
                 {
                     if (ClearMenu["FlowersRiven.ClearMenu.LaneClearQTurret"].Enabled && Q.Ready && Me.CountEnemyHeroesInRange(800) == 0)
                     {
-                        Q.Cast(target.Position);
+                        Q.Cast(target.ServerPosition);
                     }
                 }
                 else if (target.Type == GameObjectType.obj_AI_Minion)
@@ -1046,11 +1046,11 @@
                         if (ClearMenu["FlowersRiven.ClearMenu.LaneClearQ"].Enabled && Q.Ready)
                         {
                             var minions =
-                                GameObjects.EnemyMinions.Where(x => x.IsValidTarget(400, false, false, target.Position) && x.IsMinion()).ToArray();
+                                GameObjects.EnemyMinions.Where(x => x.IsValidTarget(400, false, false, target.ServerPosition) && x.IsMinion()).ToArray();
 
                             if (minions.Length >= 2)
                             {
-                                Q.Cast(target.Position);
+                                Q.Cast(target.ServerPosition);
                             }
                         }
                     }
@@ -1062,7 +1062,7 @@
                         {
                             if (ClearMenu["FlowersRiven.ClearMenu.JungleClearQ"].Enabled && Q.Ready)
                             {
-                                Q.Cast(mob.Position);
+                                Q.Cast(mob.ServerPosition);
                             }
                             else if (ClearMenu["FlowersRiven.ClearMenu.JungleClearW"].Enabled && W.Ready && target.IsValidTarget(W.Range))
                             {
@@ -1070,7 +1070,7 @@
                             }
                             else if (ClearMenu["FlowersRiven.ClearMenu.JungleClearE"].Enabled && E.Ready)
                             {
-                                E.Cast(mob.Position);
+                                E.Cast(mob.ServerPosition);
                             }
                         }
                     }
@@ -1093,16 +1093,16 @@
                 }
 
                 Vector2 MePos = Vector2.Zero;
-                Render.WorldToScreen(ObjectManager.GetLocalPlayer().Position, out MePos);
+                Render.WorldToScreen(ObjectManager.GetLocalPlayer().ServerPosition, out MePos);
 
                 if (DrawMenu["FlowersRiven.DrawMenu.E"].Enabled && E.Ready)
                 {
-                    Render.Circle(Me.Position, E.Range, 23, Color.FromArgb(0, 136, 255));
+                    Render.Circle(Me.ServerPosition, E.Range, 23, Color.FromArgb(0, 136, 255));
                 }
 
                 if (DrawMenu["FlowersRiven.DrawMenu.R"].Enabled && R.Ready)
                 {
-                    Render.Circle(Me.Position, R.Range, 23, Color.FromArgb(251, 0, 133));
+                    Render.Circle(Me.ServerPosition, R.Range, 23, Color.FromArgb(251, 0, 133));
                 }
 
                 if (DrawMenu["FlowersRiven.DrawMenu.ComboR"].Enabled)
