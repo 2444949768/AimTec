@@ -30,48 +30,33 @@
 
                 MyLogic.ComboMenu =new Menu("FlowersYasuo.ComboMenu", ":: Combo Settings");
                 {
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.QSettings", "-- Q Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Q", "Use Q"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Q3", "Use Q3"));
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.ESettings", "-- E Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.E", "Use E"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.ETurret", "Use E| When Under Enemy Turret", false));
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.EGapcloserSettings", ":: E Gapcloser Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.EGapcloser", "Use E| Gapcloser to target"));
                     MyLogic.ComboMenu.Add(new MenuList("FlowersYasuo.ComboMenu.EGapcloserMode", "Use E Gapcloser Mode: ",
                         new[] { "To target", "To mouse" }, 0));
-                    MyLogic.ComboMenu.Add(new MenuList("FlowersYasuo.ComboMenu.EQGapcloserMode", "Use EQ On Gapcloser?",
-                        new[] { "Both", "Only To Hero", "Only Minion", "Off" }, 1));
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.EQSettings", "-- EQ Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.EQ", "Use EQ"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.EQ3", "Use EQ3"));
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.RSettings", "-- R Settings"));
+                    MyLogic.ComboMenu.Add(new MenuList("FlowersYasuo.ComboMenu.EQGapcloserMode", "Use EQ On Gapcloser?",
+                        new[] {"Both", "Only To Hero", "Only Minion", "Off"}, 1));
                     MyLogic.ComboMenu.Add(new MenuKeyBind("FlowersYasuo.ComboMenu.R", "Use R", Aimtec.SDK.Util.KeyCode.R,
                         KeybindType.Toggle, true));
                     MyLogic.ComboMenu.Add(new MenuSliderBool("FlowersYasuo.ComboMenu.RTargetHP",
                         "Use R| When target HealthPercent <= x%", true, 40, 1, 101));
                     MyLogic.ComboMenu.Add(new MenuSliderBool("FlowersYasuo.ComboMenu.RHitCount",
                         "Use R| When Min Hit Count >= x", true, 3, 1, 5));
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.RTargetSettings", "-- RTarget Settings"));
                     foreach (var hero in GameObjects.EnemyHeroes)
                     {
                         MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.RTargetFor" + hero.ChampionName,
                             "Use On " + hero.ChampionName));
                     }
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.EQFlashSettings", "-- EQ Flash Settings"));
                     MyLogic.ComboMenu.Add(new MenuKeyBind("FlowersYasuo.ComboMenu.EQFlash", "Use EQ Flash",
                         Aimtec.SDK.Util.KeyCode.H, KeybindType.Toggle));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.EQFlashKS", "Use EQ Flash| When Can KillAble in 1v1 or 1v2"));
                     MyLogic.ComboMenu.Add(new MenuSliderBool("FlowersYasuo.ComboMenu.EQFlashCount",
                         "Use EQ Flash| When Min Hit Count >= x", true, 3, 1, 5));
-
-                    MyLogic.ComboMenu.Add(new MenuSeperator("FlowersYasuo.ComboMenu.OtherSettings", "-- Other Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersYasuo.ComboMenu.Ignite", "Use Ignite"));
                 }
                 MyLogic.Menu.Add(MyLogic.ComboMenu);
@@ -158,9 +143,9 @@
 
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersYasuo.MiscMenu.RSettings", "-- R Settings"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.AutoR", "Auto R"));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRCount", "Auto R| Min Hit Count >= x", 3, 1, 5));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRAlly", "Auto R| My Allies Count >= x", 2, 1, 5));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRHP", "Auto R| My HealthPercednt >= x", 50, 1, 99));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRCount", "Auto R| And Min Hit Count >= x", 3, 1, 5));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRAlly", "Auto R| And My Allies Count >= x", 2, 1, 5));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRHP", "Auto R| And My HealthPercednt >= x", 50, 1, 99));
 
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersYasuo.MiscMenu.EQSettings", "-- EQ Settings"));
                     MyLogic.MiscMenu.Add(new MenuKeyBind("FlowersYasuo.MiscMenu.EQFlashKey", "EQ Flash Key",
