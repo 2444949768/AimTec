@@ -56,6 +56,7 @@
     <Compile Include="MyCommon\MyExtraManager.cs" />
     <Compile Include="MyCommon\MyManaManager.cs" />
     <Compile Include="MyCommon\MyMenuManager.cs" />
+    <Compile Include="MyCommon\MyOrbwalkerManager.cs" />
     <Compile Include="MyCommon\MySpellManager.cs" />
     <Compile Include="MyLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

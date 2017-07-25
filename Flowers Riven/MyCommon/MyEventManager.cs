@@ -758,10 +758,9 @@
         {
             try
             {
-                if (sender.IsMe && Args.Animation != "Run" && Args.Animation != "Idle1")
+                if (sender.IsMe)
                 {
                     var time = 0;
-                    Console.WriteLine(Args.Animation);
                         
                     switch (Args.Animation)
                     {
@@ -823,18 +822,17 @@
         {
             try
             {
-                Orbwalker.ResetAutoAttackTimer();
+                MyOrbwalkerManager.Reset();
 
                 if (myTarget != null && myTarget.IsValidTarget())
                 {
-                    Orbwalker.ForceTarget(myTarget);
-                    Orbwalker.Move(Game.CursorPos);
-                    //Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(myTarget.ServerPosition, 180));
+                    var pos = Me.ServerPosition + (Me.ServerPosition - myTarget.ServerPosition).Normalized() * 150;
+
+                    Me.IssueOrder(OrderType.MoveTo, pos);
                 }
                 else
                 {
-                    Orbwalker.Move(Game.CursorPos);
-                    //Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(Game.CursorPos, 180));
+                    Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(Game.CursorPos, 150));
                 }
             }
             catch (Exception ex)
