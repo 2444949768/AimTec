@@ -42,10 +42,8 @@
         internal static bool isRActive => ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.R).Name == "RivenIzunaBlade";
         internal static Obj_AI_Hero myTarget { get; set; } = null;
 
-        //TODO IM NOT SURE THIS<<< NEED TO TEST IT
         internal const string Youmuu = "YoumusBlade";
-        internal const string Tiamat = "ItemTiamatCleave";
+        internal const string TiamatHrdra = "ItemTiamatCleave";
         internal const string Titanic = "ItemTitanicHydraCleave";
-        internal const string Hrdra = "ItemTiamatCleave";
     }
 }

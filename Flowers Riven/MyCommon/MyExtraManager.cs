@@ -431,6 +431,17 @@
             }
         }
 
+        internal static void GetNames(this Obj_AI_Hero source)
+        {
+            foreach (var slot in source.Inventory.Slots)
+            {
+                if (!slot.SpellName.ToLower().Contains("noscript"))
+                {
+                    Console.WriteLine(slot.SpellName);
+                }
+            }
+        }
+
         internal static bool IsBuilding(this AttackableUnit target)
         {
             return target != null &&
@@ -450,6 +461,17 @@
         {
             return target != null && target.IsValidTarget() && target.Type == GameObjectType.obj_AI_Minion && 
                 !target.Name.ToLower().Contains("plant") && target.Team != GameObjectTeam.Neutral;
+        }
+
+        internal static bool IsWall(this Vector3 position)
+        {
+            if (position == Vector3.Zero)
+            {
+                return false;
+            }
+
+            var flag = NavMesh.WorldToCell(position).Flags;
+            return flag == NavCellFlags.Wall || flag == NavCellFlags.Building;
         }
     }
 }

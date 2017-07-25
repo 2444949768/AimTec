@@ -56,6 +56,11 @@
                     FleeEvent();
                 }
 
+                if (MiscMenu["FlowersRiven.FleeMenu.WallJumpKey"].As<MenuKeyBind>().Enabled && Me.CanMoveMent())
+                {
+                    WallJumpEvent();
+                }
+
                 KillStealEvent();
                 AutoUseEvent();
                 
@@ -146,6 +151,61 @@
             catch (Exception ex)
             {
                 Console.WriteLine("Error in MyEventManager.FleeEvent." + ex);
+            }
+        }
+
+        private static void WallJumpEvent()
+        {
+            if (true)
+            {
+                if (!Q.Ready)
+                {
+                    Me.IssueOrder(OrderType.MoveTo, Game.CursorPos);
+                }
+                else
+                {
+                    if (qStack < 2)
+                    {
+                        Me.IssueOrder(OrderType.MoveTo, Game.CursorPos);
+                        Q.Cast(Game.CursorPos);
+                    }
+                    else
+                    {
+                        Vector3 Position = Game.CursorPos;
+                        //Vector3 JumpPosition = Me.ServerPosition.Extend(Game.CursorPos, 75);//75 = Riven.BoundRadius 
+                        Vector3 JumpPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 75;//75 = Riven.BoundRadius 
+                        if (JumpPosition.IsWall())
+                        {
+                            Position = JumpPosition;
+                        }
+
+                        Me.IssueOrder(OrderType.MoveTo, Position);
+
+                        //Vector3 EDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 300);// 300 = E.Range - less
+                        //Vector3 QDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 162);// 162 = Q.Range/2, this is real dash distance
+                        //Vector3 EQDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 462);// 300 + 162
+
+                        Vector3 EDashPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 300;// 300 = E.Range - less
+                        Vector3 QDashPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 162;// 162 = Q.Range/2, this is real dash distance
+                        Vector3 EQDashPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 462;// 300 + 162
+
+                        if (EDashPosition.IsWall() && E.Ready)
+                        {
+                            E.Cast(EDashPosition);
+                        }
+
+                        if (QDashPosition.IsWall() && Q.Ready)
+                        {
+                            Q.Cast(QDashPosition);
+                        }
+
+                        if (EQDashPosition.IsWall() && E.Ready && Q.Ready)
+                        {
+                            E.Cast(EQDashPosition);
+                            Q.Cast(EQDashPosition);
+                        }
+                    }
+                }
             }
         }
 
@@ -784,7 +844,8 @@
                             break;
                     }
 
-                    if (FleeMenu["FlowersRiven.FleeMenu.FleeKey"].As<MenuKeyBind>().Enabled)
+                    if (FleeMenu["FlowersRiven.FleeMenu.FleeKey"].As<MenuKeyBind>().Enabled ||
+                        FleeMenu["FlowersRiven.FleeMenu.WallJumpKey"].As<MenuKeyBind>().Enabled)
                     {
                         return;
                     }
@@ -1129,14 +1190,9 @@
 
         private static void UseItem()
         {
-            if (Me.CanUseItem(Hrdra))
+            if (Me.CanUseItem(TiamatHrdra))
             {
-                Me.UseItem(Hrdra);
-            }
-
-            if (Me.CanUseItem(Tiamat))
-            {
-                Me.UseItem(Tiamat);
+                Me.UseItem(TiamatHrdra);
             }
 
             if (Me.CanUseItem(Titanic))

@@ -22,7 +22,7 @@
 
                 MyLogic.W = new Aimtec.SDK.Spell(SpellSlot.W, 260f);
 
-                MyLogic.E = new Aimtec.SDK.Spell(SpellSlot.E, 312f) { Delay = 0.1f };
+                MyLogic.E = new Aimtec.SDK.Spell(SpellSlot.E, 320f) { Delay = 0.1f };
 
                 MyLogic.R = new Aimtec.SDK.Spell(SpellSlot.R, 900f);
                 MyLogic.R.SetSkillshot(0.25f, 40f, 1600f, false, SkillshotType.Cone);

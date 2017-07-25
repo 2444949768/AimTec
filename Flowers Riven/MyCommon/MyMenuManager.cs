@@ -115,6 +115,8 @@
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersRiven.FleeMenu.KeySettings", "-- Key Settings"));
                     MyLogic.FleeMenu.Add(new MenuKeyBind("FlowersRiven.FleeMenu.FleeKey", "Flee Key",
                         Aimtec.SDK.Util.KeyCode.Z, KeybindType.Press));
+                    MyLogic.FleeMenu.Add(new MenuKeyBind("FlowersRiven.FleeMenu.WallJumpKey", "Wall Jump Key",
+                        Aimtec.SDK.Util.KeyCode.A, KeybindType.Press));
 
                     MyLogic.FleeMenu.Add(new MenuSeperator("FlowersRiven.FleeMenu.QSettings", "-- Q Settings"));
                     MyLogic.FleeMenu.Add(new MenuBool("FlowersRiven.FleeMenu.Q", "Use Q"));
@@ -153,9 +155,9 @@
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersRiven.MiscMenu.AnimationSettings", "-- Animation Settings"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersRiven.MiscMenu.SemiCancel", "Semi Cancel Animation"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersRiven.MiscMenu.CalculatePing", "Calulate your Ping"));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q1Delay", "Q1 Cancel Delay", 351, 0, 500));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q2Delay", "Q2 Cancel Delay", 351, 0, 500));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q3Delay", "Q3 Cancel Delay", 451, 0, 600));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q1Delay", "Q1 Cancel Delay", 251, 0, 500));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q2Delay", "Q2 Cancel Delay", 251, 0, 500));
+                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q3Delay", "Q3 Cancel Delay", 351, 0, 600));
                 }
                 MyLogic.Menu.Add(MyLogic.MiscMenu);
 
