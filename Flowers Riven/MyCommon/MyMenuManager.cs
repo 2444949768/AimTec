@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Aimtec;
-
-namespace Flowers_Riven.MyCommon
+﻿namespace Flowers_Riven.MyCommon
 {
     #region 
 

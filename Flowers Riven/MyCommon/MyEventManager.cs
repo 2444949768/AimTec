@@ -766,17 +766,17 @@
                     switch (Args.Animation)
                     {
                         case "Spell1a":
-                            time = 351;
+                            time = MiscMenu["FlowersRiven.MiscMenu.Q1Delay"].Value;
                             qStack = 1;
                             lastQTime = Game.TickCount;
                             break;
                         case "Spell1b":
-                            time = 351;
+                            time = MiscMenu["FlowersRiven.MiscMenu.Q2Delay"].Value;
                             qStack = 2;
                             lastQTime = Game.TickCount;
                             break;
                         case "Spell1c":
-                            time = 451;
+                            time = MiscMenu["FlowersRiven.MiscMenu.Q3Delay"].Value;
                             qStack = 0;
                             lastQTime = Game.TickCount;
                             break;
