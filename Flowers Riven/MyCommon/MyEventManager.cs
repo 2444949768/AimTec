@@ -758,23 +758,24 @@
         {
             try
             {
-                if (sender.IsMe || Args.Animation == "Run" || Args.Animation == "Idle1")
+                if (sender.IsMe && Args.Animation != "Run" && Args.Animation != "Idle1")
                 {
                     var time = 0;
-
+                    Console.WriteLine(Args.Animation);
+                        
                     switch (Args.Animation)
                     {
-                        case "Spell11a":
+                        case "Spell1a":
                             time = 351;
                             qStack = 1;
                             lastQTime = Game.TickCount;
                             break;
-                        case "Spell11b":
+                        case "Spell1b":
                             time = 351;
                             qStack = 2;
                             lastQTime = Game.TickCount;
                             break;
-                        case "Spell11c":
+                        case "Spell1c":
                             time = 451;
                             qStack = 0;
                             lastQTime = Game.TickCount;
@@ -826,11 +827,14 @@
 
                 if (myTarget != null && myTarget.IsValidTarget())
                 {
-                    Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(myTarget.ServerPosition, 180));
+                    Orbwalker.ForceTarget(myTarget);
+                    Orbwalker.Move(Game.CursorPos);
+                    //Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(myTarget.ServerPosition, 180));
                 }
                 else
                 {
-                    Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(Game.CursorPos, 180));
+                    Orbwalker.Move(Game.CursorPos);
+                    //Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(Game.CursorPos, 180));
                 }
             }
             catch (Exception ex)
