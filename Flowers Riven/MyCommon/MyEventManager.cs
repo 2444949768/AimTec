@@ -22,9 +22,6 @@
 
     internal class MyEventManager : MyLogic
     {
-        private static readonly int _menuX = (int)(Render.Width * 0.91f);
-        private static readonly int _menuY = (int)(Render.Height * 0.04f);
-
         internal static void Initializer()
         {
             try
@@ -92,14 +89,17 @@
         {
             try
             {
-                if (TargetSelector.GetSelectedTarget() != null && TargetSelector.GetSelectedTarget().IsValidTarget())
+                var selectTarget = TargetSelector.GetSelectedTarget();
+                var orbTarget = Orbwalker.GetOrbwalkingTarget() as Obj_AI_Hero;
+
+                if (selectTarget != null && !selectTarget.IsDead && selectTarget.IsValid && selectTarget.IsValidTarget())
                 {
-                    myTarget = TargetSelector.GetSelectedTarget();
+                    myTarget = selectTarget;
                 }
-                else if (Orbwalker.GetOrbwalkingTarget() != null && Orbwalker.GetOrbwalkingTarget().Type == GameObjectType.obj_AI_Hero &&
-                    Orbwalker.GetOrbwalkingTarget().IsValidTarget())
+                else if (orbTarget != null && !orbTarget.IsDead && orbTarget.IsValid && orbTarget.Type == GameObjectType.obj_AI_Hero &&
+                    orbTarget.IsValidTarget())
                 {
-                    myTarget = (Obj_AI_Hero)Orbwalker.GetOrbwalkingTarget();
+                    myTarget = orbTarget;
                 }
                 else
                 {
@@ -306,7 +306,7 @@
                     return;
                 }
 
-                if (BurstMenu["FlowersRiven.ComboMenu.Ignite"].Enabled && IgniteSlot != SpellSlot.Unknown &&
+                if (BurstMenu["FlowersRiven.BurstMenu.Ignite"].Enabled && IgniteSlot != SpellSlot.Unknown &&
                     Ignite.Ready && target.IsValidTarget(600))
                 {
                     Ignite.Cast(target);
@@ -826,8 +826,8 @@
 
                 if (Orbwalker.GetOrbwalkingTarget() != null && !Orbwalker.GetOrbwalkingTarget().IsDead)
                 {
-                    Orbwalker.Move(Game.CursorPos);
-                    Aimtec.SDK.Util.DelayAction.Queue(1, () => Orbwalker.Attack(Orbwalker.GetOrbwalkingTarget()));
+                    Orbwalker.ForceTarget(Orbwalker.GetOrbwalkingTarget());
+                    Orbwalker.Orbwalk();
                 }
                 else
                 {
@@ -1085,6 +1085,15 @@
         {
             try
             {
+                if (ObjectManager.GetLocalPlayer().IsDead || ObjectManager.GetLocalPlayer().IsRecalling() || 
+                    MenuGUI.IsChatOpen() || MenuGUI.IsShopOpen())
+                {
+                    return;
+                }
+
+                Vector2 MePos = Vector2.Zero;
+                Render.WorldToScreen(ObjectManager.GetLocalPlayer().Position, out MePos);
+
                 if (DrawMenu["FlowersRiven.DrawMenu.E"].Enabled && E.Ready)
                 {
                     Render.Circle(Me.Position, E.Range, 23, Color.FromArgb(0, 136, 255));
@@ -1097,16 +1106,18 @@
 
                 if (DrawMenu["FlowersRiven.DrawMenu.ComboR"].Enabled)
                 {
-                    Render.Text(_menuX + 10, _menuY + 25, Color.Orange,
+                    Render.Text(MePos.X - 57, MePos.Y + 68, Color.Orange,
                         "Combo R(" + ComboMenu["FlowersRiven.ComboMenu.R"].As<MenuKeyBind>().Key + "): " +
                         (ComboMenu["FlowersRiven.ComboMenu.R"].As<MenuKeyBind>().Enabled ? "On" : "Off"));
                 }
 
                 if (DrawMenu["FlowersRiven.DrawMenu.Burst"].Enabled)
                 {
-                    Render.Text(_menuX + 10, _menuY + 45, Color.Orange,
+                    var target = TargetSelector.GetSelectedTarget();
+
+                    Render.Text(MePos.X - 57, MePos.Y + 88, Color.Orange,
                         "Burst Combo(" + BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Key + "): " +
-                        (BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Enabled ? "On" : "Off"));
+                        (BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Enabled ? (target != null ? "Lock: " + target.ChampionName : "No Target"): "Off"));
                 }
             }
             catch (Exception ex)

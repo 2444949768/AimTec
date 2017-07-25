@@ -3,6 +3,7 @@
     #region 
 
     using Aimtec;
+    using Aimtec.SDK.Extensions;
     using Aimtec.SDK.Menu;
     using Aimtec.SDK.Menu.Components;
 
@@ -69,7 +70,8 @@
                     {
                         try
                         {
-                            if (ObjectManager.GetLocalPlayer().IsDead)
+                            if (ObjectManager.GetLocalPlayer().IsDead || ObjectManager.GetLocalPlayer().IsRecalling() ||
+                                 MenuGUI.IsChatOpen() || MenuGUI.IsShopOpen())
                             {
                                 return;
                             }

@@ -64,10 +64,10 @@ namespace Flowers_Riven.MyCommon
 
                 MyLogic.BurstMenu = new Menu("FlowersRiven.BurstMenu", ":: Burst Settings");
                 {
-                    MyLogic.BurstMenu.Add(new MenuSeperator("-- How to burst"));
-                    MyLogic.BurstMenu.Add(new MenuSeperator("1.you need to enbaled the Key"));
-                    MyLogic.BurstMenu.Add(new MenuSeperator("2.Select the Target (or not, but this will be force target to burst)"));
-                    MyLogic.BurstMenu.Add(new MenuSeperator("3.and then press the Combo Key"));
+                    MyLogic.BurstMenu.Add(new MenuSeperator("FlowersRiven.BurstMenu.Text1", "-- How to burst"));
+                    MyLogic.BurstMenu.Add(new MenuSeperator("FlowersRiven.BurstMenu.Text2", "1.you need to enbaled the Key"));
+                    MyLogic.BurstMenu.Add(new MenuSeperator("FlowersRiven.BurstMenu.Text3", "2.Select the Target (or not, but this will be force target to burst)"));
+                    MyLogic.BurstMenu.Add(new MenuSeperator("FlowersRiven.BurstMenu.Text4", "3.and then press the Combo Key"));
                     MyLogic.BurstMenu.Add(new MenuSeperator("BUSRAWDQWD"));
                     MyLogic.BurstMenu.Add(new MenuBool("FlowersRiven.BurstMenu.Flash", "Use Flash"));
                     MyLogic.BurstMenu.Add(new MenuBool("FlowersRiven.BurstMenu.Ignite", "Use Ignite"));
@@ -165,24 +165,6 @@ namespace Flowers_Riven.MyCommon
                 MyLogic.EvadeMenu = new Menu("FlowersRiven.EvadeMenu", ":: Evade Settings");
                 {
                     MyLogic.EvadeMenu.Add(new MenuBool("FlowersRiven.EvadeMenu.Use E", "Use E Shield"));
-                    MyLogic.EvadeMenu.Add(new MenuSeperator("ascqwdqwdqqwe"));
-                    if (GameObjects.EnemyHeroes.ToArray().Any())
-                    {
-                        foreach (var target in GameObjects.EnemyHeroes.ToArray())
-                        {
-                            var heroMenu = new Menu(target.ChampionName, target.ChampionName);
-
-                            foreach (var spell in target.SpellBook.Spells.ToArray().Where(x => !x.Name.ToLower().Contains("summoner")))
-                            {
-                                if (spell.SpellData.TargettingType == 1)
-                                {
-                                    heroMenu.Add(new MenuBool(target.ChampionName + spell.Slot, spell.Slot.ToString()));
-                                }
-                            }
-
-                            MyLogic.EvadeMenu.Add(heroMenu);
-                        }
-                    }
                 }
                 MyLogic.Menu.Add(MyLogic.EvadeMenu);
 
@@ -194,8 +176,8 @@ namespace Flowers_Riven.MyCommon
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersRiven.DrawMenu.R", "Draw R Range", false));
 
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersRiven.DrawMenu.StatusSettings", "-- Logic Status"));
-                    MyLogic.DrawMenu.Add(new MenuBool("FlowersRiven.DrawMenu.ComboR", "Draw Combo R Status", false));
-                    MyLogic.DrawMenu.Add(new MenuBool("FlowersRiven.DrawMenu.Burst", "Draw Burst Status", false));
+                    MyLogic.DrawMenu.Add(new MenuBool("FlowersRiven.DrawMenu.ComboR", "Draw Combo R Status"));
+                    MyLogic.DrawMenu.Add(new MenuBool("FlowersRiven.DrawMenu.Burst", "Draw Burst Status"));
 
                     MyManaManager.AddDrawToMenu(MyLogic.DrawMenu);
                 }
