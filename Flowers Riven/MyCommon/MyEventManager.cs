@@ -824,14 +824,13 @@
             {
                 Orbwalker.ResetAutoAttackTimer();
 
-                if (Orbwalker.GetOrbwalkingTarget() != null && !Orbwalker.GetOrbwalkingTarget().IsDead)
+                if (myTarget != null && myTarget.IsValidTarget())
                 {
-                    Orbwalker.ForceTarget(Orbwalker.GetOrbwalkingTarget());
-                    Orbwalker.Orbwalk();
+                    Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(myTarget.ServerPosition, 180));
                 }
                 else
                 {
-                    Orbwalker.Move(Game.CursorPos);
+                    Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(Game.CursorPos, 180));
                 }
             }
             catch (Exception ex)
