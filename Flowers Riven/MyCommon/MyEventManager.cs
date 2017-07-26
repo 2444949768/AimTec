@@ -26,6 +26,7 @@
         {
             try
             {
+                GameObject.OnCreate += OnCreate;
                 Game.OnUpdate += OnUpdate;
                 SpellBook.OnCastSpell += OnCastSpell;
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
@@ -38,6 +39,11 @@
             {
                 Console.WriteLine("Error in MyEventManager.Initializer." + ex);
             }
+        }
+
+        private static void OnCreate(GameObject sender)
+        {
+            
         }
 
         private static void OnUpdate()
