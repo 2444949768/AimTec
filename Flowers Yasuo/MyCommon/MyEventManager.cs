@@ -32,7 +32,6 @@
             {
                 Game.OnUpdate += OnUpdate;
                 BuffManager.OnAddBuff += OnAddBuff;
-                SpellBook.OnStopCast += OnStopCast;
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Obj_AI_Base.OnPlayAnimation += OnPlayAnimation;
                 Orbwalker.PostAttack += OnPostAttack;
@@ -94,9 +93,9 @@
         {
             try
             {
-                IsMyDashing = isYasuoDashing || Me.IsDashing();
+                IsMyDashing = isYasuoDashing;// || Me.IsDashing();
 
-                if (Game.TickCount - YasuolastETime > 500)
+                if (Game.TickCount - YasuolastETime - (Game.Ping /2) > 500)
                 {
                     isYasuoDashing = false;
                     YasuolastEPos = Vector3.Zero;
@@ -126,7 +125,7 @@
 
                         if (qMinion != null && qMinion.IsValidTarget())
                         {
-                            Q.Cast();
+                            Q.Cast(Me.ServerPosition);
                         }
                     }
                 }
@@ -185,7 +184,7 @@
                                     .OrderByDescending(x => GameObjects.EnemyHeroes.Count(i => i.Distance(x) <= 220))
                                     .FirstOrDefault();
 
-                            if (bestPos != Vector3.Zero && bestPos.CountEnemyHeroesInRange(220) > 0 && Q.Cast())
+                            if (bestPos != Vector3.Zero && bestPos.CountEnemyHeroesInRange(220) > 0 && Q.Cast(Me.ServerPosition))
                             {
                                 Aimtec.SDK.Util.DelayAction.Queue(10 + (Game.Ping / 2 - 5), () =>
                                 {
@@ -323,7 +322,7 @@
 
                         if (enemies.Count > 0)
                         {
-                            R.Cast();
+                            R.CastOnUnit(enemies.FirstOrDefault());
                         }
                     }
                     else
@@ -345,7 +344,7 @@
                             (MiscMenu["FlowersYasuo.MiscMenu.AutoRAlly"].Value == 0 || 
                             allies.Count >= MiscMenu["FlowersYasuo.MiscMenu.AutoRAlly"].Value))
                         {
-                            R.Cast();
+                            R.CastOnUnit(enemies.FirstOrDefault());
                         }
                     }
                 }
@@ -433,7 +432,7 @@
 
                     if (ComboMenu["FlowersYasuo.ComboMenu.R"].As<MenuKeyBind>().Enabled && R.Ready)
                     {
-                        foreach (var rTarget in GameObjects.EnemyHeroes.Where(x => x.IsValidTarget(1200)))
+                        foreach (var rTarget in GameObjects.EnemyHeroes.Where(x => x.IsValidTarget(1200) && MyExtraManager.CanCastR(x)))
                         {
                             if (ComboMenu["FlowersYasuo.ComboMenu.RHitCount"].As<MenuSliderBool>().Enabled)
                             {
@@ -448,7 +447,7 @@
 
                                     if (enemiesKnocked.Count >= ComboMenu["FlowersYasuo.ComboMenu.RHitCount"].As<MenuSliderBool>().Value)
                                     {
-                                        R.Cast();
+                                        R.CastOnUnit(rTarget);
                                     }
                                 }
                             }
@@ -458,11 +457,11 @@
                                 if (rTarget.IsValidTarget(R.Range))
                                 {
                                     if (ComboMenu["FlowersYasuo.ComboMenu.RTargetFor" + rTarget.ChampionName].Enabled &&
-                                        MyExtraManager.CanCastR(rTarget) && MyExtraManager.CanCastDelayR(rTarget) &&
+                                        MyExtraManager.CanCastR(rTarget) &&
                                         rTarget.HealthPercent() <=
                                         ComboMenu["FlowersYasuo.ComboMenu.RTargetHP"].As<MenuSliderBool>().Value)
                                     {
-                                        R.Cast();
+                                        R.CastOnUnit(rTarget);
                                     }
                                 }
                             }
@@ -513,7 +512,7 @@
                                 if (ObjectManager.Get<Obj_AI_Base>()
                                         .Any(x => x.IsValidTarget(220, false, false, YasuolastEPos)) && Me.Distance(YasuolastEPos) <= 250)
                                 {
-                                    Q.Cast();
+                                    Q.Cast(Me.ServerPosition);
                                 }
                             }
 
@@ -521,7 +520,7 @@
                             {
                                 if (YasuolastEPos.CountEnemyHeroesInRange(220) > 0 && Me.Distance(YasuolastEPos) <= 250)
                                 {
-                                    Q.Cast();
+                                    Q.Cast(Me.ServerPosition);
                                 }
                             }
                         }
@@ -568,7 +567,7 @@
                     {
                         var bestPos = MyExtraManager.FlashPoints().ToArray().FirstOrDefault(x => target.Distance(x) <= 220);
 
-                        if (bestPos != Vector3.Zero && bestPos.CountEnemyHeroesInRange(220) > 0 && Q.Cast())
+                        if (bestPos != Vector3.Zero && bestPos.CountEnemyHeroesInRange(220) > 0 && Q.Cast(Me.ServerPosition))
                         { 
                             Aimtec.SDK.Util.DelayAction.Queue(10 + (Game.Ping / 2 - 5),
                                 () =>
@@ -597,7 +596,7 @@
 
                     if (bestPos != Vector3.Zero &&
                         bestPos.CountEnemyHeroesInRange(220) >=
-                        ComboMenu["FlowersYasuo.ComboMenu.EQFlashCount"].As<MenuSliderBool>().Value && Q.Cast())
+                        ComboMenu["FlowersYasuo.ComboMenu.EQFlashCount"].As<MenuSliderBool>().Value && Q.Cast(Me.ServerPosition))
                     {
                         Aimtec.SDK.Util.DelayAction.Queue(10 + (Game.Ping / 2 - 5),
                             () =>
@@ -670,7 +669,7 @@
         {
             try
             {
-                if (Me.IsUnderEnemyTurret())
+                if (ClearMenu["FlowersYasuo.ClearMenu.LaneClearTurret"].Enabled && Me.IsUnderEnemyTurret())
                 {
                     return;
                 }
@@ -691,7 +690,10 @@
                                         ? Me.GetSpellDamage(x, SpellSlot.Q) + Me.GetSpellDamage(x, SpellSlot.E)
                                         : Me.GetSpellDamage(x, SpellSlot.E))))
                         {
-                            if (minion != null && minion.IsValidTarget(E.Range) && !MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion)))
+                            if (minion != null && minion.IsValidTarget(E.Range) &&
+                                (ClearMenu["FlowersYasuo.ClearMenu.LaneClearTurret"].Enabled == false ||
+                                 MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion))) &&
+                                MyExtraManager.PosAfterE(minion).IsSafePosition())
                             {
                                 E.CastOnUnit(minion);
                             }
@@ -704,7 +706,7 @@
                         {
                             if (minions.Count(x => x.Health > 0 && x.IsValidTarget(220, false, false, YasuolastEPos)) >= 1)
                             {
-                                Q.Cast();
+                                Q.Cast(Me.ServerPosition);
                             }
                         }
                     }
@@ -805,7 +807,8 @@
                                 Me.GetSpellDamage(minion, SpellSlot.E) +
                                 Me.GetSpellDamage(minion, SpellSlot.E, DamageStage.Buff) &&
                                 MyExtraManager.CanCastE(minion) &&
-                                !MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion)))
+                                !MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion)) &&
+                                MyExtraManager.PosAfterE(minion).IsSafePosition())
                             {
                                 E.CastOnUnit(minion);
                             }
@@ -830,7 +833,7 @@
                         {
                             YasuolastETime = Game.TickCount;
                             isYasuoDashing = true;
-                            Aimtec.SDK.Util.DelayAction.Queue(500, () => { isYasuoDashing = true; });
+                            Aimtec.SDK.Util.DelayAction.Queue(500 + (Game.Ping / 2), () => { isYasuoDashing = false; });
                         }
                         break;
                     case "yasuoqcombosoundmiss":
@@ -838,7 +841,7 @@
                         if (sender.IsMe)
                         {
                             Orbwalker.AttackingEnabled = false;
-                            Aimtec.SDK.Util.DelayAction.Queue(250 + Game.Ping / 2, () =>
+                            Aimtec.SDK.Util.DelayAction.Queue(250 + (Game.Ping /2 + 10), () =>
                             {
                                 Orbwalker.ResetAutoAttackTimer();
                                 Me.IssueOrder(OrderType.MoveTo, Me.Position.Extend(Game.CursorPos, 50));
@@ -846,21 +849,6 @@
                             });
                         }
                         break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in MyEventManager.OnAddBuff." + ex);
-            }
-        }
-
-        private static void OnStopCast(Obj_AI_Base sender, SpellBookStopCastEventArgs Args)
-        {
-            try
-            {
-                if (sender.IsMe && Args.DestroyMissile && Args.StopAnimation)
-                {
-                    isYasuoDashing = false;
                 }
             }
             catch (Exception ex)
@@ -1003,6 +991,10 @@
                         "Flash Combo(" + ComboMenu["FlowersYasuo.ComboMenu.EQFlash"].As<MenuKeyBind>().Key + "): " +
                         (ComboMenu["FlowersYasuo.ComboMenu.EQFlash"].As<MenuKeyBind>().Enabled ? "On" : "Off"));
                 }
+
+                //Render.Text(_menuX + 10, _menuY + 105, Color.Orange, "IsMyDashing: " + (IsMyDashing ? "On" : "Off"));
+                //Render.Text(_menuX + 10, _menuY + 125, Color.Orange, "IsYasuoDashing: " + (isYasuoDashing ? "On" : "Off"));
+                //Render.Text(_menuX + 10, _menuY + 145, Color.Orange, "HaveQ3: " + (HaveQ3 ? "On" : "Off"));
             }
             catch (Exception ex)
             {

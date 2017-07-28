@@ -40,6 +40,7 @@
 
         internal static Vector3 YasuolastEPos { get; set; } = Vector3.Zero;
         internal static int YasuolastETime { get; set; } = 0;
+        internal static int lastWTime { get; set; } = 0;
         internal static bool isYasuoDashing { get; set; } = false;
         internal static bool HaveQ3 => ObjectManager.GetLocalPlayer().HasBuff("YasuoQ3W");
         internal static bool IsMyDashing { get; set; } = false;

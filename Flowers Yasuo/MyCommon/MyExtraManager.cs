@@ -17,6 +17,33 @@
 
     internal static class MyExtraManager
     {
+        private static readonly string[] Attacks =
+            {
+                "caitlynheadshotmissile", "frostarrow", "garenslash2",
+                "kennenmegaproc", "masteryidoublestrike", "quinnwenhanced",
+                "renektonexecute", "renektonsuperexecute",
+                "rengarnewpassivebuffdash", "trundleq", "xenzhaothrust",
+                "xenzhaothrust2", "xenzhaothrust3", "viktorqbuff",
+                "lucianpassiveshot"
+            };
+
+        private static readonly string[] NoAttacks =
+            {
+                "volleyattack", "volleyattackwithsound",
+                "jarvanivcataclysmattack", "monkeykingdoubleattack",
+                "shyvanadoubleattack", "shyvanadoubleattackdragon",
+                "zyragraspingplantattack", "zyragraspingplantattack2",
+                "zyragraspingplantattackfire", "zyragraspingplantattack2fire",
+                "viktorpowertransfer", "sivirwattackbounce", "asheqattacknoonhit",
+                "elisespiderlingbasicattack", "heimertyellowbasicattack",
+                "heimertyellowbasicattack2", "heimertbluebasicattack",
+                "annietibbersbasicattack", "annietibbersbasicattack2",
+                "yorickdecayedghoulbasicattack", "yorickravenousghoulbasicattack",
+                "yorickspectralghoulbasicattack", "malzaharvoidlingbasicattack",
+                "malzaharvoidlingbasicattack2", "malzaharvoidlingbasicattack3",
+                "kindredwolfbasicattack", "gravesautoattackrecoil"
+            };
+
         internal static float DistanceToPlayer(this Obj_AI_Base source)
         {
             return ObjectManager.GetLocalPlayer().Distance(source);
@@ -79,6 +106,33 @@
             return target.HasBuffOfType(BuffType.Knockup) || target.HasBuffOfType(BuffType.Knockback);
         }
 
+        public static bool IsAutoAttack(this SpellData spellData)
+        {
+            return IsAutoAttack(spellData.Name);
+        }
+
+        public static bool IsAutoAttack(string name)
+        {
+            return name.ToLower().Contains("attack") && !NoAttacks.Contains(name.ToLower())
+                   || Attacks.Contains(name.ToLower());
+        }
+
+        public static bool IsValid<T>(this GameObject obj) where T : GameObject
+        {
+            return obj is T && obj.IsValid;
+        }
+
+        public static bool IsReady(this Aimtec.SDK.Spell spell, int t = 0)
+        {
+            return spell != null && spell.Slot != SpellSlot.Unknown && t == 0
+                ? ObjectManager.GetLocalPlayer().SpellBook.GetSpellState(spell.Slot) == SpellState.Ready
+                : ObjectManager.GetLocalPlayer().SpellBook.GetSpellState(spell.Slot) == SpellState.Ready
+                  ||
+                  ObjectManager.GetLocalPlayer().SpellBook.GetSpellState(spell.Slot) == SpellState.Cooldown &&
+                  ObjectManager.GetLocalPlayer().SpellBook.GetSpell(spell.Slot).CooldownEnd - Game.ClockTime <=
+                  t / 1000f;
+        }
+
         internal static Obj_AI_Base GetNearObj()
         {
             var pos = Game.CursorPos;
@@ -87,7 +141,7 @@
             obj.AddRange(GameObjects.EnemyMinions.Where(x => x.IsValidTarget(475) && x.MaxHealth > 5));
             obj.AddRange(GameObjects.EnemyHeroes.Where(i => i.IsValidTarget(475)));
 
-            return obj.Where(i => CanCastE(i) && pos.Distance(PosAfterE(i)) < ObjectManager.GetLocalPlayer().Distance(pos))
+            return obj.Where(i => CanCastE(i) && pos.Distance(PosAfterE(i)) < ObjectManager.GetLocalPlayer().Distance(pos) && IsSafePosition(PosAfterE(i)))
                     .MinOrDefault(i => pos.Distance(PosAfterE(i)));
         }
 
@@ -106,6 +160,35 @@
             return SpellSlot.Unknown;
         }
 
+        public static bool IsSafePosition(this Vector2 pos)
+        {
+            return MyLogic.MiscMenu["FlowersYasuo.MiscMenu.CheckESafe"].Enabled == false ||
+                   MyEvade.EvadeManager.IsSafe(pos).IsSafe;
+        }
+
+        public static bool IsSafePosition(this Vector3 pos)
+        {
+            return MyLogic.MiscMenu["FlowersYasuo.MiscMenu.CheckESafe"].Enabled == false ||
+                   MyEvade.EvadeManager.IsSafe(pos.To2D()).IsSafe;
+        }
+
+        public static bool IsInRange(this Aimtec.SDK.Spell spell, GameObject obj, float range = -1)
+        {
+            return spell.IsInRange(
+                (obj as Obj_AI_Base)?.ServerPosition.To2D() ?? obj.ServerPosition.To2D(),
+                range);
+        }
+
+        public static bool IsInRange(this Aimtec.SDK.Spell spell, Vector3 point, float range = -1)
+        {
+            return spell.IsInRange(point.To2D(), range);
+        }
+
+        public static bool IsInRange(this Aimtec.SDK.Spell spell, Vector2 point, float range = -1)
+        {
+            return ObjectManager.GetLocalPlayer().ServerPosition.To2D().Distance(point, true) < range * range;
+        }
+
         internal static void EGapTarget(Obj_AI_Hero target, bool UnderTurret, float GapcloserDis,
             bool includeChampion = true)
         {
@@ -121,7 +204,7 @@
 
             if (dashtargets.Any())
             {
-                var dash = dashtargets.Where(x => x.IsValidTarget(475))
+                var dash = dashtargets.Where(x => x.IsValidTarget(475) && IsSafePosition(PosAfterE(x)))
                     .OrderBy(x => target.Position.Distance(PosAfterE(x)))
                     .FirstOrDefault();
 
@@ -157,7 +240,7 @@
                 if (dashtargets.Any())
                 {
                     var dash =
-                        dashtargets.Where(x => x.IsValidTarget(475))
+                        dashtargets.Where(x => x.IsValidTarget(475) && IsSafePosition(PosAfterE(x)))
                             .MinOrDefault(x => PosAfterE(x).Distance(Game.CursorPos));
 
                     if (dash != null && dash.DistanceToPlayer() <= 475 && CanCastE(dash) &&
@@ -260,5 +343,18 @@
 
             return Vector3.Zero;
         }
+
+        internal static bool IsMob(this AttackableUnit target)
+        {
+            return target != null && target.IsValidTarget() && target.Type == GameObjectType.obj_AI_Minion &&
+                !target.Name.ToLower().Contains("plant") && target.Team == GameObjectTeam.Neutral;
+        }
+
+        internal static bool IsMinion(this AttackableUnit target)
+        {
+            return target != null && target.IsValidTarget() && target.Type == GameObjectType.obj_AI_Minion &&
+                !target.Name.ToLower().Contains("plant") && target.Team != GameObjectTeam.Neutral;
+        }
+
     }
 }

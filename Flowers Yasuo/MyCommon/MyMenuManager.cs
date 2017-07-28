@@ -44,7 +44,7 @@
                     MyLogic.ComboMenu.Add(new MenuKeyBind("FlowersYasuo.ComboMenu.R", "Use R", Aimtec.SDK.Util.KeyCode.R,
                         KeybindType.Toggle, true));
                     MyLogic.ComboMenu.Add(new MenuSliderBool("FlowersYasuo.ComboMenu.RTargetHP",
-                        "Use R| When target HealthPercent <= x%", true, 40, 1, 101));
+                        "Use R| When target HealthPercent <= x%", true, 65, 1, 101));
                     MyLogic.ComboMenu.Add(new MenuSliderBool("FlowersYasuo.ComboMenu.RHitCount",
                         "Use R| When Min Hit Count >= x", true, 3, 1, 5));
                     foreach (var hero in GameObjects.EnemyHeroes)
@@ -81,6 +81,7 @@
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearQ3", "Use Q3"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearE", "Use E"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearEQ", "Use EQ"));
+                    MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.LaneClearTurret", "Allow Under Turret Farm", false));
 
                     MyLogic.ClearMenu.Add(new MenuSeperator("FlowersYasuo.ClearMenu.JungleClearSettings", "-- JungleClear Settings"));
                     MyLogic.ClearMenu.Add(new MenuBool("FlowersYasuo.ClearMenu.JungleClearQ", "Use Q"));
@@ -141,6 +142,9 @@
                     MyLogic.MiscMenu.Add(new MenuKeyBind("FlowersYasuo.MiscMenu.StackQ", "Stack Q Key",
                         Aimtec.SDK.Util.KeyCode.T, KeybindType.Toggle));
 
+                    MyLogic.MiscMenu.Add(new MenuSeperator("FlowersYasuo.MiscMenu.ESettings", "-- E Settings"));
+                    MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.CheckESafe", "Check Safe"));
+
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersYasuo.MiscMenu.RSettings", "-- R Settings"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersYasuo.MiscMenu.AutoR", "Auto R"));
                     MyLogic.MiscMenu.Add(new MenuSlider("FlowersYasuo.MiscMenu.AutoRCount", "Auto R| And Min Hit Count >= x", 3, 1, 5));
@@ -155,7 +159,8 @@
 
                 MyLogic.EvadeMenu = new Menu("FlowersYasuo.EvadeMenu", ":: Evade Settings");
                 {
-                    MyLogic.EvadeMenu.Add(new MenuSeperator("FlowersYasuo.EvadeMenu.TODO", "TODO~"));//TODO
+                    MyEvade.EvadeManager.Attach(MyLogic.EvadeMenu);
+                    MyEvade.EvadeTargetManager.Attach(MyLogic.EvadeMenu);
                 }
                 MyLogic.Menu.Add(MyLogic.EvadeMenu);
 

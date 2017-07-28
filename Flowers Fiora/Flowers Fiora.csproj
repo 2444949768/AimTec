@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B7924DE0-BDB7-4ED9-A77C-1BFE31C75AF6}</ProjectGuid>
+    <ProjectGuid>{67D0A716-0395-420C-9DEE-D468D943CB91}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Flowers_Yasuo</RootNamespace>
-    <AssemblyName>Flowers Yasuo</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <RootNamespace>Flowers_Fiora</RootNamespace>
+    <AssemblyName>Flowers Fiora</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -50,33 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyBase\MyChampions.cs" />
-    <Compile Include="MyEvade\EvadeTargetManager.cs" />
-    <Compile Include="MyCommon\MyEventManager.cs" />
-    <Compile Include="MyBase\MyLogic.cs" />
-    <Compile Include="MyCommon\MyExtraManager.cs" />
-    <Compile Include="MyCommon\MyGeometry.cs" />
-    <Compile Include="MyCommon\MySpellManager.cs" />
-    <Compile Include="MyCommon\MyManaManager.cs" />
-    <Compile Include="MyCommon\MyMenuManager.cs" />
-    <Compile Include="MyEvade\Collision.cs" />
-    <Compile Include="MyEvade\CollisionObjectTypes.cs" />
-    <Compile Include="MyEvade\DetectedCollision.cs" />
-    <Compile Include="MyEvade\DetectionType.cs" />
-    <Compile Include="MyEvade\EvadeManager.cs" />
-    <Compile Include="MyEvade\EvadeSpellData.cs" />
-    <Compile Include="MyEvade\EvadeSpellDatabase.cs" />
-    <Compile Include="MyEvade\FastPredResult.cs" />
-    <Compile Include="MyEvade\FoundIntersection.cs" />
-    <Compile Include="MyEvade\IsSafeResult.cs" />
-    <Compile Include="MyEvade\SafePathResult.cs" />
-    <Compile Include="MyEvade\Skillshot.cs" />
-    <Compile Include="MyEvade\SkillshotDetector.cs" />
-    <Compile Include="MyEvade\SkillShotType.cs" />
-    <Compile Include="MyEvade\SpellData.cs" />
-    <Compile Include="MyEvade\SpellDatabase.cs" />
-    <Compile Include="MyEvade\Utils.cs" />
-    <Compile Include="MyLoader.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
