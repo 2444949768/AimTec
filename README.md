@@ -1,16 +1,16 @@
 # AimTec
 Done:
 
-Draven (Working)
+Draven
 
-Kalista (Working)
+Fiora
 
-Yasuo (Working)
+Kalista
+
+Yasuo
 
 
 WIP: 
-
-Fiora
 
 Riven (Need to Rewrite QA Logic)
 
