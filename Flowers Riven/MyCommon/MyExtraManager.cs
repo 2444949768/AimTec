@@ -274,17 +274,17 @@
                 damage += ObjectManager.GetLocalPlayer().GetSpellDamage(target, SpellSlot.Q);
             }
 
-            if (MyLogic.Q.Ready)
+            if (MyLogic.W.Ready)
             {
                 damage += ObjectManager.GetLocalPlayer().GetSpellDamage(target, SpellSlot.W);
             }
 
-            if (MyLogic.Q.Ready)
+            if (MyLogic.E.Ready)
             {
                 damage += ObjectManager.GetLocalPlayer().CanMoveMent() ? ObjectManager.GetLocalPlayer().GetAutoAttackDamage(target) : 0;
             }
 
-            if (MyLogic.Q.Ready)
+            if (MyLogic.R.Ready)
             {
                 damage += ObjectManager.GetLocalPlayer().GetSpellDamage(target, SpellSlot.R);
             }

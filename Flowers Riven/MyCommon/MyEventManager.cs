@@ -62,7 +62,7 @@
                     FleeEvent();
                 }
 
-                if (MiscMenu["FlowersRiven.FleeMenu.WallJumpKey"].As<MenuKeyBind>().Enabled && Me.CanMoveMent())
+                if (FleeMenu["FlowersRiven.FleeMenu.WallJumpKey"].As<MenuKeyBind>().Enabled && Me.CanMoveMent())
                 {
                     WallJumpEvent();
                 }
@@ -164,6 +164,7 @@
         {
             if (true)
             {
+                Console.WriteLine(Me.BoundingRadius);
                 if (!Q.Ready)
                 {
                     Me.IssueOrder(OrderType.MoveTo, Game.CursorPos);
@@ -172,6 +173,11 @@
                 {
                     if (qStack < 2)
                     {
+                        if (Game.TickCount - lastQTime < 500)
+                        {
+                            return;
+                        }
+
                         Me.IssueOrder(OrderType.MoveTo, Game.CursorPos);
                         Q.Cast(Game.CursorPos);
                     }
