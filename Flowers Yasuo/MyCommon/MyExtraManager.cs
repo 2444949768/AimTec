@@ -336,9 +336,9 @@
         {
             if (target.IsValidTarget())
             {
-                return ObjectManager.GetLocalPlayer().IsFacing(target)
+                return ObjectManager.GetLocalPlayer().IsFacingUnit(target)
                     ? ObjectManager.GetLocalPlayer().ServerPosition.Extend(target.ServerPosition, 475f)
-                    : ObjectManager.GetLocalPlayer().ServerPosition.Extend(Prediction.GetPrediction(target, 0.35f).CastPosition, 475f);
+                    : ObjectManager.GetLocalPlayer().ServerPosition.Extend(Prediction.GetPrediction(target, 0.05f).UnitPosition, 475f);
             }
 
             return Vector3.Zero;
@@ -355,6 +355,5 @@
             return target != null && target.IsValidTarget() && target.Type == GameObjectType.obj_AI_Minion &&
                 !target.Name.ToLower().Contains("plant") && target.Team != GameObjectTeam.Neutral;
         }
-
     }
 }
