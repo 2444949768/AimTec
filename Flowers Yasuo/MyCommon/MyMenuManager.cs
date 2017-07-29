@@ -20,7 +20,8 @@
             {
                 MyLogic.Menu = new Menu("FlowersYasuo", "Flowers Yasuo", true);
                 {
-                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("MadebyNightMoon", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Cirdit: Brian & Esk0r"));
                     MyLogic.Menu.Add(new MenuSeperator("IfFPSDrop", "If you have FPS Drop Try F5 reload"));
                     MyLogic.Menu.Add(new MenuSeperator("ASDASDF"));
                 }
