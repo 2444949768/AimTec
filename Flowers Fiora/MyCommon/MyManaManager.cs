@@ -43,9 +43,9 @@
 
                     Game.OnUpdate += delegate
                     {
-                        if (Environment.TickCount - tick > 100 * Game.Ping)
+                        if (Game.TickCount - tick > 20 * Game.Ping)
                         {
-                            tick = Environment.TickCount;
+                            tick = Game.TickCount;
                             SpellFarm = mainMenu["MyManaManager.SpellFarm"].Enabled;
                         }
                     };
