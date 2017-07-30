@@ -755,12 +755,12 @@
                             E.CastOnUnit(mob);
                         }
 
-                        if (ClearMenu["FlowersYasuo.LastHitMenu.Q"].Enabled && Q.Ready && !HaveQ3 && mob.IsValidTarget(Q.Range))
+                        if (ClearMenu["FlowersYasuo.ClearMenu.JungleClearQ"].Enabled && Q.Ready && !HaveQ3 && mob.IsValidTarget(Q.Range))
                         {
                             Q.Cast(mob);
                         }
 
-                        if (ClearMenu["FlowersYasuo.LastHitMenu.Q3"].Enabled && Q3.Ready && HaveQ3 &&
+                        if (ClearMenu["FlowersYasuo.ClearMenu.JungleClearQ3"].Enabled && Q3.Ready && HaveQ3 &&
                             mob.IsValidTarget(Q3.Range))
                         {
                             Q3.Cast(mob);
