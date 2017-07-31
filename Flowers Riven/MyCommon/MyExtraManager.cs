@@ -32,6 +32,11 @@
             return ObjectManager.GetLocalPlayer().Distance(position);
         }
 
+        internal static int GameTimeTickCount
+        {
+            get { return (int) (Game.ClockTime * 1000); }
+        }
+
         public static T MinOrDefault<T, TR>(this IEnumerable<T> container, Func<T, TR> valuingFoo)
             where TR : IComparable
         {
@@ -191,7 +196,7 @@
                         return false;
                     }
 
-                    return MyLogic.Q.Cast(target.ServerPosition);
+                    return MyLogic.Q.Cast(target);//target.ServerPosition
                 case 1:
                     return MyLogic.Q.Cast(Game.CursorPos);
                 default:

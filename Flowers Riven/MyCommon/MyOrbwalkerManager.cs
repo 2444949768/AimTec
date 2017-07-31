@@ -27,7 +27,7 @@
             }
             finally
             {
-                Console.WriteLine("Reset Auto Attack Event Handler");
+                //Console.WriteLine("Reset Auto Attack Event Handler");
             }
         }
     }

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="MyBase\MyChampions.cs" />
     <Compile Include="MyBase\MyLogic.cs" />
+    <Compile Include="MyCommon\DelayAction.cs" />
     <Compile Include="MyCommon\MyEventManager.cs" />
     <Compile Include="MyCommon\MyExtraManager.cs" />
     <Compile Include="MyCommon\MyManaManager.cs" />

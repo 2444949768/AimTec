@@ -155,13 +155,13 @@
                     MyLogic.MiscMenu.Add(new MenuSeperator("FlowersRiven.MiscMenu.AnimationSettings", "-- Animation Settings"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersRiven.MiscMenu.SemiCancel", "Semi Cancel Animation"));
                     MyLogic.MiscMenu.Add(new MenuBool("FlowersRiven.MiscMenu.CalculatePing", "Calulate your Ping"));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q1Delay", "Q1 Cancel Delay", 251, 0, 500));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q2Delay", "Q2 Cancel Delay", 251, 0, 500));
-                    MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q3Delay", "Q3 Cancel Delay", 351, 0, 600));
-                    MyLogic.MiscMenu.Add(new MenuSeperator("QDelay111", "Default: Q1Q2 = 351, Q3 = 451"));
-                    MyLogic.MiscMenu.Add(new MenuSeperator("QDelay222", "Normal: Q1Q2Q3 = 0"));
-                    MyLogic.MiscMenu.Add(new MenuSeperator("QDelay333", "Speed: Q1Q2 = 251, Q3 = 351(feedback)"));
-                    MyLogic.MiscMenu.Add(new MenuSeperator("QDelay444", "Im Not Sure this is perfect Delay"));
+                    //MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q1Delay", "Q1 Cancel Delay", 251, 0, 500));
+                    //MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q2Delay", "Q2 Cancel Delay", 251, 0, 500));
+                    //MyLogic.MiscMenu.Add(new MenuSlider("FlowersRiven.MiscMenu.Q3Delay", "Q3 Cancel Delay", 351, 0, 600));
+                    //MyLogic.MiscMenu.Add(new MenuSeperator("QDelay111", "Default: Q1Q2 = 351, Q3 = 451"));
+                    //MyLogic.MiscMenu.Add(new MenuSeperator("QDelay222", "Normal: Q1Q2Q3 = 0"));
+                    //MyLogic.MiscMenu.Add(new MenuSeperator("QDelay333", "Speed: Q1Q2 = 251, Q3 = 351(feedback)"));
+                    //MyLogic.MiscMenu.Add(new MenuSeperator("QDelay444", "Im Not Sure this is perfect Delay"));
                 }
                 MyLogic.Menu.Add(MyLogic.MiscMenu);
 

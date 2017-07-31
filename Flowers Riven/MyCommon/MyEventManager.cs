@@ -26,12 +26,12 @@
         {
             try
             {
-                GameObject.OnCreate += OnCreate;
+                Obj_AI_Base.OnPlayAnimation += OnPlayAnimation;
                 Game.OnUpdate += OnUpdate;
                 SpellBook.OnCastSpell += OnCastSpell;
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Obj_AI_Base.OnPerformCast += OnPerformCast;
-                Obj_AI_Base.OnPlayAnimation += OnPlayAnimation;
+                Obj_AI_Base.OnProcessAutoAttack += OnProcessAutoAttack;
                 Orbwalker.PostAttack += OnPostAttack;
                 Render.OnRender += OnRender;
             }
@@ -41,9 +41,53 @@
             }
         }
 
-        private static void OnCreate(GameObject sender)
+        private static void OnProcessAutoAttack(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
         {
-            
+            if (!sender.IsMe || Me.IsDead)
+            {
+                return;
+            }
+
+            var ping = Game.Ping;
+
+            if (ping > 50)
+            {
+                DelayAction.Queue(ping, () => { OnProcessAutoAttackDelayEvent(Args); });
+            }
+            else
+            {
+                DelayAction.Queue(50 - ping, () => { OnProcessAutoAttackDelayEvent(Args); });
+            }
+        }
+
+        private static void OnProcessAutoAttackDelayEvent(Obj_AI_BaseMissileClientDataEventArgs Args)
+        {
+            var target = Args.Target as AttackableUnit;
+
+            if (target == null || target.IsDead || !target.IsValidTarget())
+            {
+                return;
+            }
+
+            switch (Orbwalker.Mode)
+            {
+                case OrbwalkingMode.Combo:
+                    if (BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Enabled)
+                    {
+                        BurstAfterAttackEvent();
+                    }
+                    else
+                    {
+                        ComboAfterAttackEvent(target);
+                    }
+                    break;
+                case OrbwalkingMode.Mixed:
+                    HarassAfterAttackEvent(target);
+                    break;
+                case OrbwalkingMode.Laneclear:
+                    ClearFarmAfterAttackEvent(target);
+                    break;
+            }
         }
 
         private static void OnUpdate()
@@ -69,7 +113,7 @@
 
                 KillStealEvent();
                 AutoUseEvent();
-                
+
                 switch (Orbwalker.Mode)
                 {
                     case OrbwalkingMode.Combo:
@@ -164,7 +208,6 @@
         {
             if (true)
             {
-                Console.WriteLine(Me.BoundingRadius);
                 if (!Q.Ready)
                 {
                     Me.IssueOrder(OrderType.MoveTo, Game.CursorPos);
@@ -184,8 +227,7 @@
                     else
                     {
                         Vector3 Position = Game.CursorPos;
-                        //Vector3 JumpPosition = Me.ServerPosition.Extend(Game.CursorPos, 75);//75 = Riven.BoundRadius 
-                        Vector3 JumpPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 75;//75 = Riven.BoundRadius 
+                        Vector3 JumpPosition = Me.ServerPosition.Extend(Game.CursorPos, 65);//65 = Riven.BoundRadius 
                         if (JumpPosition.IsWall())
                         {
                             Position = JumpPosition;
@@ -193,13 +235,9 @@
 
                         Me.IssueOrder(OrderType.MoveTo, Position);
 
-                        //Vector3 EDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 300);// 300 = E.Range - less
-                        //Vector3 QDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 162);// 162 = Q.Range/2, this is real dash distance
-                        //Vector3 EQDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 462);// 300 + 162
-
-                        Vector3 EDashPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 300;// 300 = E.Range - less
-                        Vector3 QDashPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 162;// 162 = Q.Range/2, this is real dash distance
-                        Vector3 EQDashPosition = Me.ServerPosition + (Game.CursorPos - Me.ServerPosition).Normalized() * 462;// 300 + 162
+                        Vector3 EDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 300);// 300 = E.Range - less
+                        Vector3 QDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 162);// 162 = Q.Range/2, this is real dash distance
+                        Vector3 EQDashPosition = Me.ServerPosition.Extend(Game.CursorPos, 462);// 300 + 162
 
                         if (EDashPosition.IsWall() && E.Ready)
                         {
@@ -303,34 +341,34 @@
 
                     if (ComboMenu["FlowersRiven.ComboMenu.R"].As<MenuKeyBind>().Enabled && R.Ready && !isRActive &&
                         ComboMenu["FlowersRiven.ComboMenu.RTargetFor" + target.ChampionName].Enabled &&
-                        target.Health <= MyExtraManager.GetComboDamage(target) * 1.3 && target.IsValidTarget(600f) &&
-                        MyExtraManager.R1Logic(target))
+                        target.Health <= MyExtraManager.GetComboDamage(target) * 1.3 && target.IsValidTarget(600f))
                     {
-                        return;
+                        MyExtraManager.R1Logic(target);
                     }
 
-                    if (ComboMenu["FlowersRiven.ComboMenu.RMode"].As<MenuList>().Value != 3 && R.Ready && isRActive && 
-                        ComboMenu["FlowersRiven.ComboMenu.RTargetFor" + target.ChampionName].Enabled && MyExtraManager.R2Logic(target))
+                    if (ComboMenu["FlowersRiven.ComboMenu.RMode"].As<MenuList>().Value != 3 && R.Ready && isRActive &&
+                        ComboMenu["FlowersRiven.ComboMenu.RTargetFor" + target.ChampionName].Enabled)
                     {
-                        return;
+                        MyExtraManager.R2Logic(target);
                     }
 
                     if (ComboMenu["FlowersRiven.ComboMenu.QGapcloser"].Enabled && Q.Ready &&
-                        Game.TickCount - lastQTime > 1200 && !Me.IsDashing() && target.IsValidTarget(480) &&
+                        Game.TickCount - lastQTime > 1200 && !Me.IsDashing() && target.IsValidTarget(500f) &&
                         target.DistanceToPlayer() > Me.GetFullAttackRange(target) + 50 &&
-                        Prediction.GetPrediction(target, Q.Delay).UnitPosition.DistanceToPlayer() >
+                        Prediction.GetPrediction(target, 0.25f).UnitPosition.DistanceToPlayer() >
                         Me.GetFullAttackRange(target) + 50)
                     {
-                        MyExtraManager.CastQ(target);
+                        Q.Cast(target);
                         return;
                     }
+
 
                     if (ComboMenu["FlowersRiven.ComboMenu.EGapcloser"].Enabled && E.Ready && target.IsValidTarget(600) &&
                         target.DistanceToPlayer() > Me.GetFullAttackRange(target) + 50)
                     {
                         E.Cast(target.ServerPosition);
-                        return;
                     }
+
 
                     if (W.Ready && target.IsValidTarget(W.Range))
                     {
@@ -409,9 +447,9 @@
                     if (target.IsValidTarget(E.Range + Me.BoundingRadius - 30))
                     {
                         E.Cast(target.ServerPosition);
-                        Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(60, () => W.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(150, () => Q.Cast(target.ServerPosition));
+                        DelayAction.Queue(10, () => R.Cast());
+                        DelayAction.Queue(60, () => W.Cast());
+                        DelayAction.Queue(150, () => Q.Cast(target.ServerPosition));
                         return;
                     }
 
@@ -420,10 +458,10 @@
                         if (target.IsValidTarget(E.Range + Me.BoundingRadius + 425 - 50))
                         {
                             E.Cast(target.ServerPosition);
-                            Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
-                            Aimtec.SDK.Util.DelayAction.Queue(60, () => W.Cast());
-                            Aimtec.SDK.Util.DelayAction.Queue(61, () => Flash.Cast(target.ServerPosition));
-                            Aimtec.SDK.Util.DelayAction.Queue(150, () => Q.Cast(target.ServerPosition));
+                            DelayAction.Queue(10, () => R.Cast());
+                            DelayAction.Queue(60, () => W.Cast());
+                            DelayAction.Queue(61, () => Flash.Cast(target.ServerPosition));
+                            DelayAction.Queue(150, () => Q.Cast(target.ServerPosition));
                         }
                     }
                 }
@@ -451,12 +489,12 @@
                     if (target.IsValidTarget(E.Range + 425 + Q.Range - 150) && qStack > 0 && E.Ready && R.Ready && !isRActive && W.Ready)
                     {
                         E.Cast(target.ServerPosition);
-                        Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(50, () => Flash.Cast(target.ServerPosition));
-                        Aimtec.SDK.Util.DelayAction.Queue(61, () => Q.Cast(target.ServerPosition));
-                        Aimtec.SDK.Util.DelayAction.Queue(62, UseItem);
-                        Aimtec.SDK.Util.DelayAction.Queue(70, () => W.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(71, () => R.Cast(target.ServerPosition));
+                        DelayAction.Queue(10, () => R.Cast());
+                        DelayAction.Queue(50, () => Flash.Cast(target.ServerPosition));
+                        DelayAction.Queue(61, () => Q.Cast(target.ServerPosition));
+                        DelayAction.Queue(62, UseItem);
+                        DelayAction.Queue(70, () => W.Cast());
+                        DelayAction.Queue(71, () => R.Cast(target.ServerPosition));
                         return;
                     }
 
@@ -470,11 +508,11 @@
                     if (target.IsValidTarget(E.Range + Q.Range - 150) && qStack == 2 && E.Ready && R.Ready && !isRActive && W.Ready)
                     {
                         E.Cast(target.ServerPosition);
-                        Aimtec.SDK.Util.DelayAction.Queue(10, () => R.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(50, () => Q.Cast(target.ServerPosition));
-                        Aimtec.SDK.Util.DelayAction.Queue(61, UseItem);
-                        Aimtec.SDK.Util.DelayAction.Queue(62, () => W.Cast());
-                        Aimtec.SDK.Util.DelayAction.Queue(70, () => R.Cast(target.ServerPosition));
+                        DelayAction.Queue(10, () => R.Cast());
+                        DelayAction.Queue(50, () => Q.Cast(target.ServerPosition));
+                        DelayAction.Queue(61, UseItem);
+                        DelayAction.Queue(62, () => W.Cast());
+                        DelayAction.Queue(70, () => R.Cast(target.ServerPosition));
                         return;
                     }
 
@@ -524,7 +562,7 @@
 
                             if (pos != Vector3.Zero)
                             {
-                                Aimtec.SDK.Util.DelayAction.Queue(100, () => Q.Cast(pos));
+                                DelayAction.Queue(100, () => Q.Cast(pos));
                             }
                         }
 
@@ -550,7 +588,7 @@
                     }
                     else
                     {
-                        if (E.Ready && HarassMenu["FlowersRiven.HarassMenu.E"].Enabled && 
+                        if (E.Ready && HarassMenu["FlowersRiven.HarassMenu.E"].Enabled &&
                             target.DistanceToPlayer() <= E.Range + (Q.Ready ? Q.Range : Me.AttackRange))
                         {
                             E.Cast(target.ServerPosition);
@@ -563,7 +601,7 @@
                             Orbwalker.ForceTarget(target);
                         }
 
-                        if (W.Ready && HarassMenu["FlowersRiven.HarassMenu.W"].Enabled && 
+                        if (W.Ready && HarassMenu["FlowersRiven.HarassMenu.W"].Enabled &&
                             target.IsValidTarget(W.Range) && (!Q.Ready || qStack == 1))
                         {
                             W.Cast();
@@ -611,7 +649,7 @@
                         UseItem();
                     }
 
-                    if (ClearMenu["FlowersRiven.ClearMenu.LaneClearQSmart"].Enabled && Q.Ready && 
+                    if (ClearMenu["FlowersRiven.ClearMenu.LaneClearQSmart"].Enabled && Q.Ready &&
                         minions.Count(x => Me.IsFacing(x) && x.IsValidTarget()) >= 3)
                     {
                         var minion = minions.FirstOrDefault();
@@ -624,7 +662,7 @@
 
                     if (ClearMenu["FlowersRiven.ClearMenu.LaneClearW"].As<MenuSliderBool>().Enabled && W.Ready)
                     {
-                        if (minions.Count(x => x.IsValidTarget(W.Range)) >= 
+                        if (minions.Count(x => x.IsValidTarget(W.Range)) >=
                             ClearMenu["FlowersRiven.ClearMenu.LaneClearW"].As<MenuSliderBool>().Value)
                         {
                             W.Cast();
@@ -706,7 +744,7 @@
                 {
                     RivenDoubleCastEvent(Args.SpellData.Name, BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Enabled);
                 }
-                else if (sender.IsEnemy && sender.Type == GameObjectType.obj_AI_Hero && 
+                else if (sender.IsEnemy && sender.Type == GameObjectType.obj_AI_Hero &&
                     !string.IsNullOrEmpty(Args.SpellData.Name) && !Args.SpellData.Name.Contains("attack"))
                 {
                     if (EvadeMenu["FlowersRiven.EvadeMenu.Use E"].Enabled && E.Ready)
@@ -832,27 +870,28 @@
             {
                 if (sender.IsMe)
                 {
-                    var time = 0;
-                        
+                    //var time = 0;
+                    bool cancel = false;
+
                     switch (Args.Animation)
                     {
                         case "Spell1a":
-                            time = MiscMenu["FlowersRiven.MiscMenu.Q1Delay"].Value;
+                            cancel = true;//MiscMenu["FlowersRiven.MiscMenu.Q1Delay"].Value;
                             qStack = 1;
                             lastQTime = Game.TickCount;
                             break;
                         case "Spell1b":
-                            time = MiscMenu["FlowersRiven.MiscMenu.Q2Delay"].Value;
+                            cancel = true;//MiscMenu["FlowersRiven.MiscMenu.Q2Delay"].Value;
                             qStack = 2;
                             lastQTime = Game.TickCount;
                             break;
                         case "Spell1c":
-                            time = MiscMenu["FlowersRiven.MiscMenu.Q3Delay"].Value;
+                            cancel = true;//MiscMenu["FlowersRiven.MiscMenu.Q3Delay"].Value;
                             qStack = 0;
                             lastQTime = Game.TickCount;
                             break;
                         default:
-                            time = 0;
+                            cancel = false;
                             break;
                     }
 
@@ -862,24 +901,53 @@
                         return;
                     }
 
-                    if (time > 0)
+                    if (cancel == true)
                     {
+                        //var delay1 = 400 + delay3;
+                        //var delay2 = Game.Ping + delay3;
+                        var delay3 = 1000 / (ObjectManager.GetLocalPlayer().AttackSpeedMod * 3.75);
+                        //var delay4 = ObjectManager.GetLocalPlayer().AttackSpeedMod * 12;
+                        //var delay5 = Game.Ping - Me.GetSpell(SpellSlot.Q).Level * 2;
+                        //var delay6 = ObjectManager.GetLocalPlayer().AttackSpeedMod;
+                        //var delay7 = 1 / ObjectManager.GetLocalPlayer().AttackSpeedMod;
+                        //var delay8 = ObjectManager.GetLocalPlayer().AttackDelay;
+                        //var delay9 = 1 / ObjectManager.GetLocalPlayer().AttackDelay;
+                        //var delay10 = ObjectManager.GetLocalPlayer().AttackCastDelay;
+                        //var delay11 = 1 / ObjectManager.GetLocalPlayer().AttackCastDelay;
+
+                        //Console.WriteLine("Delay1: " + delay1);
+                        //Console.WriteLine("Delay2: " + delay2);
+                        //Console.WriteLine("Delay3: " + delay3);
+                        //Console.WriteLine("Delay4: " + delay4);
+                        //Console.WriteLine("Delay5: " + delay5);
+                        //Console.WriteLine("Delay6: " + delay6);
+                        //Console.WriteLine("Delay7: " + delay7);
+                        //Console.WriteLine("Delay8: " + delay8);
+                        //Console.WriteLine("Delay9: " + delay9);
+                        //Console.WriteLine("Delay10: " + delay10);
+                        //Console.WriteLine("Delay11: " + delay11);
+
+                        var time = qStack != 0
+                            ? (int) (delay3 + Game.Ping + Me.GetSpell(SpellSlot.Q).Level * 2)
+                            : (int) (delay3 + Game.Ping + (Game.Ping + Me.GetSpell(SpellSlot.Q).Level * 2));
+
+                       // Console.WriteLine(time);
                         if (MiscMenu["FlowersRiven.MiscMenu.SemiCancel"].Enabled || Orbwalker.Mode != OrbwalkingMode.None)
                         {
                             if (MiscMenu["FlowersRiven.MiscMenu.CalculatePing"].Enabled)
                             {
                                 if (time - Game.Ping > 0)
                                 {
-                                    Aimtec.SDK.Util.DelayAction.Queue(time - Game.Ping, Cancel);
+                                    DelayAction.Queue(time - Game.Ping, Cancel);
                                 }
                                 else
                                 {
-                                    Aimtec.SDK.Util.DelayAction.Queue(1, Cancel);
+                                    DelayAction.Queue(1, Cancel);
                                 }
                             }
                             else
                             {
-                                Aimtec.SDK.Util.DelayAction.Queue(time, Cancel);
+                                DelayAction.Queue(time, Cancel);
                             }
                         }
                     }
@@ -895,18 +963,25 @@
         {
             try
             {
+                //Me.ServerPosition.Extend(Game.CursorPos, Me.BoundingRadius * 2);
                 MyOrbwalkerManager.Reset();
 
                 if (myTarget != null && myTarget.IsValidTarget())
                 {
-                    var pos = Me.ServerPosition + (Me.ServerPosition - myTarget.ServerPosition).Normalized() * 150;
+                    var pos = Me.ServerPosition.Extend(myTarget.ServerPosition, Me.BoundingRadius * 2);
+                    //var pos = Me.ServerPosition +
+                    //          (Me.ServerPosition - myTarget.ServerPosition).Normalized() *
+                    //          (Me.BoundingRadius * 2 + myTarget.BoundingRadius);
+                    //var newPos = new Vector3(pos.X, pos.Y, myTarget.ServerPosition.Z);
 
                     Me.IssueOrder(OrderType.MoveTo, pos);
+                    DelayAction.Queue(10, () => { Orbwalker.Orbwalk(); });
                 }
                 else
                 {
-                    Me.IssueOrder(OrderType.MoveTo, Me.ServerPosition.Extend(Game.CursorPos, 150));
+                    Orbwalker.Move(Me.ServerPosition.Extend(Game.CursorPos, Me.BoundingRadius * 2));
                 }
+
             }
             catch (Exception ex)
             {
@@ -919,8 +994,10 @@
             try
             {
                 Orbwalker.ForceTarget(null);
+                
+                var target = Args.Target;// as Obj_AI_Base;
 
-                if (Args.Target == null || Args.Target.IsDead || !Args.Target.IsValidTarget())
+                if (target == null || target.IsDead || !target.IsValidTarget())
                 {
                     return;
                 }
@@ -934,14 +1011,19 @@
                         }
                         else
                         {
-                            ComboAfterAttackEvent(Args.Target);
+                            if (ComboMenu["FlowersRiven.ComboMenu.Item"].Enabled)
+                            {
+                                UseItem();
+                            }
+
+                            ComboAfterAttackEvent(target);
                         }
                         break;
                     case OrbwalkingMode.Mixed:
-                        HarassAfterAttackEvent(Args.Target);
+                        HarassAfterAttackEvent(target);
                         break;
                     case OrbwalkingMode.Laneclear:
-                        ClearFarmAfterAttackEvent(Args.Target);
+                        ClearFarmAfterAttackEvent(target);
                         break;
                 }
             }
@@ -1008,26 +1090,21 @@
 
                 if (target != null && target.IsValidTarget(400))
                 {
-                    if (ComboMenu["FlowersRiven.ComboMenu.Item"].Enabled)
-                    {
-                        UseItem();
-                    }
-
                     if (Q.Ready && target.IsValidTarget(400))
                     {
                         MyExtraManager.CastQ(target);
                         return;
                     }
 
-                    if (ComboMenu["FlowersRiven.ComboMenu.RMode"].As<MenuList>().Value != 3 && 
+                    if (ComboMenu["FlowersRiven.ComboMenu.RMode"].As<MenuList>().Value != 3 &&
                         R.Ready && isRActive && qStack == 2 && Q.Ready &&
-                        ComboMenu["FlowersRiven.ComboMenu.RMode"].As<MenuList>().Value != 1 && 
+                        ComboMenu["FlowersRiven.ComboMenu.RMode"].As<MenuList>().Value != 1 &&
                         MyExtraManager.R2Logic(target))
                     {
                         return;
                     }
 
-                    if (ComboMenu["FlowersRiven.ComboMenu.WCancel"].Enabled && W.Ready && 
+                    if (ComboMenu["FlowersRiven.ComboMenu.WCancel"].Enabled && W.Ready &&
                         target.IsValidTarget(W.Range) && !target.HaveShiled())
                     {
                         W.Cast();
@@ -1041,7 +1118,7 @@
                     }
 
                     if (ComboMenu["FlowersRiven.ComboMenu.R"].As<MenuKeyBind>().Enabled &&
-                        R.Ready && !isRActive && 
+                        R.Ready && !isRActive &&
                         ComboMenu["FlowersRiven.ComboMenu.RTargetFor" + target.ChampionName].Enabled)
                     {
                         MyExtraManager.R1Logic(target);
@@ -1159,8 +1236,8 @@
         {
             try
             {
-                if (ObjectManager.GetLocalPlayer().IsDead || ObjectManager.GetLocalPlayer().IsRecalling() || 
-                    MenuGUI.IsChatOpen() || MenuGUI.IsShopOpen())
+                if (ObjectManager.GetLocalPlayer().IsDead || ObjectManager.GetLocalPlayer().IsRecalling() ||
+                MenuGUI.IsChatOpen() || MenuGUI.IsShopOpen())
                 {
                     return;
                 }
@@ -1191,7 +1268,7 @@
 
                     Render.Text(MePos.X - 57, MePos.Y + 88, Color.Orange,
                         "Burst Combo(" + BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Key + "): " +
-                        (BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Enabled ? (target != null ? "Lock: " + target.ChampionName : "No Target"): "Off"));
+                        (BurstMenu["FlowersRiven.BurstMenu.Key"].As<MenuKeyBind>().Enabled ? (target != null ? "Lock: " + target.ChampionName : "No Target") : "Off"));
                 }
             }
             catch (Exception ex)
