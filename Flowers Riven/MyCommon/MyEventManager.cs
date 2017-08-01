@@ -928,8 +928,8 @@
                         //Console.WriteLine("Delay11: " + delay11);
 
                         var time = qStack != 0
-                            ? (int) (delay3 + Game.Ping + Me.GetSpell(SpellSlot.Q).Level * 2)
-                            : (int) (delay3 + Game.Ping + (Game.Ping + Me.GetSpell(SpellSlot.Q).Level * 2));
+                            ? (int) (delay3 + (Game.Ping > 50 ? Game.Ping : 50) + Me.GetSpell(SpellSlot.Q).Level * 2)
+                            : (int) (delay3 + (Game.Ping > 50 ? Game.Ping : 50) + ((Game.Ping > 50 ? Game.Ping : 50) + Me.GetSpell(SpellSlot.Q).Level * 2));
 
                        // Console.WriteLine(time);
                         if (MiscMenu["FlowersRiven.MiscMenu.SemiCancel"].Enabled || Orbwalker.Mode != OrbwalkingMode.None)
