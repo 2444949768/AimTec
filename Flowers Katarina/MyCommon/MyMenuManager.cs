@@ -20,7 +20,8 @@
             {
                 MyLogic.Menu = new Menu("FlowersKatarina", "Flowers Katarina", true);
                 {
-                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("MadebyNightMoon", "Made by NightMoon"));
+                    MyLogic.Menu.Add(new MenuSeperator("CreditName", "Credit: badao"));
                     MyLogic.Menu.Add(new MenuSeperator("IfFPSDrop", "If you have FPS Drop Try F5 reload"));
                     MyLogic.Menu.Add(new MenuSeperator("ASDASDF"));
                 }
@@ -41,7 +42,7 @@
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersKatarina.ComboMenu.ESettings", "-- E Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersKatarina.ComboMenu.E", "Use E"));
                     MyLogic.ComboMenu.Add(new MenuKeyBind("FlowersKatarina.ComboMenu.EKillAble", "Use E| Only KillAble",
-                        Aimtec.SDK.Util.KeyCode.G, KeybindType.Toggle, true));
+                        Aimtec.SDK.Util.KeyCode.G, KeybindType.Toggle));
 
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersKatarina.ComboMenu.RSettings", "-- R Settings"));
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersKatarina.ComboMenu.R", "Use R"));
@@ -51,6 +52,24 @@
 
                     MyLogic.ComboMenu.Add(new MenuSeperator("FlowersKatarina.ComboMenu.ModeSettings", "-- Other Settings"));
                     MyLogic.ComboMenu.Add(new MenuList("FlowersKatarina.ComboMenu.Mode", "Combo Mode: ", new[] {"QE", "EQ"}, 0));
+                    MyLogic.ComboMenu.Add(new MenuKeyBind("FlowersKatarina.ComboMenu.SwitchMode",
+                        "Switch Combo Mode Key", Aimtec.SDK.Util.KeyCode.H, KeybindType.Press))
+                        .OnValueChanged +=
+                        delegate (MenuComponent iMenuComponent, ValueChangedArgs Args)
+                        {
+                            if (Args.GetNewValue<MenuKeyBind>().Enabled)
+                            {
+                                switch (MyLogic.ComboMenu["FlowersKatarina.ComboMenu.Mode"].As<MenuList>().Value)
+                                {
+                                    case 0:
+                                        MyLogic.ComboMenu["FlowersKatarina.ComboMenu.Mode"].As<MenuList>().Value = 1;
+                                        break;
+                                    case 1:
+                                        MyLogic.ComboMenu["FlowersKatarina.ComboMenu.Mode"].As<MenuList>().Value = 0;
+                                        break;
+                                }
+                            }
+                        };
                     MyLogic.ComboMenu.Add(new MenuBool("FlowersKatarina.ComboMenu.Ignite", "Use Ignite"));
                 }
                 MyLogic.Menu.Add(MyLogic.ComboMenu);
@@ -59,13 +78,13 @@
                 {
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersKatarina.HarassMenu.QSettings", "-- Q Settings"));
                     MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.Q", "Use Q"));
-                    MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.QOnMinion", "Use Q| On Minion to Gapcloser"));
+                    MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.QOnMinion", "Use Q| On Minion to Gapcloser", false));
 
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersKatarina.HarassMenu.WSettings", "-- W Settings"));
-                    MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.W", "Use W"));
+                    MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.W", "Use W", false));
 
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersKatarina.HarassMenu.ESettings", "-- E Settings"));
-                    MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.E", "Use E"));
+                    MyLogic.HarassMenu.Add(new MenuBool("FlowersKatarina.HarassMenu.E", "Use E", false));
 
                     MyLogic.HarassMenu.Add(new MenuSeperator("FlowersKatarina.HarassMenu.ModeSettings", "-- Mode Settings"));
                     MyLogic.HarassMenu.Add(new MenuList("FlowersKatarina.HarassMenu.Mode", "Harass Mode: ", new[] { "QE", "EQ" }, 0));
@@ -154,7 +173,7 @@
 
                     MyLogic.DrawMenu.Add(new MenuSeperator("FlowersKatarina.DrawMenu.StatusSettings", "-- Logic Status"));
                     MyLogic.DrawMenu.Add(new MenuBool("FlowersKatarina.DrawMenu.ComboE", "Draw Combo E Status"));
-                    MyLogic.DrawMenu.Add(new MenuBool("FlowersKatarina.DrawMenu.ComboMode", "Draw Combo Mode Status"));
+                    MyLogic.DrawMenu.Add(new MenuBool("FlowersKatarina.DrawMenu.ComboMode", "Draw Combo Mode"));
                 }
                 MyLogic.Menu.Add(MyLogic.DrawMenu);
 

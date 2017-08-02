@@ -677,20 +677,107 @@ namespace Flowers_Katarina.MyCommon
             }
         }
 
+
+        internal static float GetDariusPassiveCount(Obj_AI_Base target)
+        {
+            return target.GetBuffCount("DariusHemo") > 0 ? target.GetBuffCount("DariusHemo") : 0;
+        }
+
+        internal static SpellSlot GetItemSlot(this Obj_AI_Hero source, string itemName)
+        {
+            if (source == null || string.IsNullOrEmpty(itemName))
+            {
+                return SpellSlot.Unknown;
+            }
+
+            var slot =
+                source.Inventory.Slots.FirstOrDefault(
+                    x => string.Equals(itemName, x.SpellName, StringComparison.CurrentCultureIgnoreCase));
+            if (slot != null && slot.SpellSlot != SpellSlot.Unknown)
+            {
+                return slot.SpellSlot;
+            }
+
+            return SpellSlot.Unknown;
+        }
+
+        internal static bool CanUseItem(this Obj_AI_Hero source, string itemName)
+        {
+            if (source == null || string.IsNullOrEmpty(itemName))
+            {
+                return false;
+            }
+
+            var slot = source.GetItemSlot(itemName);
+            if (slot != SpellSlot.Unknown)
+            {
+                return source.SpellBook.GetSpellState(slot) == SpellState.Ready;
+            }
+
+            return false;
+        }
+
+        internal static void UseItem(this Obj_AI_Hero source, Obj_AI_Hero target, string itemName)
+        {
+            if (source == null || target == null || !target.IsValidTarget() || string.IsNullOrEmpty(itemName))
+            {
+                return;
+            }
+
+            var slot = source.GetItemSlot(itemName);
+            if (slot != SpellSlot.Unknown && source.CanUseItem(itemName))
+            {
+                source.SpellBook.CastSpell(slot, target);
+            }
+        }
+
+        internal static void UseItem(this Obj_AI_Hero source, Vector3 position, string itemName)
+        {
+            if (source == null || position == Vector3.Zero || string.IsNullOrEmpty(itemName))
+            {
+                return;
+            }
+
+            var slot = source.GetItemSlot(itemName);
+            if (slot != SpellSlot.Unknown && source.CanUseItem(itemName))
+            {
+                source.SpellBook.CastSpell(slot, position);
+            }
+        }
+
+        internal static void UseItem(this Obj_AI_Hero source, string itemName)
+        {
+            if (source == null || string.IsNullOrEmpty(itemName))
+            {
+                return;
+            }
+
+            var slot = source.GetItemSlot(itemName);
+            if (slot != SpellSlot.Unknown && source.CanUseItem(itemName))
+            {
+                source.SpellBook.CastSpell(slot);
+            }
+        }
+
+        internal static void GetNames(this Obj_AI_Hero source)
+        {
+            foreach (var slot in source.Inventory.Slots)
+            {
+                if (!slot.SpellName.ToLower().Contains("no script"))
+                {
+                    Console.WriteLine(slot.SpellName + " - " + slot.ItemId);
+                }
+            }
+        }
+
         internal static IEnumerable<GameObject> badaoFleeLogic
         {
             get
             {
                 var Vinasun = new List<GameObject>();
-                Vinasun.AddRange(
-                    ObjectManager.Get<Obj_AI_Base>()
-                        .Where(x => !(x is Obj_AI_Minion && x.UnitSkinName.ToLower().Contains("ward"))));
-                Vinasun.AddRange(
-                    GameObjects.Heroes.Where(
-                        unit =>
-                            unit != null && unit.IsValid && !unit.IsDead && unit.IsTargetable &&
-                            ObjectManager.GetLocalPlayer().Distance(unit) <= MyLogic.E.Range));
-                Vinasun.AddRange(MyLogic.Daggers.Select(x => x.obj).ToList());
+                Vinasun.AddRange(GameObjects.Minions.Where(x => x.IsValidTarget(MyLogic.E.Range) && (x.IsMinion() || x.IsMob())).ToArray());
+                Vinasun.AddRange(GameObjects.Heroes.Where(x => x != null && x.IsTargetable && x.IsValidTarget(MyLogic.E.Range)).ToArray());
+                Vinasun.AddRange(MyLogic.Daggers.Where(x => Game.TickCount - x.time < 3850).Select(x => x.obj).ToArray());
                 return Vinasun;
             }
         }

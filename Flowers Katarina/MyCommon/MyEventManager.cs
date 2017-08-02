@@ -39,6 +39,8 @@
         {
             try
             {
+                Daggers.RemoveAll(x => Game.TickCount - x.time > 3850);
+
                 if (Me.IsDead || Me.IsRecalling())
                 {
                     return;
@@ -98,6 +100,8 @@
         {
             try
             {
+                Me.IssueOrder(OrderType.MoveTo, Game.CursorPos);
+
                 if (FleeMenu["FlowersKatarina.FleeMenu.W"].Enabled && W.Ready)
                 {
                     W.Cast();
@@ -105,13 +109,18 @@
 
                 if (FleeMenu["FlowersKatarina.FleeMenu.E"].Enabled && E.Ready)
                 {
-                    var nearest = MyExtraManager.badaoFleeLogic.ToArray().MinOrDefault(x => x.Position.Distance(Game.CursorPos));
+                    var fleeList = MyExtraManager.badaoFleeLogic.ToArray();
 
-                    if (nearest != null && nearest.Position.DistanceToMouse() < Me.DistanceToMouse() &&
-                        nearest.Position.DistanceToPlayer() > 300)
+                    if (fleeList.Any())
                     {
-                        var pos = nearest.Position.To2D().Extend(Game.CursorPos.To2D(), 150);
-                        E.Cast(pos);
+                        var nearest = fleeList.MinOrDefault(x => x.Position.Distance(Game.CursorPos));
+
+                        if (nearest != null && nearest.Position.DistanceToMouse() < Me.DistanceToMouse() &&
+                            nearest.Position.DistanceToPlayer() > 300)
+                        {
+                            var pos = nearest.Position.To2D().Extend(Game.CursorPos.To2D(), 150);
+                            E.Cast(pos);
+                        }
                     }
                 }
             }
@@ -127,13 +136,18 @@
             {
                 if (E.Ready)
                 {
-                    var nearest = MyExtraManager.badaoFleeLogic.ToArray().MinOrDefault(x => x.Position.Distance(Game.CursorPos));
+                    var fleeList = MyExtraManager.badaoFleeLogic.ToArray();
 
-                    if (nearest != null && nearest.Position.DistanceToPlayer() <= E.Range)
+                    if (fleeList.Any())
                     {
-                        var pos = nearest.Position.To2D().Extend(Game.CursorPos.To2D(), 150);
+                        var nearest = fleeList.MinOrDefault(x => x.Position.Distance(Game.CursorPos));
 
-                        E.Cast(pos);
+                        if (nearest != null && nearest.Position.DistanceToPlayer() <= E.Range)
+                        {
+                            var pos = nearest.Position.To2D().Extend(Game.CursorPos.To2D(), 150);
+
+                            E.Cast(pos);
+                        }
                     }
                 }
             }
@@ -251,7 +265,7 @@
                         }
 
                         if (target.Health < R.GetDamage(target) * 0.6 && KillStealMenu["FlowersKatarina.KillStealMenu.R"].Enabled
-                            && R.Ready && target.IsValidTarget(R.Range))
+                            && R.Ready && target.IsValidTarget(R.Range) && target.Health > 50 * target.Level)
                         {
                             R.Cast();
                             return;
@@ -322,7 +336,7 @@
                         if (ComboMenu["FlowersKatarina.ComboMenu.RKillAble"].Enabled &&
                             (target.Health <= MyExtraManager.GetComboDamage(target) ||
                              target.Health <= R.GetDamage(target) * 0.8) &&
-                             target.Health > Q.GetDamage(target) + MyExtraManager.GetKataPassiveDamage(target))
+                             target.Health > Q.GetDamage(target) + MyExtraManager.GetKataPassiveDamage(target)* 2)
                         {
                             Orbwalker.AttackingEnabled = false;
                             Orbwalker.MovingEnabled = false;
@@ -361,6 +375,12 @@
                     if (HarassMenu["FlowersKatarina.HarassMenu.W"].Enabled && W.Ready && target.IsValidTarget(W.Range))
                     {
                         W.Cast();
+                    }
+
+                    if (HarassMenu["FlowersKatarina.HarassMenu.Q"].Enabled && Q.Ready && Me.Level < 3 &&
+                        target.IsValidTarget(Q.Range))
+                    {
+                        Q.CastOnUnit(target);
                     }
 
                     switch (HarassMenu["FlowersKatarina.HarassMenu.Mode"].As<MenuList>().Value)
@@ -552,28 +572,21 @@
         {
             try
             {
-                if (!sender.Name.Contains("Katarina_") || !sender.IsAlly)
+                if (!sender.Name.Contains("Katarina_"))
                 {
                     return;
                 }
 
-                //Katarina_Base_Q_Darrger_Land_Dirt.troy
-                //Katarina_Base_W_indicator_Ally.troy
-                //Katarina_Base_E_Beam.troy
-                //Katarina_Base_Dagger_PickUp_Cas.troy
-
                 switch (sender.Name)
                 {
-                    case "Katarina_Base_Q_Darrger_Land_Dirt.troy":
-                        Daggers.Add(new MyDaggerManager(sender, sender.ServerPosition, Game.TickCount, DaggerType.QLand));
-                        break;
+                    case "Katarina_Base_Q_Dagger_Land_Stone.troy":
                     case "Katarina_Base_W_indicator_Ally.troy":
-                        Daggers.Add(new MyDaggerManager(sender, sender.ServerPosition, Game.TickCount, DaggerType.WIndicator));
-                        break;
                     case "Katarina_Base_E_Beam.troy":
-                        Daggers.Add(new MyDaggerManager(sender, sender.ServerPosition, Game.TickCount, DaggerType.EBeam));
+                    case "Katarina_Base_Dagger_Ground_Indicator.troy":
+                        Daggers.Add(new MyDaggerManager(sender, sender.ServerPosition, Game.TickCount));
                         break;
                     case "Katarina_Base_Dagger_PickUp_Cas.troy":
+                    case "Katarina_Base_Dagger_PickUp_Tar.troy":
                         Daggers.RemoveAll(x => x.obj.NetworkId == sender.NetworkId);
                         break;
                 }
@@ -588,28 +601,17 @@
         {
             try
             {
-                if (!sender.Name.Contains("Katarina") || !sender.IsAlly)
+                if (!sender.Name.Contains("Katarina"))
                 {
                     return;
                 }
 
-                //Katarina_Base_Q_Darrger_Land_Dirt.troy
-                //Katarina_Base_W_indicator_Ally.troy
-                //Katarina_Base_E_Beam.troy
-                //Katarina_Base_Dagger_PickUp_Cas.troy
-
                 switch (sender.Name)
                 {
-                    case "Katarina_Base_Q_Darrger_Land_Dirt.troy":
-                        Daggers.RemoveAll(x => x.type == DaggerType.QLand && x.obj.NetworkId == sender.NetworkId);
-                        break;
-                    case "Katarina_Base_W_indicator_Ally.troy":
-                        Daggers.RemoveAll(x => x.type == DaggerType.WIndicator && x.obj.NetworkId == sender.NetworkId);
-                        break;
-                    case "Katarina_Base_E_Beam.troy":
-                        Daggers.RemoveAll(x => x.type == DaggerType.EBeam && x.obj.NetworkId == sender.NetworkId);
-                        break;
+                    case "Katarina_Base_Dagger_Ground_Indicator.troy":
                     case "Katarina_Base_Dagger_PickUp_Cas.troy":
+                    case "Katarina_Base_Q_Dagger_Land_Stone.troy":
+                    case "Katarina_Base_Dagger_PickUp_Tar.troy":
                         Daggers.RemoveAll(x => x.obj.NetworkId == sender.NetworkId);
                         break;
                 }
@@ -696,7 +698,7 @@
                 if (DrawMenu["FlowersKatarina.DrawMenu.ComboMode"].Enabled)
                 {
                     Render.Text(MePos.X - 57, MePos.Y + 88, Color.Orange,
-                        "Combo Mode(" + ComboMenu["FlowersKatarina.ComboMenu.ModeKey"].As<MenuKeyBind>().Key + "): " +
+                        "Combo Mode(" + ComboMenu["FlowersKatarina.ComboMenu.SwitchMode"].As<MenuKeyBind>().Key + "): " +
                         ComboMenu["FlowersKatarina.ComboMenu.Mode"].As<MenuList>().SelectedItem);
                 }
             }
