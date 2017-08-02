@@ -113,8 +113,7 @@
                     break;
                 case SpellSlot.R:
                     dmg =
-                        new[] {100, 200, 300}[ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.R).Level - 1
-                        ] +
+                        new[] {100, 200, 300}[ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.R).Level - 1] +
                         0.75 * ObjectManager.GetLocalPlayer().FlatPhysicalDamageMod;
 
                     if (target.HasBuff("DariusHemo"))
@@ -127,6 +126,10 @@
 
             if (dmg > 0)
             {
+                if (spell.Slot == SpellSlot.R)
+                {
+                    return ObjectManager.GetLocalPlayer().CalculateDamage(target, DamageType.True, dmg);
+                }
                 return ObjectManager.GetLocalPlayer().CalculateDamage(target, DamageType.Physical, dmg);
             }
 

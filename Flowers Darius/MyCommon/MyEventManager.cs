@@ -482,7 +482,7 @@
                         }
                         break;
                     case GameObjectType.obj_AI_Minion:
-                        if (MyManaManager.SpellFarm)
+                        if (MyManaManager.SpellFarm && Orbwalker.Mode == OrbwalkingMode.Laneclear)
                         {
                             if (Args.Target.IsMinion())
                             {
@@ -525,7 +525,7 @@
                     case GameObjectType.obj_Barracks:
                     case GameObjectType.obj_BarracksDampener:
                     case GameObjectType.obj_HQ:
-                        if (MyManaManager.SpellFarm)
+                        if (MyManaManager.SpellFarm && Orbwalker.Mode == OrbwalkingMode.Laneclear)
                         {
                             if (Me.ManaPercent() >= ClearMenu["FlowersDarius.ClearMenu.LaneClearManaPercent"].Value)
                             {
