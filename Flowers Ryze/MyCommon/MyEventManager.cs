@@ -312,11 +312,6 @@
                         }
                         else
                         {
-                            if (useW && W.Ready && target.IsValidTarget(W.Range))
-                            {
-                                W.CastOnUnit(target);
-                            }
-
                             if (useQ && Q.Ready && target.IsValidTarget(Q.Range))
                             {
                                 var qPred = Q.GetPrediction(target);
@@ -336,7 +331,22 @@
                             {
                                 var qPred = Q.GetPrediction(target);
 
-                                if (qPred.HitChance >= HitChance.High)
+                                if (qPred.HitChance >= HitChance.VeryHigh)
+                                {
+                                    Q.Cast(qPred.UnitPosition);
+                                }
+                            }
+
+                            if (useW && W.Ready && target.IsValidTarget(W.Range))
+                            {
+                                W.CastOnUnit(target);
+                            }
+
+                            if (useQ && Q.Ready && target.IsValidTarget(Q.Range))
+                            {
+                                var qPred = Q.GetPrediction(target);
+
+                                if (qPred.HitChance >= HitChance.VeryHigh)
                                 {
                                     Q.Cast(qPred.UnitPosition);
                                 }
@@ -374,7 +384,7 @@
 
                         if (useW && W.Ready && (!FullStack || HaveShield) &&
                             target.IsValidTarget(W.Range) &&
-                            ((Ecd >= 2) || target.HasBuff("ryzee")))
+                            (Ecd >= 2 || target.HasBuff("ryzee")))
                         {
                             W.CastOnUnit(target);
                         }
@@ -428,11 +438,6 @@
                 {
                     if (Game.TickCount - LastCastTime > 500)
                     {
-                        if (useW && W.Ready && target.IsValidTarget(W.Range))
-                        {
-                            W.CastOnUnit(target);
-                        }
-
                         if (useQ && Q.Ready && target.IsValidTarget(Q.Range))
                         {
                             var qPred = Q.GetPrediction(target);
@@ -446,6 +451,21 @@
                         if (useE && E.Ready && target.IsValidTarget(E.Range))
                         {
                             E.CastOnUnit(target);
+                        }
+
+                        if (useQ && Q.Ready && target.IsValidTarget(Q.Range))
+                        {
+                            var qPred = Q.GetPrediction(target);
+
+                            if (qPred.HitChance >= HitChance.VeryHigh)
+                            {
+                                Q.Cast(qPred.UnitPosition);
+                            }
+                        }
+
+                        if (useW && W.Ready && target.IsValidTarget(W.Range))
+                        {
+                            W.CastOnUnit(target);
                         }
 
                         if (useQ && Q.Ready && target.IsValidTarget(Q.Range))
@@ -714,7 +734,6 @@
                 Console.WriteLine("Error in MyEventManager.JungleClearEvent." + ex);
             }
         }
-
 
         private static void LastHitEvent()
         {
