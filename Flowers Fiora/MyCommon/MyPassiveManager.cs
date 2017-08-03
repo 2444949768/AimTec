@@ -241,10 +241,8 @@
 
         public static Vector3 OrbwalkerPosition(Obj_AI_Hero target)
         {
-            var list = GetPassivePosList(target).ToArray();
-
             var pos =
-                list.Where(
+                GetPassivePosList(target).Where(
                         x =>
                             x.Distance(ObjectManager.GetLocalPlayer().ServerPosition) > 100 &&
                             x.Distance(target.ServerPosition) > 50)
@@ -260,7 +258,7 @@
 
             return Game.CursorPos;
         }
-
+    
         internal static void Initializer()
         {
             Game.OnUpdate += OnUpdate;
@@ -270,7 +268,7 @@
         {
             AllPassive.Clear();
 
-            var emitterList = ObjectManager.Get<GameObject>().Where(IsPassive).ToArray();
+            var emitterList = ObjectManager.Get<GameObject>().Where(x => x != null && x.IsValid && x.IsPassive()).ToArray();
 
             foreach (var passive in emitterList)
             {

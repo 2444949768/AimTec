@@ -28,6 +28,7 @@
             try
             {
                 Game.OnUpdate += OnUpdate;
+                SpellBook.OnCastSpell += OnCastSpell;
                 Orbwalker.PreMove += OnPreMove;
                 Orbwalker.PostAttack += OnPostAttack;
                 Render.OnRender += OnRender;
@@ -35,6 +36,21 @@
             catch (Exception ex)
             {
                 Console.WriteLine("Error in MyEventManager.Initializer." + ex);
+            }
+        }
+
+        private static void OnCastSpell(Obj_AI_Base sender, SpellBookCastSpellEventArgs Args)
+        {
+            try
+            {
+                if (sender.IsMe && Args.Slot == SpellSlot.Q)
+                {
+                    lastQTime = Game.TickCount;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in MyEventManager.OnCastSpell." + ex);
             }
         }
 
@@ -46,7 +62,10 @@
 
                 if (Me.IsDead || Me.IsRecalling())
                 {
-                    OrbwalkerPoint = Game.CursorPos;
+                    if (Orbwalker.Mode != OrbwalkingMode.None)
+                    {
+                        OrbwalkerPoint = Game.CursorPos;
+                    }
                     return;
                 }
 
@@ -80,7 +99,7 @@
         {
             try
             {
-                if (Orbwalker.Mode != OrbwalkingMode.Combo)
+                if (Orbwalker.Mode != OrbwalkingMode.Combo && Orbwalker.Mode != OrbwalkingMode.None)
                 {
                     OrbwalkerPoint = Game.CursorPos;
                 }
@@ -386,24 +405,31 @@
 
         private static void ForcusAttack(Obj_AI_Hero target)
         {
-            if (Me.SpellBook.IsAutoAttacking || target.IsValidAutoRange() && Orbwalker.CanAttack())
+            if (Me.IsDashing() || Me.SpellBook.IsCastingSpell || Me.SpellBook.IsAutoAttacking ||
+                !Orbwalker.CanMove() || target.IsValidAutoRange() && Orbwalker.CanAttack())
             {
                 return;
             }
 
-            if (Q.Ready || Game.TickCount - lastMoveChangedTime < 500)
+            if (Q.Ready || Game.TickCount - lastMoveChangedTime < 650 + Game.Ping || Game.TickCount - lastQTime < 650 + Game.Ping)
             {
                 return;
             }
 
             var pos = MyPassiveManager.OrbwalkerPosition(target);
-            var path = Me.GetPath(pos);
+            //var path = Me.GetPath(pos);
+            var orbwalkerPos = pos;//path.Length < 3 ? pos : path.Skip(path.Length / 2).FirstOrDefault();
 
-            OrbwalkerPoint = target.Path.Length >= 2
-                ? (path.Length < 3 ? pos : path.Skip(path.Length / 2).FirstOrDefault())
-                : pos;
-            Orbwalker.ForceTarget(target);
-            lastMoveChangedTime = Game.TickCount;
+            if (!orbwalkerPos.IsZero)
+            {
+                OrbwalkerPoint = orbwalkerPos;
+                Orbwalker.ForceTarget(target);
+                lastMoveChangedTime = Game.TickCount;
+            }
+            else
+            {
+                OrbwalkerPoint = Game.CursorPos;
+            }
         }
 
         private static void OnPreMove(object sender, PreMoveEventArgs Args)

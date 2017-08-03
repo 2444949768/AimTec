@@ -36,5 +36,6 @@
 
         internal static Vector3 OrbwalkerPoint { get; set; } = Game.CursorPos;
         internal static float lastMoveChangedTime { get; set; } = 0;
+        internal static int lastQTime { get; set; } = 0;
     }
 }
