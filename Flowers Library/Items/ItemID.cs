@@ -1,4 +1,4 @@
-﻿namespace Flowers_Library.Items
+﻿namespace Flowers_Library
 {
     // https://github.com/AimTecIO/Aimtec.SDK/blob/master/Aimtec.SDK/Damage/ItemId.cs
 

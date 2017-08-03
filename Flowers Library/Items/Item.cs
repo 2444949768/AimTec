@@ -1,4 +1,4 @@
-﻿namespace Flowers_Library.Items
+﻿namespace Flowers_Library
 {
     #region
 
@@ -11,9 +11,9 @@
 
     public class Item
     {
-        private uint itemID { get; set; }
-        private float range { get; set; }
-        private Obj_AI_Hero Owner { get; set; }
+        public uint itemID { get; set; }
+        public float range { get; set; }
+        public Obj_AI_Hero Owner { get; set; }
 
         public Item(uint id, float range = float.MaxValue, Obj_AI_Hero owner = null)
         {
@@ -76,6 +76,9 @@
             return this.IsInRange(newPos);
         }
 
-        
+        public double GetDamage(Obj_AI_Hero target)
+        {
+            return Owner.GetItemDamage(itemID, target);
+        }
     }
 }

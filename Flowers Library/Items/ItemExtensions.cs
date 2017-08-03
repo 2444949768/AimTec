@@ -1,4 +1,4 @@
-﻿namespace Flowers_Library.Items
+﻿namespace Flowers_Library
 {
     #region
 
@@ -213,45 +213,22 @@
 
             switch (itemID)
             {
-                case 3153: //Blade of the Ruined King 破败
+                case 3153: //BladeoftheRuinedKing 破败
                     return source.CalculateDamage(target, DamageType.Magical, 100);
+                case 3030: //HextechGLP800 冰冻枪
+                    var GLP800DMG = 100 + source.Level * 5.5 + 0.35 * source.FlatMagicDamageMod + 1;
+                    return source.CalculateDamage(target, DamageType.Magical, GLP800DMG);
+                case 3144: //BilgewaterCutlass 比尔沃特吉弯刀
+                    return source.CalculateDamage(target, DamageType.Magical, 100);
+                case 3146: //HextechGunblade 科技枪
+                    var HexGunDMG = 175 + source.Level * 4.1 + 0.30 * source.FlatMagicDamageMod + 1;
+                    return source.CalculateDamage(target, DamageType.Magical, HexGunDMG);
+                case 3152: //HextechProtobelt01 推推棒
+                    var HexProDMG = 150 + 0.25 * source.FlatMagicDamageMod;
+                    return source.CalculateDamage(target, DamageType.Magical, HexProDMG);
                 default:
                     return 0d;
             }
         }
-
-
-        //科技枪 HextechGunblade - 3146
-        //冰冻枪 ItemWillBoltSpellBase - 3030
-        //沙漏 ZhonyasHourglass - 3157
-        //冰霜女王指令 ItemWraithCollar - 3092
-        //推推棒 ItemSoFBoltSpellBase - 3152
-        //皇冠 shurelyascrest - 3069
-        //黄色视频lv11 TrinketTotemLv1 - 3340
-        //扫描 TrinketSweeperLv1 - 3341 - TrinketSweeperLvl3 - 3364
-        //灯泡 TrinketOrbLvl3 - 3363
-        //150水晶瓶 ItemCrystalFlask - 2031
-        //猎人药水 ItemCrystalFlaskJungle - 2032
-        //腐蚀药水 ItemDarkCrystalFlask - 2033
-        //巫术药剂 ElixirOfSorcery - 2139
-        //嗜血药剂 ElixirOfWrath - 2140
-        //钢铁药剂 ElixirOfIron - 2138
-        //水银腰带 QuicksilverSash - 3140
-        //比尔沃特吉弯刀 BilgewaterCutlass - 3144
-        //大眼石 ItemGhostWard - 2045
-        //皇冠升级为眼石 ItemGhostWard - 2302
-        //救赎 ItemRedemption - 3107
-        //坩埚 ItemMorellosBane - 3222
-        //号令之旗 ItemPromote - 3060
-        //幽梦 YoumusBlade - 3142
-        //破败 ItemSwordOfFeastAndFamine - 3153
-        //九头蛇 ItemTiamatCleave - 3074
-        //巨人九头蛇 ItemTitanicHydraCleave - 3748
-        //水银弯刀 ItemMercurial - 3139
-        //提亚马特 ItemTiamatCleave - 3077
-        //传送门 ItemVoidGate - 3512
-        //蓝盾 RanduinsOmen - 3143
-        //护盾(加攻击的) ItemVeilChannel - 3814
-        //石像鬼铠甲 Item3193Active - 3193
     }
 }
