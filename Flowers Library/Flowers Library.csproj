@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gapcloser\Gapcloser.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemExtensions.cs" />
     <Compile Include="Items\ItemID.cs" />
@@ -62,7 +63,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Gapcloser\" />
     <Folder Include="Interrupt\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
