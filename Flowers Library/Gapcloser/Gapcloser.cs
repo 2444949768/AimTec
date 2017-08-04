@@ -921,27 +921,20 @@
 
             foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsEnemy))
             {
-                if (Menu["Gapcloser.HeroMenu_" + enemy.ChampionName] != null)
-                {
-                    continue;
-                }
-
-                var heroMenu = new Menu("Gapcloser.HeroMenu_" + enemy.ChampionName, enemy.ChampionName)
+                var heroMenu = new Menu("Gapcloser." + enemy.ChampionName.ToLower(), enemy.ChampionName)
                     {
-                        new MenuBool("Gapcloser.Menu_" + enemy.ChampionName + ".Enabled", "Enabled"),
-                        new MenuSlider("Gapcloser.Menu_" + enemy.ChampionName + ".Distance",
-                                "If Target Distance To Player <= x", 450, 50, 600)
+                        new MenuBool("Gapcloser." + enemy.ChampionName.ToLower() + ".Enabled", "Enabled"),
+                        new MenuSlider("Gapcloser." + enemy.ChampionName.ToLower() + ".Distance",
+                                "If Target Distance To Player <= x", 550, 1, 700),
+                            new MenuSlider("Gapcloser." + enemy.ChampionName.ToLower() + ".HPercent",
+                                "When Player HealthPercent <= x%", 80, 1, 101)
                     };
+                Menu.Add(heroMenu);
 
                 foreach (var spell in Spells.Where(x => x.ChampionName == enemy.ChampionName))
                 {
-                    if (heroMenu["Gapcloser.Menu_" + enemy.ChampionName + "." + spell.SpellName] != null)
-                    {
-                        continue;
-                    }
-
-                    heroMenu.Add(new MenuBool("Gapcloser.Menu_" + enemy.ChampionName + "." + spell.SpellName,
-                        "Anti " + spell.Slot + "(" + spell.SpellName +")"));
+                    heroMenu.Add(new MenuBool("Gapcloser." + enemy.ChampionName.ToLower() + "." + spell.SpellName.ToLower(),
+                        "Anti Slot: " + spell.Slot + "(" + spell.SpellName +")"));
                 }
             }
 
@@ -964,7 +957,7 @@
 
         private static void OnNewPath(Obj_AI_Base sender, Obj_AI_BaseNewPathEventArgs Args)
         {
-            if (sender == null || sender.Type != GameObjectType.obj_AI_Hero)
+            if (sender == null || sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy)
             {
                 return;
             }
@@ -976,7 +969,7 @@
 
             if (Args.IsDash)
             {
-                Gapclosers[sender.NetworkId].Unit = sender as Obj_AI_Hero;
+                Gapclosers[sender.NetworkId].Unit = (Obj_AI_Hero)sender;
                 Gapclosers[sender.NetworkId].Slot = SpellSlot.Unknown;
                 Gapclosers[sender.NetworkId].Type = SpellType.Dash;
                 Gapclosers[sender.NetworkId].SpellName = string.Empty;
@@ -993,12 +986,12 @@
 
         private static void OnUpdate()
         {
-            foreach (var unit in Gapclosers.Values.Where(x => Game.TickCount - x.StartTick > 900 + Game.Ping).Select(x => x.Unit.NetworkId))
+            if (Gapclosers.Values.Any(x => Game.TickCount - x.StartTick > 900 + Game.Ping))
             {
-                Gapclosers.Remove(unit);
+                Gapclosers.Clear();
             }
 
-            if (OnGapcloser == null || Menu["Gapcloser.Enabled"] == null || !Menu["Gapcloser.Enabled"].Enabled)
+            if (OnGapcloser == null || Menu["Gapcloser.Enabled"].As<MenuBool>() == null || !Menu["Gapcloser.Enabled"].As<MenuBool>().Enabled)
             {
                 return;
             }
@@ -1007,53 +1000,61 @@
                 var Args in
                 Gapclosers.Where(
                     x =>
-                        x.Value.Unit.IsValidTarget() && Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName] != null &&
-                        Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Enabled"].As<MenuBool>().Enabled))
+                        x.Value.Unit.IsValidTarget() && Menu["Gapcloser." + x.Value.Unit.ChampionName.ToLower()].As<Menu>() != null &&
+                        Menu["Gapcloser." + x.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + x.Value.Unit.ChampionName.ToLower() + ".Enabled"].As<MenuBool>().Enabled))
             {
-                switch (Args.Value.Type)
+                if (ObjectManager.GetLocalPlayer().HealthPercent() >
+                    Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                        "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".HPercent"].As<MenuSlider>().Value)
                 {
-                    case SpellType.Attack:
-                    case SpellType.Targeted:
+                    continue;
+                }
+
+                if (Args.Value.Type == SpellType.SkillShot)
+                {
+                    if (Args.Value.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
+                        Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Distance"].As<MenuSlider>().Value *
+                        Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Distance"].As<MenuSlider>().Value)
+                    {
                         OnGapcloser(Args.Value.Unit, Args.Value);
-                        break;
-                    case SpellType.SkillShot:
-                        if (Args.Value.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
-                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
-                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
-                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
-                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value)
-                        {
-                            OnGapcloser(Args.Value.Unit, Args.Value);
-                        }
-                        break;
-                    case SpellType.Dash:
-                        if (Args.Value.Type == SpellType.Dash &&
-                            Args.Value.EndPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
-                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
-                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
-                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
-                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value)
-                        {
-                            OnGapcloser(Args.Value.Unit, Args.Value);
-                        }
-                        break;
+                    }
+                }
+                else if (Args.Value.Type == SpellType.Dash)
+                {
+                    if (Args.Value.Type == SpellType.Dash &&
+                        Args.Value.EndPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
+                        Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Distance"].As<MenuSlider>().Value *
+                        Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Distance"].As<MenuSlider>().Value)
+                    {
+                        OnGapcloser(Args.Value.Unit, Args.Value);
+                    }
+                }
+                else if (Args.Value.Type == SpellType.Attack || Args.Value.Type == SpellType.Targeted)
+                {
+                    OnGapcloser(Args.Value.Unit, Args.Value);
                 }
             }
         }
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
         {
-            if (sender == null || !sender.IsValid || sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy ||
-                string.IsNullOrEmpty(Args.SpellData.Name))
+            if (sender == null || !sender.IsValid ||
+                sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy || 
+                string.IsNullOrEmpty(Args.SpellData.Name) || 
+                Args.SpellData.Name.ToLower().Contains("attack") || Args.SpellData.Name.ToLower().Contains("crit"))
             {
                 return;
             }
 
             if (Spells.All(
                     x => !string.Equals(x.SpellName, Args.SpellData.Name, StringComparison.CurrentCultureIgnoreCase)) ||
-                !Menu["Gapcloser.HeroMenu_" + sender.UnitSkinName]
-                ["Gapcloser.Menu_" + sender.UnitSkinName + "." + Args.SpellData.Name].Enabled)
+                !Menu["Gapcloser." + sender.UnitSkinName.ToLower()].As<Menu>()
+                ["Gapcloser." + sender.UnitSkinName.ToLower() + "." + Args.SpellData.Name.ToLower()].As<MenuBool>().Enabled)
             {
                 return;
             }
@@ -1063,11 +1064,9 @@
                 Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
             }
 
-            Gapclosers[sender.NetworkId].Unit = sender as Obj_AI_Hero;
+            Gapclosers[sender.NetworkId].Unit = (Obj_AI_Hero)sender;
             Gapclosers[sender.NetworkId].Slot = Args.SpellSlot;
-            Gapclosers[sender.NetworkId].Type = Args.Target.IsMe
-                ? Args.SpellData.Name.Contains("attack") ? SpellType.Attack : SpellType.Targeted
-                : SpellType.SkillShot;
+            Gapclosers[sender.NetworkId].Type = Args.Target != null ? SpellType.Targeted : SpellType.SkillShot;
             Gapclosers[sender.NetworkId].SpellName = Args.SpellData.Name;
             Gapclosers[sender.NetworkId].StartPosition = Args.Start;
             Gapclosers[sender.NetworkId].EndPosition = Args.End;
