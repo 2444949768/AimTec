@@ -789,19 +789,25 @@
                 {
                     foreach (var minion in minions)
                     {
-                        if (LastHitMenu["FlowersYasuo.LastHitMenu.Q"].Enabled && Q.Ready)
+                        if (LastHitMenu["FlowersYasuo.LastHitMenu.Q"].Enabled && !HaveQ3 && Q.Ready)
                         {
-                            if (minion.IsValidTarget(Q.Range) && !HaveQ3 && minion.Health < Me.GetSpellDamage(minion, SpellSlot.Q))
+                            if (minion.IsValidTarget(Q.Range)  && minion.Health < Me.GetSpellDamage(minion, SpellSlot.Q))
                             {
                                 Q.Cast(minion);
                             }
+                        }
 
+                        if (LastHitMenu["FlowersYasuo.LastHitMenu.Q3"].Enabled && HaveQ3 && Q.Ready)
+                        {
                             if (minion.IsValidTarget(Q3.Range) && HaveQ3 &&
                                 minion.Health < Me.GetSpellDamage(minion, SpellSlot.Q))
                             {
                                 Q3.Cast(minion);
                             }
+                        }
 
+                        if (LastHitMenu["FlowersYasuo.LastHitMenu.E"].Enabled && E.Ready)
+                        {
                             if (minion.IsValidTarget(E.Range) &&
                                 minion.Health <
                                 Me.GetSpellDamage(minion, SpellSlot.E) +

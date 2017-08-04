@@ -336,9 +336,10 @@
         {
             if (target.IsValidTarget())
             {
-                return ObjectManager.GetLocalPlayer().IsFacingUnit(target)
-                    ? ObjectManager.GetLocalPlayer().ServerPosition.Extend(target.ServerPosition, 475f)
-                    : ObjectManager.GetLocalPlayer().ServerPosition.Extend(Prediction.GetPrediction(target, 0.05f).UnitPosition, 475f);
+                return ObjectManager.GetLocalPlayer().ServerPosition.Extend(target.ServerPosition, 475f);
+                //return ObjectManager.GetLocalPlayer().IsFacingUnit(target)
+                //    ? ObjectManager.GetLocalPlayer().ServerPosition.Extend(target.ServerPosition, 475f)
+                //    : ObjectManager.GetLocalPlayer().ServerPosition.Extend(Prediction.GetPrediction(target, 0.05f).UnitPosition, 475f);
             }
 
             return Vector3.Zero;
