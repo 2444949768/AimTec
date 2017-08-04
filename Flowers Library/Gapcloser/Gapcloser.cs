@@ -686,6 +686,46 @@
                     SpellType = SpellType.SkillShot
                 });
 
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Renekton",
+                    Slot = SpellSlot.E,
+                    SpellName = "renektonpreexecute",
+                    SpellType = SpellType.SkillShot
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Renekton",
+                    Slot = SpellSlot.E,
+                    SpellName = "renektonsuperexecute",
+                    SpellType = SpellType.SkillShot
+                });
+
+            #endregion
+
+            #region Rengar
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Rengar",
+                    Slot = SpellSlot.Unknown,
+                    SpellName = "rengarpassivebuffdash",
+                    SpellType = SpellType.SkillShot
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Rengar",
+                    Slot = SpellSlot.Unknown,
+                    SpellName = "rengarpassivebuffdashaadummy",
+                    SpellType = SpellType.SkillShot
+                });
+
             #endregion
 
             #region Riven
