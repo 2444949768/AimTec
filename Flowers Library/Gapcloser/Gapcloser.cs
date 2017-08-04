@@ -84,6 +84,19 @@
 
             #endregion
 
+            #region Ahri
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ahri",
+                    Slot = SpellSlot.R,
+                    SpellName = "ahritumble",
+                    SpellType = SpellType.SkillShot
+                });
+
+            #endregion
+
             #region Akali
 
             Spells.Add(
@@ -118,6 +131,19 @@
                     ChampionName = "Azir",
                     Slot = SpellSlot.E,
                     SpellName = "azire",
+                    SpellType = SpellType.SkillShot
+                });
+
+            #endregion
+
+            #region Caitlyn
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Caitlyn",
+                    Slot = SpellSlot.E,
+                    SpellName = "caitlynentrapment",
                     SpellType = SpellType.SkillShot
                 });
 
@@ -202,6 +228,19 @@
                     Slot = SpellSlot.E,
                     SpellName = "elisespideredescent",
                     SpellType = SpellType.Targeted
+                });
+
+            #endregion
+
+            #region Ezreal
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Ezreal",
+                    Slot = SpellSlot.E,
+                    SpellName = "ezrealarcaneshift",
+                    SpellType = SpellType.SkillShot
                 });
 
             #endregion
@@ -456,6 +495,15 @@
                     SpellType = SpellType.SkillShot
                 });
 
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Leblanc",
+                    Slot = SpellSlot.W,
+                    SpellName = "leblancslidem",
+                    SpellType = SpellType.SkillShot
+                });
+
             #endregion
 
             #region LeeSin
@@ -549,6 +597,19 @@
 
             #endregion
 
+            #region Nidalee
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Nidalee",
+                    Slot = SpellSlot.W,
+                    SpellName = "pounce",
+                    SpellType = SpellType.SkillShot
+                });
+
+            #endregion
+
             #region Pantheon
 
             Spells.Add(
@@ -596,6 +657,19 @@
                     ChampionName = "Rakan",
                     Slot = SpellSlot.W,
                     SpellName = "rakanw",
+                    SpellType = SpellType.SkillShot
+                });
+
+            #endregion
+
+            #region RekSai
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "RekSai",
+                    Slot = SpellSlot.E,
+                    SpellName = "reksaieburrowed",
                     SpellType = SpellType.SkillShot
                 });
 
@@ -741,7 +815,7 @@
             Spells.Add(
                 new SpellData
                 {
-                    ChampionName = "Vayne",
+                    ChampionName = "vaynetumble",
                     Slot = SpellSlot.Q,
                     SpellName = "vayneq",
                     SpellType = SpellType.SkillShot
@@ -880,7 +954,7 @@
 
         private static void OnCreate(GameObject sender)
         {
-            //special dash (like rengar, khazix)
+            //special dash (like rengar, khazix, ziggs)
         }
 
         private static void OnProcessAutoAttack(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs e)
@@ -935,14 +1009,36 @@
                     x =>
                         x.Value.Unit.IsValidTarget() && Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName] != null &&
                         Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Enabled"].As<MenuBool>().Enabled &&
-                        x.Value.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
-                        Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
-                        Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value))
+                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Enabled"].As<MenuBool>().Enabled))
             {
-                OnGapcloser(Args.Value.Unit, Args.Value);
+                switch (Args.Value.Type)
+                {
+                    case SpellType.Attack:
+                    case SpellType.Targeted:
+                        OnGapcloser(Args.Value.Unit, Args.Value);
+                        break;
+                    case SpellType.SkillShot:
+                        if (Args.Value.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
+                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
+                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
+                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
+                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value)
+                        {
+                            OnGapcloser(Args.Value.Unit, Args.Value);
+                        }
+                        break;
+                    case SpellType.Dash:
+                        if (Args.Value.Type == SpellType.Dash &&
+                            Args.Value.EndPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
+                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
+                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
+                            Menu["Gapcloser.HeroMenu_" + Args.Value.Unit.ChampionName][
+                                "Gapcloser.Menu_" + Args.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value)
+                        {
+                            OnGapcloser(Args.Value.Unit, Args.Value);
+                        }
+                        break;
+                }
             }
         }
 
