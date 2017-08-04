@@ -463,7 +463,7 @@
         {
             try
             {
-                if (Me.ManaPercent() >= ClearMenu["FlowersDraven.ClearMenu.LaneClearMana"].Value && E.Ready)
+                if (Me.ManaPercent() >= ClearMenu["FlowersDraven.ClearMenu.LaneClearMana"].Value && Q.Ready)
                 {
                     if (ClearMenu["FlowersDraven.ClearMenu.LaneClearQ"].Enabled && Q.Ready && AxeCount < 2 && Orbwalker.CanAttack())
                     {
