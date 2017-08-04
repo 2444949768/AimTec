@@ -967,7 +967,7 @@
                         new MenuSlider("Gapcloser." + enemy.ChampionName.ToLower() + ".Distance",
                                 "If Target Distance To Player <= x", 550, 1, 700),
                             new MenuSlider("Gapcloser." + enemy.ChampionName.ToLower() + ".HPercent",
-                                "When Player HealthPercent <= x%", 80, 1, 101)
+                                "When Player HealthPercent <= x%", 100, 1, 101)
                     };
                 Menu.Add(heroMenu);
 
