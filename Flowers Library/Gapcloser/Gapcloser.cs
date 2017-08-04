@@ -1,10 +1,5 @@
 ﻿namespace Flowers_Library
 {
-    //TODO
-    //1.Rengar, Khazix Jump
-    //2.Dash Check
-    //3.Anti Melee?
-
     #region
 
     using Aimtec;
@@ -23,6 +18,7 @@
     public enum SpellType
     {
         Attack,
+        Dash,
         SkillShot,
         Targeted
     }
@@ -876,15 +872,49 @@
             }
 
             Game.OnUpdate += OnUpdate;
+            //GameObject.OnCreate += OnCreate;
+            //Obj_AI_Base.OnProcessAutoAttack += OnProcessAutoAttack;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
-            //Obj_AI_Base.OnNewPath += OnNewPath;
+            Obj_AI_Base.OnNewPath += OnNewPath;
+        }
+
+        private static void OnCreate(GameObject sender)
+        {
+            //special dash (like rengar, khazix)
+        }
+
+        private static void OnProcessAutoAttack(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs e)
+        {
+            //special melee Attack
         }
 
         private static void OnNewPath(Obj_AI_Base sender, Obj_AI_BaseNewPathEventArgs Args)
         {
-            //EndTick = (int) (EndPosition.DistanceSqr(StartPosition) / Args.Speed * Args.Speed * 1000) + StartTick;
+            if (sender == null || sender.Type != GameObjectType.obj_AI_Hero)
+            {
+                return;
+            }
 
-            //DurationTick = EndTick - StartTick;
+            if (!Gapclosers.ContainsKey(sender.NetworkId))
+            {
+                Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
+            }
+
+            if (Args.IsDash)
+            {
+                Gapclosers[sender.NetworkId].Unit = sender as Obj_AI_Hero;
+                Gapclosers[sender.NetworkId].Slot = SpellSlot.Unknown;
+                Gapclosers[sender.NetworkId].Type = SpellType.Dash;
+                Gapclosers[sender.NetworkId].SpellName = string.Empty;
+                Gapclosers[sender.NetworkId].StartPosition = sender.ServerPosition;
+                Gapclosers[sender.NetworkId].EndPosition = Args.Path.Last();
+                Gapclosers[sender.NetworkId].StartTick = Game.TickCount;
+                Gapclosers[sender.NetworkId].EndTick =
+                    (int)
+                    (Gapclosers[sender.NetworkId].EndPosition.DistanceSqr(Gapclosers[sender.NetworkId].StartPosition) /
+                     Args.Speed * Args.Speed * 1000) + Gapclosers[sender.NetworkId].StartTick;
+                Gapclosers[sender.NetworkId].DurationTick = Gapclosers[sender.NetworkId].EndTick - Gapclosers[sender.NetworkId].StartTick;
+            }
         }
 
         private static void OnUpdate()
