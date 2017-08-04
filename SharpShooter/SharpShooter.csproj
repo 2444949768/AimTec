@@ -24,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,9 +39,6 @@
     <Reference Include="Aimtec.SDK">
       <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Aimtec.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="Flowers Library">
-      <HintPath>C:\Users\Administrator\AppData\Local\AimtecLoader\Data\System\Flowers Library.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -53,11 +50,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MyBase\MyChampions.cs" />
+    <Compile Include="MyBase\MyLogic.cs" />
+    <Compile Include="MyCommon\MyExtraManager.cs" />
+    <Compile Include="MyCommon\MyGeometry.cs" />
+    <Compile Include="MyCommon\MyManaManager.cs" />
+    <Compile Include="MyCommon\MyMenuExtensions.cs" />
+    <Compile Include="MyLibrary\Gapcloser\Gapcloser.cs" />
+    <Compile Include="MyLibrary\Items\Item.cs" />
+    <Compile Include="MyLibrary\Items\ItemExtensions.cs" />
+    <Compile Include="MyLibrary\Items\ItemID.cs" />
     <Compile Include="MyLoader.cs" />
+    <Compile Include="MyPlugin\Draven.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
