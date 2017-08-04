@@ -17,10 +17,10 @@
 
     public enum SpellType
     {
-        Attack,
-        Dash,
-        SkillShot,
-        Targeted
+        Attack = 0,
+        Dash = 1,
+        SkillShot = 2,
+        Targeted = 3
     }
 
     internal struct SpellData
