@@ -690,9 +690,10 @@
                                         ? Me.GetSpellDamage(x, SpellSlot.Q) + Me.GetSpellDamage(x, SpellSlot.E)
                                         : Me.GetSpellDamage(x, SpellSlot.E))))
                         {
-                            if (minion != null && minion.IsValidTarget(E.Range) &&
-                                (ClearMenu["FlowersYasuo.ClearMenu.LaneClearTurret"].Enabled == false ||
-                                 MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion))) &&
+                            if (minion != null && minion.IsValidTarget(E.Range) && 
+                                (!ClearMenu["FlowersYasuo.ClearMenu.LaneClearTurret"].Enabled && 
+                                !MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion)) ||
+                                MyExtraManager.UnderTower(MyExtraManager.PosAfterE(minion))) && 
                                 MyExtraManager.PosAfterE(minion).IsSafePosition())
                             {
                                 E.CastOnUnit(minion);
