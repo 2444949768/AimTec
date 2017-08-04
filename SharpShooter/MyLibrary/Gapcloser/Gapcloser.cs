@@ -971,16 +971,22 @@
                     };
                 Menu.Add(heroMenu);
 
+                if (enemy.IsMelee)
+                {
+                    heroMenu.Add(new MenuBool("Gapcloser." + enemy.ChampionName.ToLower() + ".Melee",
+                        "Anti Melee Attack"));
+                }
+
                 foreach (var spell in Spells.Where(x => x.ChampionName == enemy.ChampionName))
                 {
                     heroMenu.Add(new MenuBool("Gapcloser." + enemy.ChampionName.ToLower() + "." + spell.SpellName.ToLower(),
-                        "Anti Slot: " + spell.Slot + "(" + spell.SpellName +")"));
+                        "Anti Slot: " + spell.Slot + "(" + spell.SpellName + ")"));
                 }
             }
 
             Game.OnUpdate += OnUpdate;
             //GameObject.OnCreate += OnCreate;
-            //Obj_AI_Base.OnProcessAutoAttack += OnProcessAutoAttack;
+            Obj_AI_Base.OnProcessAutoAttack += OnProcessAutoAttack;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
             Obj_AI_Base.OnNewPath += OnNewPath;
         }
@@ -990,9 +996,32 @@
             //special dash (like rengar, khazix, ziggs)
         }
 
-        private static void OnProcessAutoAttack(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs e)
+        private static void OnProcessAutoAttack(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
         {
-            //special melee Attack
+            if (sender == null || sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy || !sender.IsMelee)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Args.SpellData.Name) || Args.Target == null || !Args.Target.IsMe ||
+                Menu["Gapcloser." + sender.UnitSkinName.ToLower()].As<Menu>()["Gapcloser." + sender.UnitSkinName.ToLower() + ".Melee"] == null ||
+                !Menu["Gapcloser." + sender.UnitSkinName.ToLower()].As<Menu>()["Gapcloser." + sender.UnitSkinName.ToLower() + ".Melee"].Enabled)
+            {
+                return;
+            }
+
+            if (!Gapclosers.ContainsKey(sender.NetworkId))
+            {
+                Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
+            }
+
+            Gapclosers[sender.NetworkId].Unit = (Obj_AI_Hero)sender;
+            Gapclosers[sender.NetworkId].Slot = SpellSlot.Unknown;
+            Gapclosers[sender.NetworkId].Type = SpellType.Attack;
+            Gapclosers[sender.NetworkId].SpellName = Args.SpellData.Name;
+            Gapclosers[sender.NetworkId].StartPosition = Args.Start;
+            Gapclosers[sender.NetworkId].EndPosition = Args.End;
+            Gapclosers[sender.NetworkId].StartTick = Game.TickCount;
         }
 
         private static void OnNewPath(Obj_AI_Base sender, Obj_AI_BaseNewPathEventArgs Args)
@@ -1012,7 +1041,7 @@
                 Gapclosers[sender.NetworkId].Unit = (Obj_AI_Hero)sender;
                 Gapclosers[sender.NetworkId].Slot = SpellSlot.Unknown;
                 Gapclosers[sender.NetworkId].Type = SpellType.Dash;
-                Gapclosers[sender.NetworkId].SpellName = string.Empty;
+                Gapclosers[sender.NetworkId].SpellName = sender.UnitSkinName + "_Dash";
                 Gapclosers[sender.NetworkId].StartPosition = sender.ServerPosition;
                 Gapclosers[sender.NetworkId].EndPosition = Args.Path.Last();
                 Gapclosers[sender.NetworkId].StartTick = Game.TickCount;
@@ -1084,8 +1113,8 @@
         private static void OnProcessSpellCast(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
         {
             if (sender == null || !sender.IsValid ||
-                sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy || 
-                string.IsNullOrEmpty(Args.SpellData.Name) || 
+                sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy ||
+                string.IsNullOrEmpty(Args.SpellData.Name) ||
                 Args.SpellData.Name.ToLower().Contains("attack") || Args.SpellData.Name.ToLower().Contains("crit"))
             {
                 return;
