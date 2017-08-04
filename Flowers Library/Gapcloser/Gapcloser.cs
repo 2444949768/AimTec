@@ -815,9 +815,9 @@
             Spells.Add(
                 new SpellData
                 {
-                    ChampionName = "vaynetumble",
+                    ChampionName = "Vayne",
                     Slot = SpellSlot.Q,
-                    SpellName = "vayneq",
+                    SpellName = "vaynetumble",
                     SpellType = SpellType.SkillShot
                 });
 
