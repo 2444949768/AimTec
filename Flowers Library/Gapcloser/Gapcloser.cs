@@ -27,7 +27,7 @@
         Targeted
     }
 
-    public struct SpellData
+    internal struct SpellData
     {
         public string ChampionName { get; set; }
 
@@ -38,9 +38,9 @@
         public SpellType SpellType { get; set; }
     }
 
-    public struct GapcloserArgs
+    public class GapcloserArgs
     {
-        public Obj_AI_Hero Unit { get; set; }
+        internal Obj_AI_Hero Unit { get; set; }
 
         public SpellSlot Slot { get; set; }
 
@@ -54,31 +54,17 @@
 
         public int StartTick { get; set; }
 
-        //public int EndTick { get; set; }
+        public int EndTick { get; set; }
 
-        //public int DurationTick { get; set; }
-
-        public GapcloserArgs(Obj_AI_Hero unit, SpellSlot slot, SpellType type, string spellName, Vector3 startPos,
-            Vector3 endPos, int startTick)//, int endTick, int durationTick)
-        {
-            this.Unit = unit;
-            this.Slot = slot;
-            this.Type = type;
-            this.SpellName = spellName;
-            this.StartPosition = startPos;
-            this.EndPosition = endPos;
-            this.StartTick = startTick;
-            //this.EndTick = endTick;
-            //this.DurationTick = durationTick;
-        }
+        public int DurationTick { get; set; }
     }
 
     public static class Gapcloser
     {
         public static event OnGapcloserEvent OnGapcloser;
 
-        public static List<GapcloserArgs> Gapclosers = new List<GapcloserArgs>();
-        public static List<SpellData> Spells = new List<SpellData>();
+        public static Dictionary<int, GapcloserArgs> Gapclosers = new Dictionary<int, GapcloserArgs>();
+        internal static List<SpellData> Spells = new List<SpellData>();
 
         public static Menu Menu;
 
@@ -903,7 +889,10 @@
 
         private static void OnUpdate()
         {
-            Gapclosers.RemoveAll(x => Game.TickCount - x.StartTick > 900 + Game.Ping);
+            foreach (var unit in Gapclosers.Values.Where(x => Game.TickCount - x.StartTick > 900 + Game.Ping).Select(x => x.Unit.NetworkId))
+            {
+                Gapclosers.Remove(unit);
+            }
 
             if (OnGapcloser == null || Menu["Gapcloser.Enabled"] == null || !Menu["Gapcloser.Enabled"].Enabled)
             {
@@ -914,32 +903,49 @@
                 var Args in
                 Gapclosers.Where(
                     x =>
-                        x.Unit.IsValidTarget() && Menu["Gapcloser.HeroMenu_" + x.Unit.ChampionName] != null &&
-                        Menu["Gapcloser.HeroMenu_" + x.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Unit.ChampionName + ".Enabled"].As<MenuBool>().Enabled &&
-                        x.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
-                        Menu["Gapcloser.HeroMenu_" + x.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
-                        Menu["Gapcloser.HeroMenu_" + x.Unit.ChampionName][
-                            "Gapcloser.Menu_" + x.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value))
+                        x.Value.Unit.IsValidTarget() && Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName] != null &&
+                        Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
+                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Enabled"].As<MenuBool>().Enabled &&
+                        x.Value.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
+                        Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
+                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value *
+                        Menu["Gapcloser.HeroMenu_" + x.Value.Unit.ChampionName][
+                            "Gapcloser.Menu_" + x.Value.Unit.ChampionName + ".Distance"].As<MenuSlider>().Value))
             {
-                OnGapcloser(Args.Unit, Args);
+                OnGapcloser(Args.Value.Unit, Args.Value);
             }
         }
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, Obj_AI_BaseMissileClientDataEventArgs Args)
         {
             if (sender == null || !sender.IsValid || sender.Type != GameObjectType.obj_AI_Hero || !sender.IsEnemy ||
-                string.IsNullOrEmpty(Args.SpellData.Name) ||
-                Spells.All(
-                    x => !string.Equals(x.SpellName, Args.SpellData.Name, StringComparison.CurrentCultureIgnoreCase)))
+                string.IsNullOrEmpty(Args.SpellData.Name))
             {
                 return;
             }
 
-            Gapclosers.Add(new GapcloserArgs(sender as Obj_AI_Hero, Args.SpellSlot,
-                Args.Target.IsMe ? SpellType.Targeted : SpellType.SkillShot, Args.SpellData.Name, Args.Start,
-                Args.End, Game.TickCount));
+            if (Spells.All(
+                    x => !string.Equals(x.SpellName, Args.SpellData.Name, StringComparison.CurrentCultureIgnoreCase)) ||
+                !Menu["Gapcloser.HeroMenu_" + sender.UnitSkinName]
+                ["Gapcloser.Menu_" + sender.UnitSkinName + "." + Args.SpellData.Name].Enabled)
+            {
+                return;
+            }
+
+            if (!Gapclosers.ContainsKey(sender.NetworkId))
+            {
+                Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
+            }
+
+            Gapclosers[sender.NetworkId].Unit = sender as Obj_AI_Hero;
+            Gapclosers[sender.NetworkId].Slot = Args.SpellSlot;
+            Gapclosers[sender.NetworkId].Type = Args.Target.IsMe
+                ? Args.SpellData.Name.Contains("attack") ? SpellType.Attack : SpellType.Targeted
+                : SpellType.SkillShot;
+            Gapclosers[sender.NetworkId].SpellName = Args.SpellData.Name;
+            Gapclosers[sender.NetworkId].StartPosition = Args.Start;
+            Gapclosers[sender.NetworkId].EndPosition = Args.End;
+            Gapclosers[sender.NetworkId].StartTick = Game.TickCount;
         }
     }
 }
