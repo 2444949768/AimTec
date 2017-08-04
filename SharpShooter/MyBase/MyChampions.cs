@@ -21,21 +21,25 @@ namespace SharpShooter.MyBase
 
         private static void Initializer()
         {
-            MyLogic.Menu = new Menu("SharpShooter", ":: SharpShooter", true);
-            {
-                MyLogic.Menu.Add(new MenuSeperator("MadebyNightMoon", "Made by NightMoon"));
-                MyLogic.Menu.Add(new MenuSeperator("ASDASDF"));
-            }
+            MyMenuExtensions.myMenu = new Menu("SharpShooter: " + ObjectManager.GetLocalPlayer().ChampionName,
+                "SharpShooter: " + ObjectManager.GetLocalPlayer().ChampionName, true);
+            MyMenuExtensions.myMenu.Add(new MenuSeperator("MadebyNightMoon", "Made by NightMoon"));
 
-            var supportMenu = new Menu("SupportChampion", ":: Support Champion");
+            var supportMenu = new Menu("SupportChampion", "Support Champion");
             {
                 foreach (var name in all)
                 {
                     supportMenu.Add(new MenuSeperator("SC_" + name, name));
                 }
             }
+            MyMenuExtensions.myMenu.Add(supportMenu);
+
+            MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
+            MyLogic.Orbwalker.Attach(MyMenuExtensions.myMenu);
 
             MyMenuExtensions.DrawOption.SetDefalut();
+
+            MyMenuExtensions.myMenu.Add(new MenuSeperator("ASDASDG"));
 
             switch (ObjectManager.GetLocalPlayer().ChampionName)
             {
@@ -47,10 +51,8 @@ namespace SharpShooter.MyBase
                     break;
             }
 
-            MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
-            MyLogic.Orbwalker.Attach(MyLogic.Menu);
 
-            MyLogic.Menu.Attach();
+            MyMenuExtensions.myMenu.Attach();
         }
     }
 }

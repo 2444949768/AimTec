@@ -26,17 +26,6 @@
 
         internal static Obj_AI_Hero Me = ObjectManager.GetLocalPlayer();
 
-        internal static Menu Menu { get; set; }
-        internal static Menu ComboMenu { get; set; }
-        internal static Menu HarassMenu { get; set; }
-        internal static Menu ClearMenu { get; set; }
-        internal static Menu LastHitMenu { get; set; }
-        internal static Menu FleeMenu { get; set; }
-        internal static Menu KillStealMenu { get; set; }
-        internal static Menu MiscMenu { get; set; }
-        internal static Menu EvadeMenu { get; set; }
-        internal static Menu DrawMenu { get; set; }
-
         internal static readonly string[] MobsName = 
         {
             "sru_baronspawn", "sru_blue", "sru_dragon_water", "sru_dragon_fire", "sru_dragon_earth", "sru_dragon_air",

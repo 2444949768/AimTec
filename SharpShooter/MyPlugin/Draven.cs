@@ -110,7 +110,7 @@
             MiscOption.AddSlider("GlobalRMax", "Global -> Cast R Max Range", 3000, 1500, 3500);
             MiscOption.AddKey("SemiRKey", "Semi R Key", KeyCode.T, KeybindType.Press);
 
-            Gapcloser.Attach(myMenu, ":: Gapcloser Settings");
+            GapcloserOption.AddMenu();
 
             DrawOption.AddMenu();
             DrawOption.AddE(E.Range);
@@ -553,7 +553,7 @@
         {
             if (AxeOption.GetBool("CancelCatch").Enabled)
             {
-                if (AxeOption.GetKey("CancelKey2").Enabled && (Args.Message == 516 || Args.Message == 517))
+                if (AxeOption.GetBool("CancelKey2").Enabled && (Args.Message == 516 || Args.Message == 517))
                 {
                     if (Game.TickCount - lastCatchTime > 1800)
                     {
@@ -627,7 +627,8 @@
         {
             if (E.Ready && target != null && target.IsValidTarget(E.Range))
             {
-                E.Cast(target.ServerPosition);
+                var ePred = E.GetPrediction(target);
+                E.Cast(ePred.UnitPosition);
             }
         }
 

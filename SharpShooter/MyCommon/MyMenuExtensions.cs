@@ -37,7 +37,7 @@
 
             internal static void AddMenu()
             {
-                AxeMenu = new Menu(heroName + "_AxeSettings", ":: Axe Settings");
+                AxeMenu = new Menu(heroName + "_AxeSettings", "Axe Settings");
                 myMenu.Add(AxeMenu);
             }
 
@@ -98,35 +98,34 @@
             }
         }
 
-
         internal class ComboOption
         {
             private static Menu comboMenu => ComboMenu;
 
             internal static void AddMenu()
             {
-                ComboMenu = new Menu(heroName + "_ComboSettings", ":: Combo Settings");
+                ComboMenu = new Menu(heroName + "_ComboSettings", "Combo Settings");
                 myMenu.Add(ComboMenu);
             }
 
             internal static bool UseQ
                 =>
-                    comboMenu["ComboQ" + heroName].As<MenuBool>() != null &&
+                    comboMenu["ComboQ" + heroName] != null &&
                     comboMenu["ComboQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    comboMenu["ComboW" + heroName].As<MenuBool>() != null &&
+                    comboMenu["ComboW" + heroName] != null &&
                     comboMenu["ComboW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    comboMenu["ComboE" + heroName].As<MenuBool>() != null &&
+                    comboMenu["ComboE" + heroName] != null &&
                     comboMenu["ComboE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    comboMenu["ComboR" + heroName].As<MenuBool>() != null &&
+                    comboMenu["ComboR" + heroName] != null &&
                     comboMenu["ComboR" + heroName].As<MenuBool>().Enabled;
 
             internal static void AddSeperator(string name)
@@ -212,28 +211,28 @@
 
             internal static void AddMenu()
             {
-                HarassMenu = new Menu(heroName + "_HarassSettings", ":: Harass Settings");
+                HarassMenu = new Menu(heroName + "_HarassSettings", "Harass Settings");
                 myMenu.Add(HarassMenu);
             }
 
             internal static bool UseQ
                 =>
-                    harassMenu["HarassQ" + heroName].As<MenuBool>() != null &&
+                    harassMenu["HarassQ" + heroName] != null &&
                     harassMenu["HarassQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    harassMenu["HarassW" + heroName].As<MenuBool>() != null &&
+                    harassMenu["HarassW" + heroName] != null &&
                     harassMenu["HarassW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    harassMenu["HarassE" + heroName].As<MenuBool>() != null &&
+                    harassMenu["HarassE" + heroName] != null &&
                     harassMenu["HarassE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    harassMenu["HarassR" + heroName].As<MenuBool>() != null &&
+                    harassMenu["HarassR" + heroName] != null &&
                     harassMenu["HarassR" + heroName].As<MenuBool>().Enabled;
 
             internal static void AddQ(bool enabled = true)
@@ -271,7 +270,7 @@
 
             internal static bool GetHarassTargetEnabled(string name)
             {
-                return harassMenu["HarassList" + name.ToLower()].As<MenuBool>() != null &&
+                return harassMenu["HarassList" + name.ToLower()] != null &&
                        harassMenu["HarassList" + name.ToLower()].As<MenuBool>().Enabled;
             }
 
@@ -289,7 +288,7 @@
 
             internal static bool HasEnouguMana(bool underTurret = false)
                 =>
-                    ObjectManager.GetLocalPlayer().ManaPercent() >= GetSlider("HarassMana" + heroName).Value &&
+                    ObjectManager.GetLocalPlayer().ManaPercent() >= GetSlider("HarassMana").Value &&
                     (underTurret || !ObjectManager.GetLocalPlayer().IsUnderEnemyTurret());
 
             internal static void AddBool(string name, string defaultName, bool enabled = true)
@@ -344,28 +343,28 @@
 
             internal static void AddMenu()
             {
-                LaneClearMenu = new Menu(heroName + "_LaneClearSettings", ":: LaneClear Settings");
+                LaneClearMenu = new Menu(heroName + "_LaneClearSettings", "LaneClear Settings");
                 myMenu.Add(LaneClearMenu);
             }
 
             internal static bool UseQ
                 =>
-                    laneClearMenu["LaneClearQ" + heroName].As<MenuBool>() != null &&
+                    laneClearMenu["LaneClearQ" + heroName] != null &&
                     laneClearMenu["LaneClearQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    laneClearMenu["LaneClearW" + heroName].As<MenuBool>() != null &&
+                    laneClearMenu["LaneClearW" + heroName] != null &&
                     laneClearMenu["LaneClearW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    laneClearMenu["LaneClearE" + heroName].As<MenuBool>() != null &&
+                    laneClearMenu["LaneClearE" + heroName] != null &&
                     laneClearMenu["LaneClearE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    laneClearMenu["LaneClearR" + heroName].As<MenuBool>() != null &&
+                    laneClearMenu["LaneClearR" + heroName] != null &&
                     laneClearMenu["LaneClearR" + heroName].As<MenuBool>().Enabled;
 
             internal static void AddQ(bool enabled = true)
@@ -440,28 +439,28 @@
 
             internal static void AddMenu()
             {
-                JungleClearMenu = new Menu(heroName + "_JungleClearSettings", ":: JungleClear Settings");
+                JungleClearMenu = new Menu(heroName + "_JungleClearSettings", "JungleClear Settings");
                 myMenu.Add(JungleClearMenu);
             }
 
             internal static bool UseQ
                 =>
-                    jungleClearMenu["JungleClearQ" + heroName].As<MenuBool>() != null &&
+                    jungleClearMenu["JungleClearQ" + heroName] != null &&
                     jungleClearMenu["JungleClearQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    jungleClearMenu["JungleClearW" + heroName].As<MenuBool>() != null &&
+                    jungleClearMenu["JungleClearW" + heroName] != null &&
                     jungleClearMenu["JungleClearW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    jungleClearMenu["JungleClearE" + heroName].As<MenuBool>() != null &&
+                    jungleClearMenu["JungleClearE" + heroName] != null &&
                     jungleClearMenu["JungleClearE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    jungleClearMenu["JungleClearR" + heroName].As<MenuBool>() != null &&
+                    jungleClearMenu["JungleClearR" + heroName] != null &&
                     jungleClearMenu["JungleClearR" + heroName].As<MenuBool>().Enabled;
 
             internal static void AddQ(bool enabled = true)
@@ -537,7 +536,7 @@
 
             internal static void AddMenu()
             {
-                LastHitMenu = new Menu(heroName + "_LastHitSettings", ":: LastHit Settings");
+                LastHitMenu = new Menu(heroName + "_LastHitSettings", "LastHit Settings");
                 myMenu.Add(LastHitMenu);
             }
 
@@ -546,24 +545,23 @@
 
             internal static bool UseQ
                 =>
-                    lastHitMenu["LastHitQ" + heroName].As<MenuBool>() != null &&
+                    lastHitMenu["LastHitQ" + heroName] != null &&
                     lastHitMenu["LastHitQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    lastHitMenu["LastHitW" + heroName].As<MenuBool>() != null &&
+                    lastHitMenu["LastHitW" + heroName] != null &&
                     lastHitMenu["LastHitW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    lastHitMenu["LastHitE" + heroName].As<MenuBool>() != null &&
+                    lastHitMenu["LastHitE" + heroName] != null &&
                     lastHitMenu["LastHitE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    lastHitMenu["LastHitR" + heroName].As<MenuBool>() != null &&
+                    lastHitMenu["LastHitR" + heroName] != null &&
                     lastHitMenu["LastHitR" + heroName].As<MenuBool>().Enabled;
-
             internal static void AddQ(bool enabled = true)
             {
                 lastHitMenu.Add(new MenuBool("LastHitQ" + heroName, "Use Q", enabled));
@@ -626,33 +624,33 @@
 
             internal static void AddMenu()
             {
-                FleeMenu = new Menu(heroName + "_FleeSettings", ":: Flee Settings");
+                FleeMenu = new Menu(heroName + "_FleeSettings", "Flee Settings");
                 myMenu.Add(FleeMenu);
             }
 
             internal static bool DisableMove
                 =>
-                    fleeMenu["FleeMove" + heroName].As<MenuBool>() != null &&
+                    fleeMenu["FleeMove" + heroName] != null &&
                     fleeMenu["FleeMove" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseQ
                 =>
-                    fleeMenu["FleeQ" + heroName].As<MenuBool>() != null &&
+                    fleeMenu["FleeQ" + heroName] != null &&
                     fleeMenu["FleeQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    fleeMenu["FleeW" + heroName].As<MenuBool>() != null &&
+                    fleeMenu["FleeW" + heroName] != null &&
                     fleeMenu["FleeW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    fleeMenu["FleeE" + heroName].As<MenuBool>() != null &&
+                    fleeMenu["FleeE" + heroName] != null &&
                     fleeMenu["FleeE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    fleeMenu["FleeR" + heroName].As<MenuBool>() != null &&
+                    fleeMenu["FleeR" + heroName] != null &&
                     fleeMenu["FleeR" + heroName].As<MenuBool>().Enabled;
 
             internal static void AddQ(bool enabled = true)
@@ -692,27 +690,27 @@
 
             internal static bool UseQ
                 =>
-                    killStealMenu["KillStealQ" + heroName].As<MenuBool>() != null &&
+                    killStealMenu["KillStealQ" + heroName] != null &&
                     killStealMenu["KillStealQ" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseW
                 =>
-                    killStealMenu["KillStealW" + heroName].As<MenuBool>() != null &&
+                    killStealMenu["KillStealW" + heroName] != null &&
                     killStealMenu["KillStealW" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseE
                 =>
-                    killStealMenu["KillStealE" + heroName].As<MenuBool>() != null &&
+                    killStealMenu["KillStealE" + heroName] != null &&
                     killStealMenu["KillStealE" + heroName].As<MenuBool>().Enabled;
 
             internal static bool UseR
                 =>
-                    killStealMenu["KillStealR" + heroName].As<MenuBool>() != null &&
+                    killStealMenu["KillStealR" + heroName] != null &&
                     killStealMenu["KillStealR" + heroName].As<MenuBool>().Enabled;
 
             internal static void AddMenu()
             {
-                KillStealMenu = new Menu(heroName + "_KillStealSettings", ":: KillSteal Settings");
+                KillStealMenu = new Menu(heroName + "_KillStealSettings", "KillSteal Settings");
                 myMenu.Add(KillStealMenu);
             }
 
@@ -751,7 +749,7 @@
 
             internal static bool GetKillStealTarget(string name)
             {
-                return killStealMenu["KillStealList" + name.ToLower()].As<MenuBool>() != null &&
+                return killStealMenu["KillStealList" + name.ToLower()] != null &&
                        killStealMenu["KillStealList" + name.ToLower()].As<MenuBool>().Enabled;
             }
 
@@ -766,13 +764,21 @@
             }
         }
 
+        internal class GapcloserOption
+        {
+            internal static void AddMenu()
+            {
+                Flowers_Library.Gapcloser.Attach(myMenu, "Gapcloser Settings");
+            }
+        }
+
         internal class MiscOption
         {
             private static Menu miscMenu => MiscMenu;
 
             internal static void AddMenu()
             {
-                MiscMenu = new Menu(heroName + "_MiscSettings", ":: Misc Settings");
+                MiscMenu = new Menu(heroName + "_MiscSettings", "Misc Settings");
                 myMenu.Add(MiscMenu);
             }
 
@@ -871,7 +877,7 @@
 
             internal static void AddMenu()
             {
-                DrawMenu = new Menu(heroName + "_DrawSettings", ":: Draw Settings");
+                DrawMenu = new Menu(heroName + "_DrawSettings", "Draw Settings");
                 myMenu.Add(DrawMenu);
             }
 
@@ -970,37 +976,37 @@
                         return;
                     }
 
-                    if (drawMenu["DrawQ" + heroName].As<MenuBool>() != null &&
+                    if (QRange > 0 && drawMenu["DrawQ" + heroName] != null &&
                         drawMenu["DrawQ" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q) && QRange > 0)
+                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
                     {
                         Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QRange, 30, Color.FromArgb(19, 130, 234));
                     }
 
-                    if (drawMenu["DrawW" + heroName].As<MenuBool>() != null &&
+                    if (WRange > 0 && drawMenu["DrawW" + heroName] != null &&
                         drawMenu["DrawW" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.W) && WRange > 0)
+                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.W))
                     {
                         Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(248, 246, 6));
                     }
 
-                    if (drawMenu["DrawE" + heroName].As<MenuBool>() != null &&
+                    if (ERange > 0 && drawMenu["DrawE" + heroName] != null &&
                         drawMenu["DrawE" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.E) && ERange > 0)
+                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.E))
                     {
                         Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(188, 6, 248));
                     }
 
-                    if (drawMenu["DrawR" + heroName].As<MenuBool>() != null &&
+                    if (RRange > 0 && drawMenu["DrawR" + heroName] != null &&
                         drawMenu["DrawR" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.R) && RRange > 0)
+                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.R))
                     {
                         Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.Red);
                     }
 
-                    if (drawMenu["DrawQExtend" + heroName].As<MenuBool>() != null &&
+                    if (QExtendRange > 0 && drawMenu["DrawQExtend" + heroName] != null &&
                         drawMenu["DrawQExtend" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q) && QExtendRange > 0)
+                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
                     {
                         Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(0, 255, 161));
                     }

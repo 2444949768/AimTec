@@ -74,7 +74,7 @@
                     {
                         try
                         {
-                            if (ObjectManager.GetLocalPlayer().IsDead)
+                            if (ObjectManager.GetLocalPlayer().IsDead || MenuGUI.IsChatOpen() || MenuGUI.IsShopOpen())
                             {
                                 return;
                             }
