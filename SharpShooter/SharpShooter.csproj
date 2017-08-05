@@ -66,6 +66,8 @@
     <Compile Include="MyPlugin\Corki.cs" />
     <Compile Include="MyPlugin\Draven.cs" />
     <Compile Include="MyPlugin\Graves.cs" />
+    <Compile Include="MyPlugin\KogMaw.cs" />
+    <Compile Include="MyUtility\ItemManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

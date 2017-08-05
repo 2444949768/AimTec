@@ -490,9 +490,26 @@
         {
             if (MiscOption.GetBool("AutoE").Enabled && target != null && target.IsValidTarget() && E.Ready)
             {
-                if (target.DistanceToPlayer() <= 200 && target.IsValid)
+                if (E.Ready && target.IsValidTarget(E.Range))
                 {
-                    E.Cast(target.ServerPosition);
+                    switch (Args.Type)
+                    {
+                        case SpellType.Melee:
+                            if (target.IsValidTarget(target.AttackRange + target.BoundingRadius + 100))
+                            {
+                                var ePred = E.GetPrediction(target);
+                                E.Cast(ePred.UnitPosition);
+                            }
+                            break;
+                        case SpellType.Dash:
+                        case SpellType.SkillShot:
+                        case SpellType.Targeted:
+                            {
+                                var ePred = E.GetPrediction(target);
+                                E.Cast(ePred.UnitPosition);
+                            }
+                            break;
+                    }
                 }
             }
         }

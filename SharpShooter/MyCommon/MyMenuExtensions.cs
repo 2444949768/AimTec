@@ -18,6 +18,7 @@
     internal static class MyMenuExtensions
     {
         internal static Menu myMenu { get; set; }
+        internal static Menu UtilityMenu { get; set; }
         internal static Menu AxeMenu { get; set; }
         internal static Menu ComboMenu { get; set; }
         internal static Menu HarassMenu { get; set; }

@@ -15,7 +15,7 @@
 
     internal class MyChampions
     {
-        private static readonly string[] all = {"Caitlyn", "Corki", "Draven", "Graves"};
+        private static readonly string[] all = {"Caitlyn", "Corki", "Draven", "Graves", "KogMaw"};
 
         public MyChampions()
         {
@@ -54,12 +54,16 @@
                 return;
             }
 
+            MyMenuExtensions.myMenu.Add(new MenuSeperator("ASDASDG"));
+
+            MyMenuExtensions.UtilityMenu = new Menu("SharpShooter.UtilityMenu", "Utility Settings");
+            MyMenuExtensions.myMenu.Add(MyMenuExtensions.UtilityMenu);
+
             MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
-            MyLogic.Orbwalker.Attach(MyMenuExtensions.myMenu);
+            MyLogic.Orbwalker.Attach(MyMenuExtensions.UtilityMenu);
+
 
             MyMenuExtensions.DrawOption.SetDefalut();
-
-            MyMenuExtensions.myMenu.Add(new MenuSeperator("ASDASDG"));
 
             switch (ObjectManager.GetLocalPlayer().ChampionName)
             {
@@ -74,6 +78,9 @@
                     break;
                 case "Graves":
                     var gravesPlugin = new MyPlugin.Graves();
+                    break;
+                case "KogMaw":
+                    var kogMawPlugin = new MyPlugin.KogMaw();
                     break;
             }
 

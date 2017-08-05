@@ -45,7 +45,7 @@
             ComboOption.AddE();
             ComboOption.AddR();
             ComboOption.AddSlider("ComboRLimit", "Use R|Limit Stack >= x", 0, 0, 7);
-            ComboOption.AddSlider("ComboRHP", "Use R|Target HealthPercent <= x%", 80, 1, 101);
+            ComboOption.AddSlider("ComboRHP", "Use R|Target HealthPercent <= x%", 100, 1, 101);
 
             HarassOption.AddMenu();
             HarassOption.AddQ();
