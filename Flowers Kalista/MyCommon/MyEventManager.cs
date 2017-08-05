@@ -186,12 +186,12 @@
         {
             try
             {
+                ForcusAttack();
+
                 var target = TargetSelector.GetTarget(Q.Range);
 
                 if (target != null && target.IsValidTarget(Q.Range))
                 {
-                    ForcusAttack(target);
-
                     if (ComboMenu["FlowersKalista.ComboMenu.Q"].Enabled && Q.Ready && target.IsValidTarget(Q.Range) && !target.IsValidAutoRange())
                     {
                         var qPred = Q.GetPrediction(target);
@@ -236,23 +236,27 @@
             }
         }
 
-        private static void ForcusAttack(Obj_AI_Hero target)
+        private static void ForcusAttack()
         {
             try
             {
-                if (!GameObjects.EnemyHeroes.All(x => x.IsValidAutoRange()) &&
-                    Me.CountEnemyHeroesInRange(Me.AttackRange + Me.BoundingRadius + 380) > 0)
+                if (GameObjects.EnemyHeroes.All(x => !x.IsValidTarget(Me.AttackRange + Me.BoundingRadius + x.BoundingRadius)) &&
+                    GameObjects.EnemyHeroes.Any(x => x.IsValidTarget((float)(Me.AttackRange * 1.65) + x.BoundingRadius)))
                 {
 
                     var AttackUnit =
                         GameObjects.EnemyMinions.Where(x => x.IsValidTarget(Me.GetFullAttackRange(x)))
-                            .OrderBy(x => x.Distance(target))
+                            .OrderBy(x => x.Distance(Game.CursorPos))
                             .FirstOrDefault();
 
                     if (AttackUnit != null && !AttackUnit.IsDead && AttackUnit.IsValidAutoRange())
                     {
                         Orbwalker.ForceTarget(AttackUnit);
                     }
+                }
+                else
+                {
+                    Orbwalker.ForceTarget(null);
                 }
             }
             catch (Exception ex)
