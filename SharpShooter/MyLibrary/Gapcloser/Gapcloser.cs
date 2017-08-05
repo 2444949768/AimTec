@@ -17,7 +17,7 @@
 
     public enum SpellType
     {
-        Attack = 0,
+        Melee = 0,
         Dash = 1,
         SkillShot = 2,
         Targeted = 3
@@ -973,8 +973,8 @@
 
                 if (enemy.IsMelee)
                 {
-                    heroMenu.Add(new MenuBool("Gapcloser." + enemy.ChampionName.ToLower() + ".Melee",
-                        "Anti Melee Attack"));
+                    heroMenu.Add(new MenuSliderBool("Gapcloser." + enemy.ChampionName.ToLower() + ".Melee",
+                        "Anti Melee Attack| Player HP <= x%", true, 40, 1, 99));
                 }
 
                 foreach (var spell in Spells.Where(x => x.ChampionName == enemy.ChampionName))
@@ -1005,7 +1005,7 @@
 
             if (string.IsNullOrEmpty(Args.SpellData.Name) || Args.Target == null || !Args.Target.IsMe ||
                 Menu["Gapcloser." + sender.UnitSkinName.ToLower()].As<Menu>()["Gapcloser." + sender.UnitSkinName.ToLower() + ".Melee"] == null ||
-                !Menu["Gapcloser." + sender.UnitSkinName.ToLower()].As<Menu>()["Gapcloser." + sender.UnitSkinName.ToLower() + ".Melee"].Enabled)
+                !Menu["Gapcloser." + sender.UnitSkinName.ToLower()].As<Menu>()["Gapcloser." + sender.UnitSkinName.ToLower() + ".Melee"].As<MenuSliderBool>().Enabled)
             {
                 return;
             }
@@ -1017,7 +1017,7 @@
 
             Gapclosers[sender.NetworkId].Unit = (Obj_AI_Hero)sender;
             Gapclosers[sender.NetworkId].Slot = SpellSlot.Unknown;
-            Gapclosers[sender.NetworkId].Type = SpellType.Attack;
+            Gapclosers[sender.NetworkId].Type = SpellType.Melee;
             Gapclosers[sender.NetworkId].SpellName = Args.SpellData.Name;
             Gapclosers[sender.NetworkId].StartPosition = Args.Start;
             Gapclosers[sender.NetworkId].EndPosition = Args.End;
@@ -1073,11 +1073,11 @@
                         Menu["Gapcloser." + x.Value.Unit.ChampionName.ToLower()].As<Menu>()[
                             "Gapcloser." + x.Value.Unit.ChampionName.ToLower() + ".Enabled"].As<MenuBool>().Enabled))
             {
-                if (ObjectManager.GetLocalPlayer().HealthPercent() >
+                if (ObjectManager.GetLocalPlayer().HealthPercent() <=
                     Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
                         "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".HPercent"].As<MenuSlider>().Value)
                 {
-                    continue;
+                    
                 }
 
                 if (Args.Value.Type == SpellType.SkillShot)
@@ -1088,7 +1088,12 @@
                         Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
                             "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Distance"].As<MenuSlider>().Value)
                     {
-                        OnGapcloser(Args.Value.Unit, Args.Value);
+                        if (ObjectManager.GetLocalPlayer().HealthPercent() <=
+                            Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                                "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".HPercent"].As<MenuSlider>().Value)
+                        {
+                            OnGapcloser(Args.Value.Unit, Args.Value);
+                        }
                     }
                 }
                 else if (Args.Value.Type == SpellType.Dash)
@@ -1100,12 +1105,31 @@
                         Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
                             "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Distance"].As<MenuSlider>().Value)
                     {
+                        if (ObjectManager.GetLocalPlayer().HealthPercent() <=
+                            Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                                "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".HPercent"].As<MenuSlider>().Value)
+                        {
+                            OnGapcloser(Args.Value.Unit, Args.Value);
+                        }
+                    }
+                }
+                else if (Args.Value.Type == SpellType.Targeted)
+                {
+                    if (ObjectManager.GetLocalPlayer().HealthPercent() <=
+                        Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".HPercent"].As<MenuSlider>().Value)
+                    {
                         OnGapcloser(Args.Value.Unit, Args.Value);
                     }
                 }
-                else if (Args.Value.Type == SpellType.Attack || Args.Value.Type == SpellType.Targeted)
+                else if (Args.Value.Type == SpellType.Melee)
                 {
-                    OnGapcloser(Args.Value.Unit, Args.Value);
+                    if (ObjectManager.GetLocalPlayer().HealthPercent() <=
+                        Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
+                            "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".Melee"].As<MenuSliderBool>().Value)
+                    {
+                        OnGapcloser(Args.Value.Unit, Args.Value);
+                    }
                 }
             }
         }
