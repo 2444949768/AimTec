@@ -301,6 +301,13 @@
                 harassMenu.Add(new MenuSlider(name + heroName, defaultName, defaultValue, minValue, maxValue));
             }
 
+            internal static void AddSliderBool(string name, string defaultName, int defaultValue, int minValue,
+                int maxValue, bool enabled = false)
+            {
+                harassMenu.Add(new MenuSliderBool(name + heroName, defaultName, enabled, defaultValue, minValue, maxValue));
+            }
+
+
             internal static void AddKey(string name, string defaultName, KeyCode Keys, KeybindType type, bool enabled = false)
             {
                 harassMenu.Add(new MenuKeyBind(name + heroName, defaultName, Keys, type, enabled));
@@ -407,6 +414,13 @@
                 laneClearMenu.Add(new MenuSlider(name + heroName, defaultName, defaultValue, minValue, maxValue));
             }
 
+            internal static void AddSliderBool(string name, string defaultName, int defaultValue, int minValue,
+                int maxValue, bool enabled = false)
+            {
+                laneClearMenu.Add(new MenuSliderBool(name + heroName, defaultName, enabled, defaultValue, minValue, maxValue));
+            }
+
+
             internal static void AddList(string name, string defaultName, string[] values, int defaultValue = 0)
             {
                 laneClearMenu.Add(new MenuList(name + heroName, defaultName, values, defaultValue));
@@ -504,6 +518,12 @@
                 jungleClearMenu.Add(new MenuSlider(name + heroName, defaultName, defaultValue, minValue, maxValue));
             }
 
+            internal static void AddSliderBool(string name, string defaultName, int defaultValue, int minValue,
+                int maxValue, bool enabled = false)
+            {
+                jungleClearMenu.Add(new MenuSliderBool(name + heroName, defaultName, enabled, defaultValue, minValue, maxValue));
+            }
+
             internal static bool HasEnouguMana(bool underTurret = false)
                 =>
                     ObjectManager.GetLocalPlayer().ManaPercent() >= GetSlider("JungleClearMana").Value && MyManaManager.SpellFarm &&
@@ -595,6 +615,12 @@
             internal static void AddSlider(string name, string defaultName, int defaultValue, int minValue, int maxValue)
             {
                 lastHitMenu.Add(new MenuSlider(name + heroName, defaultName, defaultValue, minValue, maxValue));
+            }
+
+            internal static void AddSliderBool(string name, string defaultName, int defaultValue, int minValue,
+                int maxValue, bool enabled = false)
+            {
+                lastHitMenu.Add(new MenuSliderBool(name + heroName, defaultName, enabled, defaultValue, minValue, maxValue));
             }
 
             internal static MenuBool GetBool(string name)
@@ -967,6 +993,56 @@
                 MyManaManager.AddDrawToMenu(drawMenu);
             }
 
+            private static void DrawQ()
+            {
+                if (drawMenu["DrawQ" + heroName].As<MenuBool>().Enabled &&
+                    ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.Q).Level > 0 &&
+                    ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
+                {
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QRange, 30, Color.FromArgb(19, 130, 234));
+                }
+            }
+
+            private static void DrawW()
+            {
+                if (drawMenu["DrawW" + heroName].As<MenuBool>().Enabled &&
+                    ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.W).Level > 0 &&
+                    ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.W))
+                {
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(248, 246, 6));
+                }
+            }
+
+            private static void DrawE()
+            {
+                if (drawMenu["DrawE" + heroName].As<MenuBool>().Enabled &&
+                    ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.E).Level > 0 &&
+                    ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.E))
+                {
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, ERange, 30, Color.FromArgb(188, 6, 248));
+                }
+            }
+
+            private static void DrawR()
+            {
+                if (drawMenu["DrawR" + heroName].As<MenuBool>().Enabled &&
+                    ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.R).Level > 0 &&
+                    ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.R))
+                {
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, RRange, 30, Color.Red);
+                }
+            }
+
+            private static void DrawQExtend()
+            {
+                if (drawMenu["DrawQExtend" + heroName].As<MenuBool>().Enabled &&
+                    ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.Q).Level > 0 &&
+                    ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
+                {
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QExtendRange, 30, Color.FromArgb(0, 255, 161));
+                }
+            }
+
             internal static void AddEvent()
             {
                 Render.OnRender += delegate
@@ -976,39 +1052,29 @@
                         return;
                     }
 
-                    if (QRange > 0 && drawMenu["DrawQ" + heroName] != null &&
-                        drawMenu["DrawQ" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
+                    if (QRange > 0)
                     {
-                        Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QRange, 30, Color.FromArgb(19, 130, 234));
+                        DrawQ();
                     }
 
-                    if (WRange > 0 && drawMenu["DrawW" + heroName] != null &&
-                        drawMenu["DrawW" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.W))
+                    if (WRange > 0)
                     {
-                        Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(248, 246, 6));
+                        DrawW();
                     }
 
-                    if (ERange > 0 && drawMenu["DrawE" + heroName] != null &&
-                        drawMenu["DrawE" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.E))
+                    if (ERange > 0)
                     {
-                        Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(188, 6, 248));
+                        DrawE();
                     }
 
-                    if (RRange > 0 && drawMenu["DrawR" + heroName] != null &&
-                        drawMenu["DrawR" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.R))
+                    if (RRange > 0)
                     {
-                        Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.Red);
+                        DrawR();
                     }
 
-                    if (QExtendRange > 0 && drawMenu["DrawQExtend" + heroName] != null &&
-                        drawMenu["DrawQExtend" + heroName].As<MenuBool>().Enabled &&
-                        ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
+                    if (QExtendRange > 0)
                     {
-                        Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(0, 255, 161));
+                        DrawQExtend();
                     }
                 };
             }

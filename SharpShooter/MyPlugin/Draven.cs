@@ -70,6 +70,7 @@
 
             LaneClearOption.AddMenu();
             LaneClearOption.AddQ();
+            LaneClearOption.AddSliderBool("LaneClearECount", "Use E| Min Hit Count >= x", 4, 1, 7, true);
             LaneClearOption.AddMana();
 
             JungleClearOption.AddMenu();
@@ -456,7 +457,7 @@
         {
             if (HarassOption.HasEnouguMana() && HarassOption.UseE && E.Ready)
             {
-                var target = TargetSelector.GetTarget(E.Range);
+                var target = HarassOption.GetTarget(E.Range);
 
                 if (target != null && target.IsValidTarget(E.Range))
                 {
@@ -487,15 +488,30 @@
 
         private static void LaneClearEvent()
         {
-            if (LaneClearOption.HasEnouguMana() && LaneClearOption.UseQ && Q.Ready)
+            if (LaneClearOption.HasEnouguMana())
             {
-                if (AxeCount < 2 && Orbwalker.CanAttack())
+                if (LaneClearOption.UseQ && Q.Ready && AxeCount < 2 && Orbwalker.CanAttack())
                 {
                     var minions = GameObjects.EnemyMinions.Where(x => x.IsValidTarget(600) && x.IsMinion()).ToArray();
 
                     if (minions.Any() && minions.Length >= 2)
                     {
                         Q.Cast();
+                    }
+                }
+
+                if (LaneClearOption.GetSliderBool("LaneClearECount").Enabled && E.Ready)
+                {
+                    var minions = GameObjects.EnemyMinions.Where(x => x.IsValidTarget(E.Range) && x.IsMinion()).ToArray();
+
+                    if (minions.Any() && minions.Length >= LaneClearOption.GetSliderBool("LaneClearECount").Value)
+                    {
+                        var eFarm = E.GetSpellFarmPosition(minions);
+
+                        if (eFarm.HitCount >= LaneClearOption.GetSliderBool("LaneClearECount").Value)
+                        {
+                            E.Cast(eFarm.CastPosition);
+                        }
                     }
                 }
             }
@@ -627,8 +643,24 @@
         {
             if (E.Ready && target != null && target.IsValidTarget(E.Range))
             {
-                var ePred = E.GetPrediction(target);
-                E.Cast(ePred.UnitPosition);
+                switch (Args.Type)
+                {
+                    case SpellType.Melee:
+                        if (target.IsValidTarget(target.AttackRange + target.BoundingRadius + 100))
+                        {
+                            var ePred = E.GetPrediction(target);
+                            E.Cast(ePred.UnitPosition);
+                        }
+                        break;
+                    case SpellType.Dash:
+                    case SpellType.SkillShot:
+                    case SpellType.Targeted:
+                        {
+                            var ePred = E.GetPrediction(target);
+                            E.Cast(ePred.UnitPosition);
+                        }
+                        break;
+                }
             }
         }
 
@@ -650,7 +682,7 @@
                     }
                     else if (Orbwalker.Mode == OrbwalkingMode.Mixed || Orbwalker.Mode == OrbwalkingMode.Laneclear && MyManaManager.SpellHarass)
                     {
-                        if (HarassOption.HasEnouguMana())
+                        if (HarassOption.HasEnouguMana() && HarassOption.GetHarassTargetEnabled(target.ChampionName))
                         {
                             if (HarassOption.UseQ)
                             {

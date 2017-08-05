@@ -12,7 +12,7 @@ namespace SharpShooter.MyBase
 
     internal class MyChampions
     {
-        private static readonly string[] all = {"Draven", "Kalista"};
+        private static readonly string[] all = {"Draven", "Graves"};
 
         public MyChampions()
         {
@@ -46,8 +46,8 @@ namespace SharpShooter.MyBase
                 case "Draven":
                     var dravenPlugin = new MyPlugin.Draven();
                     break;
-                case "Kalista":
-
+                case "Graves":
+                    var gravesPlugin = new MyPlugin.Graves();
                     break;
             }
 
