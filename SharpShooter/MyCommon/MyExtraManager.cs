@@ -25,6 +25,16 @@
                    !target.HasBuff("zhonyasringshield") && !target.HasBuff("bardrstasis");
         }
 
+        internal static Aimtec.Spell GetBasicSpell(this Aimtec.SDK.Spell spell)
+        {
+            return ObjectManager.GetLocalPlayer().SpellBook.GetSpell(spell.Slot);
+        }
+
+        internal static SpellData GetSpellData(this Aimtec.SDK.Spell spell)
+        {
+            return ObjectManager.GetLocalPlayer().SpellBook.GetSpell(spell.Slot).SpellData;
+        }
+
         internal static bool IsUnKillable(this Obj_AI_Base target)
         {
             if (target == null || target.IsDead || target.Health <= 0)

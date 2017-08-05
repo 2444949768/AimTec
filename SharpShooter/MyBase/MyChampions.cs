@@ -1,6 +1,4 @@
-﻿using SharpShooter.MyCommon;
-
-namespace SharpShooter.MyBase
+﻿namespace SharpShooter.MyBase
 {
     #region
 
@@ -8,11 +6,15 @@ namespace SharpShooter.MyBase
     using Aimtec.SDK.Menu;
     using Aimtec.SDK.Menu.Components;
 
+    using SharpShooter.MyCommon;
+
+    using System.Linq;
+
     #endregion
 
     internal class MyChampions
     {
-        private static readonly string[] all = {"Draven", "Graves"};
+        private static readonly string[] all = {"Corki", "Draven", "Graves"};
 
         public MyChampions()
         {
@@ -22,8 +24,11 @@ namespace SharpShooter.MyBase
         private static void Initializer()
         {
             MyMenuExtensions.myMenu = new Menu("SharpShooter: " + ObjectManager.GetLocalPlayer().ChampionName,
-                "SharpShooter: " + ObjectManager.GetLocalPlayer().ChampionName, true);
-            MyMenuExtensions.myMenu.Add(new MenuSeperator("MadebyNightMoon", "Made by NightMoon"));
+                "SharpShooter: " + ObjectManager.GetLocalPlayer().ChampionName, true)
+            {
+                new MenuSeperator("MadebyNightMoon", "Made by NightMoon")
+            };
+            MyMenuExtensions.myMenu.Attach();
 
             var supportMenu = new Menu("SupportChampion", "Support Champion");
             {
@@ -34,6 +39,18 @@ namespace SharpShooter.MyBase
             }
             MyMenuExtensions.myMenu.Add(supportMenu);
 
+            if (
+                all.All(
+                    x =>
+                        !string.Equals(x, ObjectManager.GetLocalPlayer().ChampionName,
+                            System.StringComparison.CurrentCultureIgnoreCase)))
+            {
+                MyMenuExtensions.myMenu.Add(
+                    new MenuSeperator("NotSupport_" + ObjectManager.GetLocalPlayer().ChampionName,
+                        "Not Support: " + ObjectManager.GetLocalPlayer().ChampionName));
+                return;
+            }
+
             MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
             MyLogic.Orbwalker.Attach(MyMenuExtensions.myMenu);
 
@@ -43,6 +60,9 @@ namespace SharpShooter.MyBase
 
             switch (ObjectManager.GetLocalPlayer().ChampionName)
             {
+                case "Corki":
+                    var corkiPlugin = new MyPlugin.Corki();
+                    break;
                 case "Draven":
                     var dravenPlugin = new MyPlugin.Draven();
                     break;
@@ -52,7 +72,7 @@ namespace SharpShooter.MyBase
             }
 
 
-            MyMenuExtensions.myMenu.Attach();
+
         }
     }
 }

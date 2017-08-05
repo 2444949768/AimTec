@@ -62,12 +62,14 @@
     <Compile Include="MyLibrary\Items\ItemExtensions.cs" />
     <Compile Include="MyLibrary\Items\ItemID.cs" />
     <Compile Include="MyLoader.cs" />
+    <Compile Include="MyPlugin\Corki.cs" />
     <Compile Include="MyPlugin\Draven.cs" />
     <Compile Include="MyPlugin\Graves.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
