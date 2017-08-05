@@ -62,6 +62,8 @@
             MyLogic.Orbwalker = new Aimtec.SDK.Orbwalking.Orbwalker();
             MyLogic.Orbwalker.Attach(MyMenuExtensions.UtilityMenu);
 
+            var MyItemManager = new MyUtility.MyItemManager();
+            //var MyAutoLevelManager = new MyUtility.MyAutoLevelManager();
 
             MyMenuExtensions.DrawOption.SetDefalut();
 

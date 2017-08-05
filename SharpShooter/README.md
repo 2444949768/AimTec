@@ -4,6 +4,7 @@ Support Champions: Caitlyn, Corki, Draven, Graves, KogMaw <br>
 
 <br>
 
+V 0.0.0.6: Add Utility (Auto Potions, Auto Use Item, Cleanse, Auto Stack) <br>
 V 0.0.0.5: KogMaw Released, Improve Caitlyn Anti Gapcloser Logic, Change Corki R Hp (defaut 100%) <br>
 V 0.0.0.4: Caitlyn Released <br>
 V 0.0.0.3: Corki Released, Add Circle Spell Farm (it's also work with Cone Spell), Add the Champion Check at inject time<br>

@@ -212,5 +212,15 @@
                 !target.Name.ToLower().Contains("plant") && target.Team != GameObjectTeam.Neutral;
         }
 
+        internal static bool IsInFountainRange(this Obj_AI_Base hero, bool enemyFountain = false)
+        {
+            return hero.IsValid &&
+                   ObjectManager.Get<GameObject>()
+                       .Where(x => x.Type == GameObjectType.obj_SpawnPoint)
+                       .Any(
+                           x =>
+                               (enemyFountain ? x.Team != hero.Team : x.Team == hero.Team) && x.Team != hero.Team &&
+                               hero.ServerPosition.DistanceSqr(x.Position) <= 1200 * 1200);
+        }
     }
 }
