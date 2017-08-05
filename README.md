@@ -2,9 +2,5 @@
 
 <br>
 
-Done: Darius, Draven, Fiora, Kalista, Katarina, Ryze, Yasuo <br>
-
-<br>
-
-WIP: Riven (Need to Rewrite QA Logic)
-
+Forum: https://forum.aimtec.io/ <br>
+My Profiles: https://forum.aimtec.io/profile/705-nightmoon/ <br>
