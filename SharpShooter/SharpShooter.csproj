@@ -62,6 +62,7 @@
     <Compile Include="MyLibrary\Items\ItemExtensions.cs" />
     <Compile Include="MyLibrary\Items\ItemID.cs" />
     <Compile Include="MyLoader.cs" />
+    <Compile Include="MyPlugin\Caitlyn.cs" />
     <Compile Include="MyPlugin\Corki.cs" />
     <Compile Include="MyPlugin\Draven.cs" />
     <Compile Include="MyPlugin\Graves.cs" />
