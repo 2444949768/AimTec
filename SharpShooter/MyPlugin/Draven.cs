@@ -98,6 +98,8 @@
             AxeOption.AddBool("CancelKey3", "Cancel Catch Key 3(is mouse scroll)", false);
             AxeOption.AddSeperator("Set Orbwalker->Misc->Hold Radius to 0 (will better)");
 
+            GapcloserOption.AddMenu();
+
             MiscOption.AddMenu();
             MiscOption.AddBasic();
             MiscOption.AddW();
@@ -110,8 +112,6 @@
             MiscOption.AddSlider("GlobalRMin", "Global -> Cast R Min Range", 1000, 500, 2500);
             MiscOption.AddSlider("GlobalRMax", "Global -> Cast R Max Range", 3000, 1500, 3500);
             MiscOption.AddKey("SemiRKey", "Semi R Key", KeyCode.T, KeybindType.Press);
-
-            GapcloserOption.AddMenu();
 
             DrawOption.AddMenu();
             DrawOption.AddE(E.Range);

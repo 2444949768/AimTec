@@ -1,0 +1,87 @@
+﻿
+Introduction
+Hi, this is my First AIO in Aimtec. This AIO will include Utility and Champions, now still BETA Version, too much thing i need to work
+
+Feature
+
+Utility
+Auto Potions
+Auto Item(Botrk, Cutlass, Youmuus, Hextech, Randuin)
+Cleanse (High Custom, Speed)
+Auto Stack Tear (High Custom)
+
+Champion
+
+Caitlyn
+Basic Logic (QWER)
+Combo W Use Logic (Smart, Custom Stack)
+Combo R Use Logic (Safe Check, Min Cast Range DIY)
+Full Farm Logic
+Mana Manager (Harass/LaneClear/JungleClear Mode)
+KillSteal Logic
+Advanced Anti Gapcloser Logic (High Custom)
+Auto Q/W Logic (CC/TP)
+Semi R/EQ Logic
+Spell Range Circle
+
+Corki
+Basic Logic (QWER)
+Combo R Use Logic (Custom Stack and target HP Check)
+Smart Collsion Minion to Hit target
+Full Farm Logic (Harass/LaneClear/JungleClear Mode)
+Mana Manager (Harass/LaneClear/JungleClear Mode)
+KillSteal Logic
+Semi R Logic
+Spell Range Circle
+
+Draven
+Basic Logic (QWER)
+Two Combo R Logic (Solo KS and Team Fight)
+Full Farm Logic (Harass/LaneClear/JungleClear Mode)
+Mana Manager (Harass/LaneClear/JungleClear Mode)
+KillSteal Logic
+High Custom Axe Catch Logic (DIY)
+Auto W (slowing)
+Advanced Anti Gapcloser Logic (High Custom)
+Global R Range Settings
+Semi R Logic
+Draw Axe Position and Draw Axe Catch Range
+Spell Range Circle
+
+Graves
+Basic Logic (QWER)
+Fast E Reset Attack (Combo/JungleClear Mode)
+Safe E Check
+Combo R AOE Logic
+Full Farm Logic (Harass/LaneClear/JungleClear Mode)
+Mana Manager (Harass/LaneClear/JungleClear Mode)
+KillSteal Logic
+Advanced Anti Gapcloser Logic (High Custom)
+Spell Range Circle
+
+KogMaw
+Basic Logic (QWER)
+Combo R Custom Logic (Max Buff Count, target Health check)
+Full Farm Logic (Harass/LaneClear/JungleClear Mode)
+Mana Manager (Harass/LaneClear/JungleClear Mode)
+KillSteal Logic
+Advanced Anti Gapcloser Logic (High Custom)
+Spell Range Circle
+
+Change Log
+V 0.0.0.7: Released to Forum and will be add more Champions and Utility in here
+V 0.0.0.6: Add Utility (Auto Potions, Auto Use Item, Cleanse, Auto Stack)
+V 0.0.0.5: KogMaw Released, Improve Caitlyn Anti Gapcloser Logic, Change Corki R Hp (defaut 100%)
+V 0.0.0.4: Caitlyn Released
+V 0.0.0.3: Corki Released, Add Circle Spell Farm (it's also work with Cone Spell), Add the Champion Check at inject time
+V 0.0.0.2: Graves Released, Add Line Spell Farm Logic, Add Draven LaneClear E Logic, Improve the DrawOption (More FPS and fix the shit code), Add Gapcloser Shield Check, Improve the Lib Dash Check
+V 0.0.0.1: Fix Inject Issue, Draven Released
+V 0.0.0.0: Basic
+
+TODO
+Add More Champion (At least all ADC and then make others)
+Add More Utility (Auto Level, Auto Bush Ward, ect)
+And Your Suggestion
+
+GitHub
+https://github.com/NightMoon032/AimTec/tree/master/SharpShooter
