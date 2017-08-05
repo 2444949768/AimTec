@@ -1,23 +1,10 @@
 # AimTec
-Done:
 
-Darius
+<br>
 
-Draven
+Done: Darius, Draven, Fiora, Kalista, Katarina, Ryze, Yasuo <br>
 
-Fiora
+<br>
 
-Kalista
-
-Katarina
-
-Ryze
-
-Yasuo
-
-
-WIP: 
-
-
-Riven (Need to Rewrite QA Logic)
+WIP: Riven (Need to Rewrite QA Logic)
 
