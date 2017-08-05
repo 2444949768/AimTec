@@ -26,33 +26,23 @@
     internal struct SpellData
     {
         public string ChampionName { get; set; }
-
         public string SpellName { get; set; }
-
         public SpellSlot Slot { get; set; }
-
         public SpellType SpellType { get; set; }
     }
 
     public class GapcloserArgs
     {
         internal Obj_AI_Hero Unit { get; set; }
-
         public SpellSlot Slot { get; set; }
-
         public string SpellName { get; set; }
-
         public SpellType Type { get; set; }
-
         public Vector3 StartPosition { get; set; }
-
         public Vector3 EndPosition { get; set; }
-
         public int StartTick { get; set; }
-
         public int EndTick { get; set; }
-
         public int DurationTick { get; set; }
+        public bool HaveShield { get; set; }
     }
 
     public static class Gapcloser
@@ -1031,6 +1021,15 @@
                 return;
             }
 
+            if (sender.UnitSkinName == "Vi" || sender.UnitSkinName == "Sion" || sender.UnitSkinName == "Kayn" || sender.UnitSkinName == "Fizz")
+            {
+                // Vi R
+                // Sion R
+                // Kayn R
+                // Fizz E
+                return;
+            }
+
             if (!Gapclosers.ContainsKey(sender.NetworkId))
             {
                 Gapclosers.Add(sender.NetworkId, new GapcloserArgs());
@@ -1050,6 +1049,7 @@
                     (Gapclosers[sender.NetworkId].EndPosition.DistanceSqr(Gapclosers[sender.NetworkId].StartPosition) /
                      Args.Speed * Args.Speed * 1000) + Gapclosers[sender.NetworkId].StartTick;
                 Gapclosers[sender.NetworkId].DurationTick = Gapclosers[sender.NetworkId].EndTick - Gapclosers[sender.NetworkId].StartTick;
+                Gapclosers[sender.NetworkId].HaveShield = HaveShiledBuff(sender);
             }
         }
 
@@ -1073,13 +1073,6 @@
                         Menu["Gapcloser." + x.Value.Unit.ChampionName.ToLower()].As<Menu>()[
                             "Gapcloser." + x.Value.Unit.ChampionName.ToLower() + ".Enabled"].As<MenuBool>().Enabled))
             {
-                if (ObjectManager.GetLocalPlayer().HealthPercent() <=
-                    Menu["Gapcloser." + Args.Value.Unit.ChampionName.ToLower()].As<Menu>()[
-                        "Gapcloser." + Args.Value.Unit.ChampionName.ToLower() + ".HPercent"].As<MenuSlider>().Value)
-                {
-                    
-                }
-
                 if (Args.Value.Type == SpellType.SkillShot)
                 {
                     if (Args.Value.Unit.ServerPosition.DistanceSqr(ObjectManager.GetLocalPlayer().ServerPosition) <=
@@ -1164,6 +1157,48 @@
             Gapclosers[sender.NetworkId].StartPosition = Args.Start;
             Gapclosers[sender.NetworkId].EndPosition = Args.End;
             Gapclosers[sender.NetworkId].StartTick = Game.TickCount;
+            Gapclosers[sender.NetworkId].HaveShield = HaveShiledBuff(sender);
         }
+
+        private static bool HaveShiledBuff(Obj_AI_Base target)
+        {
+            if (target == null || target.IsDead || target.Health <= 0 || !target.IsValidTarget())
+            {
+                return false;
+            }
+
+            if (target.HasBuff("BlackShield"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("bansheesveil"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("SivirE"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("NocturneShroudofDarkness"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("itemmagekillerveil"))
+            {
+                return true;
+            }
+
+            if (target.HasBuffOfType(BuffType.SpellShield))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }
