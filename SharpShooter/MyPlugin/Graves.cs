@@ -20,7 +20,6 @@
     using System.Linq;
 
     using static SharpShooter.MyCommon.MyMenuExtensions;
-    using System;
 
     #endregion
 
@@ -105,6 +104,7 @@
                 if (target != null)
                 {
                     LastAttackTime = Game.TickCount - Game.Ping / 2;
+                    //OnIssueOrder(sender, Args);
                 }
             }
         }
@@ -145,12 +145,7 @@
                 {
                     if (target.IsValidTarget(Q.Range) && !target.IsUnKillable())
                     {
-                        var qPred = Q.GetPrediction(target);
-
-                        if (qPred.HitChance >= HitChance.High)
-                        {
-                            Q.Cast(qPred.UnitPosition);
-                        }
+                        CastQ(target);
                     }
                 }
             }
@@ -207,12 +202,7 @@
             {
                 if (ComboOption.UseQ && Q.Ready && target.IsValidTarget(Q.Range))
                 {
-                    var qPred = Q.GetPrediction(target);
-
-                    if (qPred.HitChance >= HitChance.High)
-                    {
-                        Q.Cast(qPred.UnitPosition);
-                    }
+                    CastQ(target);
                 }
 
                 if (ComboOption.UseE && E.Ready && target.IsValidTarget(800f))
@@ -255,12 +245,7 @@
 
                 if (HarassOption.UseQ && Q.Ready && target.IsValidTarget(Q.Range))
                 {
-                    var qPred = Q.GetPrediction(target);
-
-                    if (qPred.HitChance >= HitChance.High)
-                    {
-                        Q.Cast(qPred.UnitPosition);
-                    }
+                    CastQ(target);
                 }
             }
         }
@@ -378,7 +363,7 @@
             }
         }
 
-        private static void OnIssueOrder(Obj_AI_Base sender, Obj_AI_BaseIssueOrderEventArgs Args)
+        private static void OnIssueOrder(Obj_AI_Base sender, Obj_AI_BaseIssueOrderEventArgs/*Obj_AI_BaseMissileClientDataEventArgs*/ Args)
         {
             if (!sender.IsMe)
             {
@@ -390,6 +375,11 @@
                 return;
             }
 
+            if (Orbwalker.Mode != OrbwalkingMode.Combo && Orbwalker.Mode != OrbwalkingMode.Laneclear)
+            {
+                return;
+            }
+
             var target = (AttackableUnit)Args.Target;
 
             if (target == null || !target.IsValidTarget())
@@ -397,9 +387,8 @@
                 return;
             }
 
-            if (!CanAttack() || !target.IsValidTarget(Me.AttackRange + Me.BoundingRadius + target.BoundingRadius - 20))
+            if (!Orbwalker.CanAttack() || !target.IsValidTarget(Me.AttackRange + Me.BoundingRadius + target.BoundingRadius - 20))
             {
-                //System.Console.WriteLine(Args.ProcessEvent);
                 Args.ProcessEvent = false;
                 return;
             }
@@ -407,41 +396,30 @@
             if (Orbwalker.Mode == OrbwalkingMode.Combo && ComboOption.UseE && 
                 ComboOption.GetBool("ComboEReset").Enabled && target.Type == GameObjectType.obj_AI_Hero)
             {
-                DelayAction.Queue(1 + Game.Ping, () =>
+                DelayAction.Queue(1, () =>
                 {
-                    if (E.Cast(Me.ServerPosition.Extend(Args.Position, E.Range - Args.Target.BoundingRadius)))
-                    {
-                        Orbwalker.ResetAutoAttackTimer();
-                        Me.IssueOrder(OrderType.AttackUnit, target);
-                    }
+                    E.Cast(Me.ServerPosition.Extend(Args.Target.ServerPosition, E.Range - Args.Target.BoundingRadius));
+                    Orbwalker.ResetAutoAttackTimer();
+                    Me.IssueOrder(OrderType.AttackUnit, target);
                 });
             }
             else if (Orbwalker.Mode == OrbwalkingMode.Laneclear && JungleClearOption.HasEnouguMana() && 
                 JungleClearOption.UseE && target.IsMob())
             {
-                DelayAction.Queue(1 + Game.Ping, () =>
+                DelayAction.Queue(1, () =>
                 {
-                    if (E.Cast(Me.ServerPosition.Extend(Args.Position, E.Range - Args.Target.BoundingRadius)))
-                    {
-                        Orbwalker.ResetAutoAttackTimer();
-                        Me.IssueOrder(OrderType.AttackUnit, target);
-                    }
+                    E.Cast(Me.ServerPosition.Extend(Args.Target.ServerPosition, E.Range - Args.Target.BoundingRadius));
+                    Orbwalker.ResetAutoAttackTimer();
+                    Me.IssueOrder(OrderType.AttackUnit, target);
                 });
             }
-        }
-
-        private static bool CanAttack()
-        {
-            return Game.TickCount + Game.Ping / 2 + 25 >=
-                      LastAttackTime + (1.0740296828d * 1000 * ObjectManager.GetLocalPlayer().AttackDelay - 716.2381256175d) &&
-                      ObjectManager.GetLocalPlayer().HasBuff("GravesBasicAttackAmmo1");
         }
 
         private static void OnCastSpell(Obj_AI_Base sender, SpellBookCastSpellEventArgs Args)
         {
             if (sender.IsMe && Args.Slot == SpellSlot.E && Orbwalker.Mode != OrbwalkingMode.None)
             {
-                DelayAction.Queue(1, Orbwalker.ResetAutoAttackTimer);
+                Orbwalker.ResetAutoAttackTimer();
             }
         }
 
@@ -514,6 +492,36 @@
                      target.IsValidTarget(Me.AttackRange + Me.BoundingRadius + target.BoundingRadius - 20))
             {
                 E.Cast(Me.ServerPosition.Extend(Game.CursorPos, E.Range));
+            }
+        }
+
+        private static void CastQ(Obj_AI_Base target)
+        {
+            if (target == null || !target.IsValidTarget(Q.Range))
+            {
+                return;
+            }
+
+            var from = Me.ServerPosition.To2D();
+            var to = target.ServerPosition.To2D();
+            var direction = (from - to).Normalized();
+            var distance = from.Distance(to);
+
+            for (var d = 0; d < distance; d = d + 20)
+            {
+                var point = from + d * direction;
+                var flags = NavMesh.WorldToCell(point.To3D()).Flags;
+
+                if (flags.HasFlag(NavCellFlags.Building) || flags.HasFlag(NavCellFlags.Wall))
+                {
+                    return;
+                }
+            }
+
+            var qPred = Q.GetPrediction(target);
+            if (qPred.HitChance >= HitChance.High)
+            {
+                Q.Cast(qPred.UnitPosition);
             }
         }
     }
