@@ -387,7 +387,7 @@
                 return;
             }
 
-            if (!Orbwalker.CanAttack() || !target.IsValidTarget(Me.AttackRange + Me.BoundingRadius + target.BoundingRadius - 20))
+            if (!CanAttack() || !target.IsValidTarget(Me.AttackRange + Me.BoundingRadius + target.BoundingRadius - 20))
             {
                 Args.ProcessEvent = false;
                 return;
@@ -399,7 +399,7 @@
                 DelayAction.Queue(1, () =>
                 {
                     E.Cast(Me.ServerPosition.Extend(Args.Target.ServerPosition, E.Range - Args.Target.BoundingRadius));
-                    Orbwalker.ResetAutoAttackTimer();
+                    ResetAutoAttackTimer();
                     Me.IssueOrder(OrderType.AttackUnit, target);
                 });
             }
@@ -409,7 +409,7 @@
                 DelayAction.Queue(1, () =>
                 {
                     E.Cast(Me.ServerPosition.Extend(Args.Target.ServerPosition, E.Range - Args.Target.BoundingRadius));
-                    Orbwalker.ResetAutoAttackTimer();
+                    ResetAutoAttackTimer();
                     Me.IssueOrder(OrderType.AttackUnit, target);
                 });
             }
@@ -419,8 +419,30 @@
         {
             if (sender.IsMe && Args.Slot == SpellSlot.E && Orbwalker.Mode != OrbwalkingMode.None)
             {
-                Orbwalker.ResetAutoAttackTimer();
+                ResetAutoAttackTimer();
             }
+        }
+
+        private static bool CanAttack()
+        {
+            if (Me.HasBuffOfType(BuffType.Polymorph) || Me.HasBuffOfType(BuffType.Blind) || !Me.HasBuff("GravesBasicAttackAmmo1") || IsWindingUp)
+            {
+                return false;
+            }
+
+            return AttackReady;
+        }
+
+        private static bool AttackReady => Game.TickCount + Game.Ping / 2 - LastAttackTime >= AttackCoolDownTime;
+
+        private static float AttackCoolDownTime => (1.07402968406677f * Me.AttackDelay - 0.716238141059875f) * 1000 - 90;
+
+        private static bool IsWindingUp => Game.TickCount + Game.Ping / 2 - LastAttackTime <= Me.AttackCastDelay * 1000 + 60;
+
+        private static void ResetAutoAttackTimer()
+        {
+            LastAttackTime = 0;
+            Orbwalker.ResetAutoAttackTimer();
         }
 
         private static void ELogic(Obj_AI_Base target)
