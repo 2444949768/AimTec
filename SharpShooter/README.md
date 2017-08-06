@@ -4,7 +4,8 @@ Support Champions: Caitlyn, Corki, Draven, Graves, KogMaw <br>
 
 <br>
 
-V 0.0.0.9: Improve Graves Attack Cancel Problem (Until SDK Merger the PR will be fix everything), Add Wall Check for Q Spell
+V 0.0.1.0: Add Varus <br>
+V 0.0.0.9: Improve Graves Attack Cancel Problem (Until SDK Merger the PR will be fix everything), Add Wall Check for Q Spell <br>
 V 0.0.0.8: Update Caitlyn Q/E Prediction problem.. now should be work fine~ <br>
 V 0.0.0.7: Released to Forum and will be add more Champions and Utility in here <br>
 V 0.0.0.6: Add Utility (Auto Potions, Auto Use Item, Cleanse, Auto Stack) <br>

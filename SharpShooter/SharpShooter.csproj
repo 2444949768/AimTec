@@ -67,6 +67,7 @@
     <Compile Include="MyPlugin\Draven.cs" />
     <Compile Include="MyPlugin\Graves.cs" />
     <Compile Include="MyPlugin\KogMaw.cs" />
+    <Compile Include="MyPlugin\Varus.cs" />
     <Compile Include="MyUtility\MyAutoLevelManager.cs" />
     <Compile Include="MyUtility\MyItemManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

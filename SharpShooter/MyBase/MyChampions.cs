@@ -15,7 +15,7 @@
 
     internal class MyChampions
     {
-        private static readonly string[] all = {"Caitlyn", "Corki", "Draven", "Graves", "KogMaw"};
+        private static readonly string[] all = {"Caitlyn", "Corki", "Draven", "Graves", "KogMaw", "Varus"};
 
         public MyChampions()
         {
@@ -83,6 +83,9 @@
                     break;
                 case "KogMaw":
                     var kogMawPlugin = new MyPlugin.KogMaw();
+                    break;
+                case "Varus":
+                    var varusPlugin = new MyPlugin.Varus();
                     break;
             }
 

@@ -1000,7 +1000,7 @@
                     ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.Q).Level > 0 &&
                     ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
                 {
-                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QRange, 30, Color.FromArgb(19, 130, 234));
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QRange, 43, Color.FromArgb(19, 130, 234));
                 }
             }
 
@@ -1010,7 +1010,7 @@
                     ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.W).Level > 0 &&
                     ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.W))
                 {
-                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 30, Color.FromArgb(248, 246, 6));
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, WRange, 43, Color.FromArgb(248, 246, 6));
                 }
             }
 
@@ -1020,7 +1020,7 @@
                     ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.E).Level > 0 &&
                     ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.E))
                 {
-                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, ERange, 30, Color.FromArgb(188, 6, 248));
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, ERange, 43, Color.FromArgb(188, 6, 248));
                 }
             }
 
@@ -1030,7 +1030,7 @@
                     ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.R).Level > 0 &&
                     ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.R))
                 {
-                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, RRange, 30, Color.Red);
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, RRange, 43, Color.Red);
                 }
             }
 
@@ -1040,7 +1040,7 @@
                     ObjectManager.GetLocalPlayer().SpellBook.GetSpell(SpellSlot.Q).Level > 0 &&
                     ObjectManager.GetLocalPlayer().SpellBook.CanUseSpell(SpellSlot.Q))
                 {
-                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QExtendRange, 30, Color.FromArgb(0, 255, 161));
+                    Render.Circle(ObjectManager.GetLocalPlayer().ServerPosition, QExtendRange, 43, Color.FromArgb(0, 255, 161));
                 }
             }
 

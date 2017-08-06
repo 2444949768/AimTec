@@ -14,6 +14,46 @@
 
     internal static class MyExtraManager
     {
+        internal static bool HaveShiledBuff(this Obj_AI_Base target)
+        {
+            if (target == null || target.IsDead || target.Health <= 0 || !target.IsValidTarget())
+            {
+                return false;
+            }
+
+            if (target.HasBuff("BlackShield"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("bansheesveil"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("SivirE"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("NocturneShroudofDarkness"))
+            {
+                return true;
+            }
+
+            if (target.HasBuff("itemmagekillerveil"))
+            {
+                return true;
+            }
+
+            if (target.HasBuffOfType(BuffType.SpellShield))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         internal static bool CanMoveMent(this Obj_AI_Base target)
         {
             return !(target.MoveSpeed < 50) && !target.HasBuffOfType(BuffType.Stun) &&

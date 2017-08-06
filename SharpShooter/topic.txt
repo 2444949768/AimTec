@@ -68,7 +68,22 @@ KillSteal Logic
 Advanced Anti Gapcloser Logic (High Custom)
 Spell Range Circle
 
+Varus
+Basic Logic (QWER)
+Combo R Logic (KS or AOE)
+Combo Custom Passive Spell Using (Q/E)
+Combo Fast Q Logic
+Full Farm Logic (Harass/LaneClear/JungleClear Mode)
+Mana Manager (Harass/LaneClear/JungleClear Mode)
+KillSteal Logic
+Advanced Anti Gapcloser Logic (High Custom)
+Semi R Logic
+Spell Range Circle
+
 Change Log
+V 0.0.1.0: Add Varus
+V 0.0.0.9: Improve Graves Attack Cancel Problem (Until SDK Merger the PR will be fix everything), Add Wall Check for Q Spell
+V 0.0.0.8: Update Caitlyn Q/E Prediction problem.. now should be work fine~
 V 0.0.0.7: Released to Forum and will be add more Champions and Utility in here
 V 0.0.0.6: Add Utility (Auto Potions, Auto Use Item, Cleanse, Auto Stack)
 V 0.0.0.5: KogMaw Released, Improve Caitlyn Anti Gapcloser Logic, Change Corki R Hp (defaut 100%)
