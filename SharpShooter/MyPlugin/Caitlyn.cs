@@ -268,11 +268,12 @@
                                 if (ComboOption.GetSlider("ComboQCount").Value != 0 &&
                                     Me.CountEnemyHeroesInRange(Q.Range) >= ComboOption.GetSlider("ComboQCount").Value)
                                 {
-                                    if (qPred.HitChance >= HitChance.Medium &&
-                                        qPred.AoeTargetsHitCount >= ComboOption.GetSlider("ComboQCount").Value)
-                                    {
-                                        Q.Cast(qPred.CastPosition);
-                                    }
+                                    Q.CastIfWillHit(target, ComboOption.GetSlider("ComboQCount").Value);
+                                    //if (qPred.HitChance >= HitChance.Medium &&
+                                    //    qPred.AoeTargetsHitCount >= ComboOption.GetSlider("ComboQCount").Value)
+                                    //{
+                                    //    Q.Cast(qPred.CastPosition);
+                                    //}
                                 }
                             }
                         }
@@ -293,11 +294,12 @@
                         if (ComboOption.GetSlider("ComboQCount").Value != 0 &&
                             Me.CountEnemyHeroesInRange(Q.Range) >= ComboOption.GetSlider("ComboQCount").Value)
                         {
-                            if (qPred.HitChance >= HitChance.Medium &&
-                                qPred.AoeTargetsHitCount >= ComboOption.GetSlider("ComboQCount").Value)
-                            {
-                                Q.Cast(qPred.CastPosition);
-                            }
+                            Q.CastIfWillHit(target, ComboOption.GetSlider("ComboQCount").Value);
+                            //if (qPred.HitChance >= HitChance.Medium &&
+                            //    qPred.AoeTargetsHitCount >= ComboOption.GetSlider("ComboQCount").Value)
+                            //{
+                            //    Q.Cast(qPred.CastPosition);
+                            //}
                         }
                     }
                 }
