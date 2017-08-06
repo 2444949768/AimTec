@@ -162,12 +162,7 @@
 
                 if (target.IsValidTarget(Q.Range) && !target.CanMoveMent())
                 {
-                    var qPred = Q.GetPrediction(target);
-
-                    if (qPred.HitChance >= HitChance.High)
-                    {
-                        Q.Cast(qPred.CastPosition);
-                    }
+                    Q.Cast(target);
                 }
             }
 
@@ -227,12 +222,7 @@
 
                     if (!target.IsUnKillable())
                     {
-                        var qPred = Q.GetPrediction(target);
-
-                        if (qPred.HitChance >= HitChance.High)
-                        {
-                            Q.Cast(qPred.CastPosition);
-                        }
+                        Q.Cast(target);
                     }
                 }
             }
@@ -254,7 +244,7 @@
                         {
                             if (E.Cast(ePred.CastPosition))
                             {
-                                Q.Cast(ePred.CastPosition);
+                                Q.Cast(target);
                             }
                         }
                         else
@@ -272,7 +262,7 @@
 
                                 if (qPred.HitChance >= HitChance.High)
                                 {
-                                    Q.Cast(qPred.CastPosition);
+                                    Q.Cast(target);
                                 }
 
                                 if (ComboOption.GetSlider("ComboQCount").Value != 0 &&
@@ -297,7 +287,7 @@
 
                         if (qPred.HitChance >= HitChance.High)
                         {
-                            Q.Cast(qPred.CastPosition);
+                            Q.Cast(target);
                         }
 
                         if (ComboOption.GetSlider("ComboQCount").Value != 0 &&
@@ -479,8 +469,8 @@
                     var ePred = E.GetPrediction(target);
                     if (ePred.CollisionObjects.Count == 0)
                     {
-                        E.Cast(ePred.CastPosition);
-                        Q.Cast(ePred.CastPosition);
+                        E.Cast(target);
+                        Q.Cast(target);
                     }
                 }
             }
